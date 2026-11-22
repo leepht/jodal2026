@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="theme-color" content="#070b16" />
+  <meta name="color-scheme" content="dark" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -29,6 +30,7 @@
            url("assets/fonts/PretendardVariable.woff2") format("woff2");
     }
     :root {
+      color-scheme: dark;
       --bg-outer: #04070f;
       --bg-stage: #070b16;
       --glass-top: rgba(7, 11, 22, 0.56);
@@ -108,7 +110,8 @@
       box-shadow: 0 24px 64px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.08);
     }
 
-    @media (max-width: 640px), (pointer: coarse) and (orientation: portrait) {
+    /* 일반 바형 스마트폰(갤럭시 S/A/Flip/Fold 커버, 아이폰)은 풀블리드, Z Fold 펼침·태블릿·PC는 9:16 중앙 유지 */
+    @media (max-width: 520px) and (max-aspect-ratio: 3/4) {
       #app {
         width: 100vw;
         height: var(--apph, 100dvh);
@@ -318,6 +321,10 @@
     }
     .char-dark img {
       filter: brightness(0.14) contrast(1.08) drop-shadow(0 8px 20px rgba(0, 0, 0, 0.72));
+    }
+    .char-reveal-wrap:not(.entering) .char-dark {
+      opacity: 0;
+      pointer-events: none;
     }
     .char-bright {
       -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 100%);
@@ -615,7 +622,7 @@
       height: 33%;
       min-height: 196px;
       max-height: 310px;
-      padding: clamp(18px, 3dvh, 30px) clamp(16px, 5vw, 30px) calc(8px + var(--safe-bottom));
+      padding: clamp(18px, 3dvh, 30px) clamp(16px, 5vw, 30px) calc(14px + var(--safe-bottom));
       background: linear-gradient(
         180deg,
         rgba(3, 6, 14, 0) 0%,
@@ -628,14 +635,14 @@
       border-top: none;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: flex-start;
       transition: opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1), transform 0.42s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.42s ease;
     }
     @media (max-height: 740px) {
       #dialogue-overlay {
         height: 31%;
         min-height: 176px;
-        padding: 16px 16px calc(10px + var(--safe-bottom));
+        padding: 16px 16px calc(14px + var(--safe-bottom));
       }
     }
     #dialogue-overlay::before {
@@ -714,12 +721,13 @@
     #dialogue-overlay.mode-narration #dlg-text {
       color: #f8fafc;
       font-style: normal;
-      padding-top: clamp(6px, 1.4dvh, 14px);
+      padding-top: clamp(22px, 4.2dvh, 34px);
     }
 
     #dlg-text {
-      flex: 1;
+      flex: 0 1 auto;
       min-height: 0;
+      max-height: calc(100% - 22px);
       font-size: clamp(15px, calc(var(--appw, 100vw) * 0.043), 21px);
       font-weight: 600;
       line-height: 1.54;
@@ -734,25 +742,36 @@
     strong.hl-gold { color: var(--accent-gold); font-weight: 800; }
     em.hl-echo { color: #e2e8f0; font-style: italic; }
 
+    /* 텍스트 완료 시 나레이션/대사 바로 아래 좌측 라인에 겹쳐 표시 (별도 하단 자리 차지 X) */
     .dlg-footer {
-      position: absolute;
-      right: clamp(14px, 4.5vw, 24px);
-      bottom: calc(6px + var(--safe-bottom));
+      position: relative;
+      height: 0;
+      overflow: visible;
+      margin-top: 7px;
+      padding: 0 2px;
       display: flex;
-      align-items: center;
-      justify-content: flex-end;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: 5px;
       font-size: clamp(11.5px, calc(var(--appw, 100vw) * 0.034), 14px);
       font-weight: 700;
-      color: var(--text-muted);
-      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
-      padding: 0;
+      line-height: 1.25;
+      color: rgba(203, 213, 225, 0.88);
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.92);
       pointer-events: none;
+      opacity: 0;
+      transform: translateY(3px);
+      transition: opacity 0.24s ease, transform 0.24s ease;
     }
-    .dlg-footer > span:first-child { display: none; }
+    #dialogue-overlay.typing-done .dlg-footer {
+      opacity: 0.85;
+      transform: translateY(0);
+    }
     .tap-indicator {
       color: var(--accent-gold);
       font-size: clamp(11.5px, calc(var(--appw, 100vw) * 0.034), 14px);
-      opacity: 0.85;
+      line-height: 1.25;
+      opacity: 0.9;
     }
     #debug-asset-pill {
       position: absolute;
@@ -1526,6 +1545,62 @@
       padding: 2px 4px 8px;
       z-index: 5;
     }
+    @media (max-width: 420px) {
+      #mg-hud {
+        flex-wrap: nowrap;
+        gap: 4px;
+        padding: 2px 2px 6px;
+      }
+      #mg-hud .hud-chip {
+        flex: 1 1 auto;
+        justify-content: center;
+        padding: 5px 5px;
+        font-size: clamp(10.5px, 3.05vw, 12.5px);
+        min-width: 0;
+      }
+    }
+    /* 보스전 등 풀스크린 캔버스 미니게임: 상단 HUD가 별도 영역을 차지하지 않고 배경 위에 반투명 오버레이 */
+    #minigame-layer.mg-hud-overlay {
+      padding: 0;
+      background: #050812;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+    #minigame-layer.mg-hud-overlay #mg-body {
+      border: none;
+      border-radius: 0;
+      background: #050812;
+    }
+    #minigame-layer.mg-hud-overlay #mg-hud {
+      position: absolute;
+      top: calc(8px + var(--safe-top));
+      left: 8px;
+      right: 8px;
+      z-index: 10;
+      padding: 0;
+      gap: 4px;
+      flex-wrap: nowrap;
+      justify-content: center;
+      pointer-events: none;
+    }
+    #minigame-layer.mg-hud-overlay #mg-hud .hud-chip {
+      pointer-events: none;
+      flex: 1 1 auto;
+      justify-content: center;
+      min-width: 0;
+      padding: 4px 6px;
+      font-size: clamp(10.5px, 2.95vw, 12.5px);
+      background: rgba(6, 10, 22, 0.56);
+      border-radius: 4px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    #minigame-layer.mg-hud-overlay #mg-hud .hud-chip.combat {
+      background: rgba(56, 10, 20, 0.62);
+    }
+    #minigame-layer.mg-hud-overlay #mg-hud .hud-chip.gold {
+      background: rgba(42, 30, 8, 0.62);
+    }
     #mg-body {
       position: relative;
       flex: 1;
@@ -1545,6 +1620,12 @@
       object-fit: cover;
       pointer-events: none;
       z-index: 1;
+    }
+    #mg-body:has(canvas) .mg-bg-layer {
+      display: none !important;
+    }
+    #mg-body:has(canvas) {
+      background: #050812;
     }
     #mg-content {
       position: relative;
@@ -2037,7 +2118,7 @@
       position: relative;
       flex-shrink: 0;
       width: 100%;
-      padding: calc(10px + var(--safe-top)) 16px 4px;
+      padding: calc(6px + var(--safe-top)) 14px 2px;
       text-align: center;
       z-index: 4;
       pointer-events: none;
@@ -2045,8 +2126,8 @@
     .recruit-top-title h3 {
       display: inline-block;
       margin: 0;
-      padding: 4px 20px 6px;
-      font-size: clamp(16px, calc(var(--appw, 100vw) * 0.056), 24px);
+      padding: 2px 16px 4px;
+      font-size: clamp(15.5px, calc(var(--appw, 100vw) * 0.046), 21px);
       font-weight: 800;
       letter-spacing: 0.02em;
       color: #ffffff;
@@ -2155,12 +2236,12 @@
     }
     .expr-preview-btn {
       position: relative;
-      padding: 8px 2px;
+      padding: 6px 2px;
       border: none;
       border-right: 1px solid rgba(255, 255, 255, 0.08);
       background: transparent;
       color: rgba(226, 232, 240, 0.68);
-      font-size: 14px;
+      font-size: 12.5px;
       font-weight: 700;
       text-align: center;
       text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
@@ -2190,10 +2271,10 @@
       margin: 0;
       border-radius: 0;
       border: none;
-      padding: 10px 16px calc(12px + var(--safe-bottom));
+      padding: 8px 12px calc(8px + var(--safe-bottom));
       display: flex;
       flex-direction: column;
-      gap: 7px;
+      gap: 5px;
       background: linear-gradient(
         180deg,
         rgba(4, 7, 15, 0.54) 0%,
@@ -2214,7 +2295,7 @@
       justify-content: center;
       gap: 1px;
       margin-top: 1px;
-      padding: 7px 14px;
+      padding: 5px 12px;
       border-radius: 3px;
       background: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(7, 11, 22, 0.72) 100%);
       border: 1px solid rgba(255, 255, 255, 0.22);
@@ -2245,14 +2326,14 @@
     }
     .name-preview-label {
       display: block;
-      font-size: 11.5px;
+      font-size: 10.5px;
       font-weight: 700;
       letter-spacing: 0.04em;
       color: rgba(226, 232, 240, 0.72);
     }
     .name-preview {
       text-align: center;
-      font-size: 23px;
+      font-size: 18px;
       font-weight: 800;
       letter-spacing: 0.02em;
       color: #ffffff;
@@ -2265,18 +2346,18 @@
     }
 
     .recruit-field-label {
-      font-size: 13px;
+      font-size: 11.5px;
       font-weight: 700;
       color: rgba(226, 232, 240, 0.78);
       letter-spacing: 0.02em;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
     }
     .recruit-field-label::before {
       content: "";
       width: 2.5px;
-      height: 12px;
+      height: 11px;
       background: #93c5fd;
     }
     #name-modal[data-gender="f"] .recruit-field-label::before {
@@ -2286,20 +2367,24 @@
     .word-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
+      gap: 5px;
       margin: 0;
     }
     .word-btn {
       position: relative;
-      padding: 10px 4px;
+      padding: 7px 4px;
       border-radius: 2px;
       border: 1px solid rgba(255, 255, 255, 0.16);
       background: rgba(255, 255, 255, 0.05);
       color: rgba(226, 232, 240, 0.78);
-      font-size: 15.5px;
+      font-size: 13px;
       font-weight: 700;
       text-align: center;
       transition: all 0.15s ease;
+    }
+    #confirm-name-btn {
+      padding: 11px 22px !important;
+      font-size: 15px !important;
     }
     .word-btn.selected {
       border-color: rgba(255, 255, 255, 0.48);
@@ -2348,8 +2433,8 @@
       box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
     }
     .board-notice-card::before {
-      content: ""; position: absolute; top: 5px; left: 50%; width: 14px; height: 14px; margin-left: -7px; border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #fde68a, #b45309 70%); box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);
+      content: ""; position: absolute; top: 4px; left: 50%; width: 11px; height: 11px; margin-left: -5.5px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #fde68a, #b45309 70%); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
     }
     .board-clause { background: rgba(255, 252, 244, 0.9); border-color: rgba(146, 110, 70, 0.45); }
     .wh-wrap { background: rgba(7, 11, 22, 0.2); }
@@ -5550,6 +5635,7 @@
 
         clearInterval(state.typingTimer);
         el.dlgText.innerHTML = "";
+        el.dlgOverlay.classList.remove("typing-done");
         state.isTyping = true;
         const stepMs = Math.max(18, Number(sc.typeSpeedMs || 36));
         const allowVoice = !sc.silentVoice;
@@ -5564,6 +5650,7 @@
           if (i >= parsed.plainLen) {
             clearInterval(state.typingTimer);
             state.isTyping = false;
+            el.dlgOverlay.classList.add("typing-done");
             scheduleAutoAdvance();
           }
         }, stepMs);
@@ -5735,6 +5822,7 @@
           el.dlgText.textContent = state.fullText;
         }
         state.isTyping = false;
+        el.dlgOverlay.classList.add("typing-done");
       }
 
       function getStepKindClass(label) {
@@ -6387,6 +6475,7 @@
         state.hudMode = "combat";
         hideAllDialogOverlays();
         renderHud();
+        el.minigameLayer.classList.remove("mg-hud-overlay");
         el.minigameLayer.classList.add("active");
         el.mgHud.innerHTML = "";
         el.mgBody.innerHTML = `
@@ -6408,6 +6497,13 @@
           AudioMgr.playSfx("sfx_chime");
           el.mgBanner.classList.remove("active");
           onStart();
+          const hasCanvas = !!document.querySelector("#mg-content canvas");
+          el.minigameLayer.classList.toggle("mg-hud-overlay", hasCanvas);
+          const mgBg = document.getElementById("mg-bg-img");
+          if (mgBg && hasCanvas) {
+            mgBg.style.display = "none";
+            mgBg.removeAttribute("src");
+          }
         });
       }
 
@@ -6462,7 +6558,7 @@
 
       async function attachMinigameBg(imgCandidates) {
         const found = await resolveFirstExistingImage(imgCandidates);
-        if (!found || !el.minigameLayer.classList.contains("active")) return;
+        if (!found || !el.minigameLayer.classList.contains("active") || document.querySelector("#mg-content canvas")) return;
         const im = document.getElementById("mg-bg-img");
         if (im) { im.src = found; im.style.display = "block"; }
       }
@@ -6520,8 +6616,8 @@
 
             const mgContent = document.getElementById("mg-content");
             mgContent.innerHTML = `
-              <div style="flex:1;min-height:0;height:100%;overflow:hidden;display:flex;flex-direction:column;padding:6px;touch-action:none;user-select:none;-webkit-user-select:none;">
-                <canvas id="crate-canvas" width="380" height="700" style="width:100%;height:100%;flex:1;min-height:0;object-fit:contain;background:#0b0710;border-radius:10px;touch-action:none;cursor:grab;"></canvas>
+              <div style="flex:1;min-height:0;height:100%;overflow:hidden;display:flex;flex-direction:column;padding:0;touch-action:none;user-select:none;-webkit-user-select:none;">
+                <canvas id="crate-canvas" width="380" height="700" style="width:100%;height:100%;flex:1;min-height:0;object-fit:contain;background:#050812;border-radius:8px;touch-action:none;cursor:grab;"></canvas>
               </div>
             `;
             const canvas = document.getElementById("crate-canvas");
@@ -7049,10 +7145,10 @@
                       <span class="rule-ref-date">기준일 2026.03.02</span>
                     </div>
                     <div class="rule-grid">
-                      <div class="rule-cell" data-rule="price_wood"><strong>삼나무 목재</strong>130~200G / 단</div>
-                      <div class="rule-cell" data-rule="price_shield"><strong>경비대 방패</strong>140~210G / 개</div>
-                      <div class="rule-cell" data-rule="price_mana"><strong>고순도 마력석</strong>180~260G / 상자</div>
-                      <div class="rule-cell" data-rule="price_gate"><strong>성문 보강재</strong>160~240G / 묶음</div>
+                      <div class="rule-cell" data-rule="price_wood"><strong>삼나무 목재</strong>130~200G/단</div>
+                      <div class="rule-cell" data-rule="price_shield"><strong>경비대 방패</strong>140~210G/개</div>
+                      <div class="rule-cell" data-rule="price_mana"><strong>고순도 마력석</strong>180~260G/상자</div>
+                      <div class="rule-cell" data-rule="price_gate"><strong>성문 보강재</strong>160~240G/묶음</div>
                     </div>
                     <div class="rule-note">
                       <div class="rule-line" data-rule="delivery"><strong>최대 납기</strong><span>D+5 (5일 이내) 필수</span></div>
@@ -7524,8 +7620,8 @@
 
             const mgContent = document.getElementById("mg-content");
             mgContent.innerHTML = `
-              <div style="flex:1;min-height:0;height:100%;overflow:hidden;display:flex;flex-direction:column;padding:6px;touch-action:none;user-select:none;-webkit-user-select:none;">
-                <canvas id="convoy-canvas" width="380" height="700" style="width:100%;height:100%;flex:1;min-height:0;object-fit:contain;border-radius:10px;touch-action:none;background:#091020;cursor:pointer;"></canvas>
+              <div style="flex:1;min-height:0;height:100%;overflow:hidden;display:flex;flex-direction:column;padding:0;touch-action:none;user-select:none;-webkit-user-select:none;">
+                <canvas id="convoy-canvas" width="380" height="700" style="width:100%;height:100%;flex:1;min-height:0;object-fit:contain;border-radius:8px;touch-action:none;background:#050812;cursor:pointer;"></canvas>
               </div>
             `;
             const canvas = document.getElementById("convoy-canvas");
@@ -7835,7 +7931,7 @@
               ctx.fillStyle = "rgba(8,14,28,0.82)";
               ctx.strokeStyle = "rgba(203,213,225,0.28)";
               ctx.lineWidth = 1.2;
-              rrect(12, 48, CW - 24, 54, 10); ctx.fill(); ctx.stroke();
+              rrect(12, 64, CW - 24, 54, 10); ctx.fill(); ctx.stroke();
               const pills = [
                 { x: 68,  lbl: "📦 정품", act: "톡 탭!", col: "#fde68a" },
                 { x: 190, lbl: "🔥 불량", act: "위로 휙▲", col: "#fb923c" },
@@ -7843,8 +7939,8 @@
               ];
               pills.forEach((p) => {
                 ctx.textAlign = "center";
-                ctx.fillStyle = "#e2e8f0"; ctx.font = `800 11.5px ${FONT}`; ctx.fillText(p.lbl, p.x, 69);
-                ctx.fillStyle = p.col; ctx.font = `900 12.5px ${FONT}`; ctx.fillText(p.act, p.x, 89);
+                ctx.fillStyle = "#e2e8f0"; ctx.font = `800 11.5px ${FONT}`; ctx.fillText(p.lbl, p.x, 85);
+                ctx.fillStyle = p.col; ctx.font = `900 12.5px ${FONT}`; ctx.fillText(p.act, p.x, 105);
               });
               ctx.restore();
 
@@ -7853,7 +7949,7 @@
               ctx.save();
               ctx.textAlign = "center"; ctx.font = `900 13px ${FONT}`;
               ctx.fillStyle = beatFloat >= 30.5 ? "#fde68a" : "#bae6fd";
-              ctx.fillText(phaseTxt, CW / 2, 126);
+              ctx.fillText(phaseTxt, CW / 2, 142);
               ctx.restore();
 
               // 2. 중앙 컨베이어 벨트 레일
@@ -8003,8 +8099,8 @@
 
               // 최상단 곡 진행 바
               const prog = Math.min(1, nowMs / LAST_MS);
-              ctx.fillStyle = "rgba(2,6,23,0.65)"; ctx.fillRect(18, 36, CW - 36, 6);
-              ctx.fillStyle = "#38bdf8"; ctx.fillRect(18, 36, (CW - 36) * prog, 6);
+              ctx.fillStyle = "rgba(2,6,23,0.65)"; ctx.fillRect(18, 52, CW - 36, 6);
+              ctx.fillStyle = "#38bdf8"; ctx.fillRect(18, 52, (CW - 36) * prog, 6);
 
               rafId = requestAnimationFrame(frame);
             };
@@ -8056,8 +8152,8 @@
 
             const mgContent = document.getElementById("mg-content");
             mgContent.innerHTML = `
-              <div style="flex:1;min-height:0;height:100%;overflow:hidden;display:flex;flex-direction:column;padding:6px;touch-action:none;user-select:none;-webkit-user-select:none;">
-                <canvas id="turret-canvas" width="380" height="680" style="width:100%;height:100%;flex:1;min-height:0;object-fit:contain;border-radius:10px;background:#090f1e;touch-action:none;cursor:grab;"></canvas>
+              <div style="flex:1;min-height:0;height:100%;overflow:hidden;display:flex;flex-direction:column;padding:0;touch-action:none;user-select:none;-webkit-user-select:none;">
+                <canvas id="turret-canvas" width="380" height="680" style="width:100%;height:100%;flex:1;min-height:0;object-fit:contain;border-radius:8px;background:#050812;touch-action:none;cursor:grab;"></canvas>
               </div>
             `;
             const canvas = document.getElementById("turret-canvas");
@@ -8206,13 +8302,13 @@
               ctx.strokeStyle = "rgba(240, 201, 105, 0.45)";
               ctx.lineWidth = 1.5;
               ctx.beginPath();
-              if (ctx.roundRect) ctx.roundRect(14, 48, CW - 28, 56, 10); else ctx.rect(14, 48, CW - 28, 56);
+              if (ctx.roundRect) ctx.roundRect(14, 62, CW - 28, 56, 10); else ctx.rect(14, 62, CW - 28, 56);
               ctx.fill(); ctx.stroke();
               ctx.textAlign = "center";
               ctx.fillStyle = "#f8fafc"; ctx.font = `900 15px ${FONT}`;
-              ctx.fillText(step < parts.length ? parts[step].name : "자동 마력 포탑 조립 완료!", CW / 2, 70);
+              ctx.fillText(step < parts.length ? parts[step].name : "자동 마력 포탑 조립 완료!", CW / 2, 84);
               ctx.fillStyle = bannerCol; ctx.font = `800 12px ${FONT}`;
-              ctx.fillText(bannerTxt, CW / 2, 92);
+              ctx.fillText(bannerTxt, CW / 2, 106);
               ctx.restore();
 
               ctx.save();
@@ -9167,9 +9263,9 @@
 
             const mgContent = document.getElementById("mg-content");
             mgContent.innerHTML = `
-              <div style="flex:1;min-height:0;height:100%;overflow:hidden;position:relative;display:flex;flex-direction:column;padding:6px;touch-action:none;user-select:none;-webkit-user-select:none;">
-                <canvas id="def-canvas" width="380" height="700" style="width:100%;height:100%;flex:1;min-height:0;object-fit:contain;border-radius:10px;background:#060814;touch-action:none;cursor:crosshair;"></canvas>
-                <div style="position:absolute;left:14px;right:14px;bottom:10px;display:flex;justify-content:space-between;align-items:flex-end;pointer-events:none;">
+              <div style="flex:1;min-height:0;height:100%;overflow:hidden;position:relative;display:flex;flex-direction:column;padding:0;touch-action:none;user-select:none;-webkit-user-select:none;">
+                <canvas id="def-canvas" width="380" height="700" style="width:100%;height:100%;flex:1;min-height:0;object-fit:contain;background:#050812;touch-action:none;cursor:crosshair;"></canvas>
+                <div style="position:absolute;left:14px;right:14px;bottom:max(12px, var(--safe-bottom));display:flex;justify-content:space-between;align-items:flex-end;pointer-events:none;">
                   <button type="button" id="def-repair-btn" style="pointer-events:auto;width:66px;height:66px;border-radius:50%;border:2.5px solid rgba(134,239,172,0.85);background:radial-gradient(circle at 35% 30%,rgba(34,197,94,0.85),rgba(15,45,28,0.92));color:#fff;font-size:11px;font-weight:900;line-height:1.2;box-shadow:0 6px 18px rgba(0,0,0,0.65);touch-action:manipulation;">🛡️<br/>보진<br/><span style="font-size:10px;color:#bbf7d0;">30%</span></button>
                   <div style="font-size:11px;font-weight:800;color:#bae6fd;background:rgba(2,6,23,0.72);padding:4px 10px;border-radius:999px;border:1px solid rgba(56,189,248,0.4);">화면 꾹 눌러 드래그 조준</div>
                   <button type="button" id="def-mana-btn" style="pointer-events:auto;width:72px;height:72px;border-radius:50%;border:2.5px solid rgba(125,211,252,0.95);background:radial-gradient(circle at 35% 30%,rgba(14,165,233,0.92),rgba(12,42,78,0.95));color:#fff;font-size:11.5px;font-weight:900;line-height:1.2;box-shadow:0 0 18px rgba(56,189,248,0.48),0 6px 18px rgba(0,0,0,0.65);touch-action:manipulation;">⚡<br/>마력방출<br/><span style="font-size:10px;color:#fde68a;">50%</span></button>
@@ -9694,18 +9790,18 @@
     })();
   </script>
   <!-- 마을 화면 SD 걷기 연출 (별도 파일, 없어도 게임은 정상 진행) -->
-  <script src="sd_walk.js?v=20261123b"></script>
+  <script src="sd_walk.js?v=20261123c"></script>
   <!-- 마을 주민 16명 목록 (sd_walk.js 가 읽음) -->
-  <script src="village_residents.js?v=20261123b"></script>
+  <script src="village_residents.js?v=20261123c"></script>
   <!-- 창고 미니게임 블록 그림 (별도 파일) -->
-  <script src="warehouse_art.js?v=20261123b"></script>
+  <script src="warehouse_art.js?v=20261123c"></script>
   <!-- 본청 집무실 미니게임: 휴대폰 화면 + 대화 장면 (별도 파일) -->
-  <script src="audit_art.js?v=20261123b"></script>
+  <script src="audit_art.js?v=20261123c"></script>
   <!-- 미니게임 시작 전 그림 튜토리얼 (별도 파일) -->
-  <script src="tutorial.js?v=20261123b"></script>
+  <script src="tutorial.js?v=20261123c"></script>
   <!-- 미니게임 효과(FX) 엔진 (별도 파일) -->
-  <script src="fx.js?v=20261123b"></script>
+  <script src="fx.js?v=20261123c"></script>
   <!-- 마을 화면: 지도 위 핀 + 들어가 보기 (별도 파일) -->
-  <script src="hub_map.js?v=20261123b"></script>
+  <script src="hub_map.js?v=20261123c"></script>
 </body>
 </html>
