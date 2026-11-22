@@ -69,10 +69,14 @@
     }
 
     html, body {
+      position: fixed;
+      inset: 0;
       margin: 0;
       padding: 0;
       width: 100%;
       height: 100%;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
       background: var(--bg-outer);
       color: var(--text-main);
       font-family: "Pretendard Variable", "Pretendard", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
@@ -93,11 +97,11 @@
       cursor: pointer;
     }
 
-    /* 9:16 Full-Bleed Viewport */
+    /* 9:16 Full-Bleed Viewport (iOS Safari visualViewport safe!) */
     #app {
       position: relative;
-      width: min(100vw, calc(100dvh * 9 / 16));
-      height: 100dvh;
+      width: min(100vw, calc(var(--apph, 100dvh) * 9 / 16));
+      height: var(--apph, 100dvh);
       max-height: none;
       background: var(--bg-stage);
       overflow: hidden;
@@ -107,7 +111,7 @@
     @media (max-width: 640px), (pointer: coarse) and (orientation: portrait) {
       #app {
         width: 100vw;
-        height: 100dvh;
+        height: var(--apph, 100dvh);
         max-width: none;
         max-height: none;
         box-shadow: none;
@@ -601,17 +605,17 @@
     }
     .hud-banner-btn:active { background: rgba(255, 255, 255, 0.14); }
 
-    /* Phase 1: Authentic NIKKE 32% Compact Gradient Zone (steep dark ramp hiding leg edge cleanly) */
+    /* Phase 1: Authentic NIKKE 29% Compact Gradient Zone (steep dark ramp hiding leg edge cleanly) */
     #dialogue-overlay {
       position: absolute;
       left: 0;
       right: 0;
       bottom: 0;
       z-index: 20;
-      height: 32%;
-      min-height: 210px;
-      max-height: 340px;
-      padding: clamp(26px, 4.2dvh, 42px) clamp(24px, 7.2vw, 38px) calc(10px + var(--safe-bottom));
+      height: 33%;
+      min-height: 196px;
+      max-height: 310px;
+      padding: clamp(18px, 3dvh, 30px) clamp(16px, 5vw, 30px) calc(8px + var(--safe-bottom));
       background: linear-gradient(
         180deg,
         rgba(3, 6, 14, 0) 0%,
@@ -626,6 +630,13 @@
       flex-direction: column;
       justify-content: space-between;
       transition: opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1), transform 0.42s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.42s ease;
+    }
+    @media (max-height: 740px) {
+      #dialogue-overlay {
+        height: 31%;
+        min-height: 176px;
+        padding: 16px 16px calc(10px + var(--safe-bottom));
+      }
     }
     #dialogue-overlay::before {
       content: "";
@@ -649,9 +660,9 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      min-height: 36px;
-      padding-bottom: 6px;
-      margin-bottom: 8px;
+      min-height: 28px;
+      padding-bottom: 4px;
+      margin-bottom: 6px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.16);
       flex-shrink: 0;
     }
@@ -665,7 +676,7 @@
       flex-shrink: 0;
     }
     #dlg-speaker {
-      font-size: clamp(17px, calc(var(--appw, 100vw) * 0.06), 28px);
+      font-size: clamp(16px, calc(var(--appw, 100vw) * 0.048), 23px);
       font-weight: 800;
       color: var(--speaker-color);
       letter-spacing: 0.015em;
@@ -703,38 +714,45 @@
     #dialogue-overlay.mode-narration #dlg-text {
       color: #f8fafc;
       font-style: normal;
-      padding-top: clamp(32px, 5dvh, 48px);
+      padding-top: clamp(6px, 1.4dvh, 14px);
     }
 
     #dlg-text {
       flex: 1;
-      font-size: clamp(16px, calc(var(--appw, 100vw) * 0.057), 26px);
+      min-height: 0;
+      font-size: clamp(15px, calc(var(--appw, 100vw) * 0.043), 21px);
       font-weight: 600;
-      line-height: 1.65;
-      letter-spacing: 0.015em;
+      line-height: 1.54;
+      letter-spacing: 0.01em;
       color: var(--text-main);
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
       word-break: keep-all;
       text-shadow: 0 2px 10px rgba(0, 0, 0, 0.96), 0 1px 3px rgba(0, 0, 0, 0.92);
-      padding: 2px 4px 0;
+      padding: 2px 2px 0;
     }
     strong.hl-gold { color: var(--accent-gold); font-weight: 800; }
     em.hl-echo { color: #e2e8f0; font-style: italic; }
 
     .dlg-footer {
+      position: absolute;
+      right: clamp(14px, 4.5vw, 24px);
+      bottom: calc(6px + var(--safe-bottom));
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      font-size: clamp(12px, calc(var(--appw, 100vw) * 0.0385), 15px);
-      font-weight: 600;
+      justify-content: flex-end;
+      font-size: clamp(11.5px, calc(var(--appw, 100vw) * 0.034), 14px);
+      font-weight: 700;
       color: var(--text-muted);
       text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
-      padding-top: 6px;
-      flex-shrink: 0;
+      padding: 0;
+      pointer-events: none;
     }
+    .dlg-footer > span:first-child { display: none; }
     .tap-indicator {
-      color: var(--text-sub);
-      font-size: clamp(12px, calc(var(--appw, 100vw) * 0.0385), 15px);
+      color: var(--accent-gold);
+      font-size: clamp(11.5px, calc(var(--appw, 100vw) * 0.034), 14px);
+      opacity: 0.85;
     }
     #debug-asset-pill {
       position: absolute;
@@ -755,22 +773,22 @@
     }
     #debug-asset-pill.show { display: block; }
 
-    /* Phase 2: Hidden Dialogue + 32% Compact Gradient Zone — Choice/Monologue Buttons Slightly Above Midpoint */
+    /* Phase 2: Hidden Dialogue + Responsive Gradient Choice Zone (never clips or overlaps review bar on iPhone!) */
     #choice-overlay {
       position: absolute;
       left: 0;
       right: 0;
       bottom: 0;
-      height: 32%;
-      min-height: 210px;
-      max-height: 340px;
+      height: auto;
+      min-height: 31%;
+      max-height: 56%;
       z-index: 22;
       isolation: isolate;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-end;
       align-items: center;
-      padding: clamp(26px, 4.2dvh, 42px) clamp(24px, 7.2vw, 38px) calc(clamp(54px, 8.2dvh, 74px) + var(--safe-bottom));
+      padding: clamp(24px, 3.6dvh, 36px) clamp(16px, 5vw, 30px) calc(52px + var(--safe-bottom));
       background: linear-gradient(
         180deg,
         rgba(3, 6, 14, 0) 0%,
@@ -780,7 +798,7 @@
         rgba(1, 3, 8, 1) 38%,
         rgba(1, 3, 8, 1) 100%
       );
-      gap: 10px;
+      gap: 8px;
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
@@ -803,15 +821,15 @@
       pointer-events: auto;
     }
     #choice-overlay.mode-monologue {
-      justify-content: center;
+      justify-content: flex-end;
       align-items: center;
-      padding: clamp(26px, 4.2dvh, 42px) clamp(24px, 7.2vw, 38px) calc(clamp(54px, 8.2dvh, 74px) + var(--safe-bottom));
+      padding: clamp(24px, 3.6dvh, 36px) clamp(16px, 5vw, 30px) calc(52px + var(--safe-bottom));
     }
     .choice-top-row {
       position: absolute;
-      left: clamp(24px, 7.2vw, 38px);
-      right: clamp(24px, 7.2vw, 38px);
-      bottom: calc(10px + var(--safe-bottom));
+      left: clamp(16px, 5vw, 30px);
+      right: clamp(16px, 5vw, 30px);
+      bottom: calc(8px + var(--safe-bottom));
       width: auto;
       display: flex;
       justify-content: space-between;
@@ -822,7 +840,7 @@
       border-radius: 4px;
       background: rgba(7, 11, 22, 0.58);
       border: 1px solid rgba(255, 255, 255, 0.22);
-      font-size: clamp(12px, calc(var(--appw, 100vw) * 0.04), 15.5px);
+      font-size: clamp(11.5px, calc(var(--appw, 100vw) * 0.035), 14.5px);
       font-weight: 700;
       color: var(--accent-gold);
       backdrop-filter: blur(8px);
@@ -838,7 +856,7 @@
       background: rgba(7, 11, 22, 0.58);
       border: 1px solid rgba(255, 255, 255, 0.22);
       color: var(--text-main);
-      font-size: clamp(12px, calc(var(--appw, 100vw) * 0.04), 15.5px);
+      font-size: clamp(11.5px, calc(var(--appw, 100vw) * 0.035), 14.5px);
       font-weight: 700;
       backdrop-filter: blur(8px);
     }
@@ -853,10 +871,10 @@
       position: relative;
       --btn-accent: var(--gender-accent, #f8fafc);
       width: 100%;
-      min-width: min(86%, 270px);
+      min-width: min(86%, 260px);
       max-width: 100%;
-      min-height: 58px;
-      padding: 15px 38px 15px 30px;
+      min-height: 46px;
+      padding: 11px 24px 11px 22px;
       border-radius: 0;
       border: none;
       background: url("assets/ui_tactical/choice_bar.png") center / 100% 100% no-repeat;
@@ -864,12 +882,12 @@
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       color: var(--text-main);
-      font-size: clamp(15.5px, calc(var(--appw, 100vw) * 0.054), 24px);
+      font-size: clamp(14px, calc(var(--appw, 100vw) * 0.041), 19.5px);
       font-weight: 700;
       text-align: center;
       text-wrap: balance;
-      line-height: 1.5;
-      letter-spacing: 0.015em;
+      line-height: 1.42;
+      letter-spacing: 0.01em;
       word-break: keep-all;
       text-shadow: 0 1px 6px rgba(0, 0, 0, 0.94);
       filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.48));
@@ -921,16 +939,16 @@
       position: absolute;
       inset: 0;
       background-image: url("assets/cg/title_opening.webp"), url("assets/cg/title_opening.gif"), url("assets/cg/title_opening.png");
-      background-size: 100% 100%;
-      background-position: center center;
+      background-size: cover;
+      background-position: center bottom;
       background-repeat: no-repeat;
       z-index: 0;
     }
     .title-bg-video {
       width: 100%;
       height: 100%;
-      object-fit: fill;
-      object-position: center center;
+      object-fit: cover;
+      object-position: center bottom;
       display: block;
       pointer-events: none;
     }
@@ -946,8 +964,24 @@
       z-index: 2;
       width: 100%;
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
+      flex-wrap: nowrap;
       align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    #title-screen #resume-btn {
+      width: auto;
+      margin-top: 0;
+      padding: 5px 16px;
+      border-radius: 999px;
+      clip-path: none;
+      border: 1px solid rgba(203, 213, 225, 0.55);
+      background: rgba(7, 11, 22, 0.72);
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.2;
+      white-space: nowrap;
     }
     .title-eyebrow,
     .title-rule,
@@ -1195,6 +1229,7 @@
       color: #fde68a;
       font-size: 11px;
       font-weight: 800;
+      white-space: nowrap;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.55);
       animation: sdWalk 1.2s ease-in-out infinite alternate;
       animation-delay: 0.2s;
@@ -1494,6 +1529,7 @@
     #mg-body {
       position: relative;
       flex: 1;
+      min-height: 0;
       border-radius: 8px;
       overflow: hidden;
       border: 1px solid rgba(255, 255, 255, 0.14);
@@ -1514,6 +1550,8 @@
       position: relative;
       z-index: 2;
       flex: 1;
+      min-height: 0;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
     }
@@ -1528,8 +1566,8 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 24px;
-      gap: 12px;
+      padding: 12px;
+      gap: 10px;
     }
     #mg-banner-overlay.active { display: flex; }
 
@@ -2008,7 +2046,7 @@
       display: inline-block;
       margin: 0;
       padding: 4px 20px 6px;
-      font-size: clamp(16px, calc(var(--appw, 100vw) * 0.066), 26px);
+      font-size: clamp(16px, calc(var(--appw, 100vw) * 0.056), 24px);
       font-weight: 800;
       letter-spacing: 0.02em;
       color: #ffffff;
@@ -6482,8 +6520,8 @@
 
             const mgContent = document.getElementById("mg-content");
             mgContent.innerHTML = `
-              <div style="flex:1;display:flex;flex-direction:column;padding:6px;touch-action:none;user-select:none;-webkit-user-select:none;">
-                <canvas id="crate-canvas" width="380" height="700" style="width:100%;flex:1;min-height:0;object-fit:cover;background:#0b0710;border-radius:10px;touch-action:none;cursor:grab;"></canvas>
+              <div style="flex:1;min-height:0;height:100%;overflow:hidden;display:flex;flex-direction:column;padding:6px;touch-action:none;user-select:none;-webkit-user-select:none;">
+                <canvas id="crate-canvas" width="380" height="700" style="width:100%;height:100%;flex:1;min-height:0;object-fit:contain;background:#0b0710;border-radius:10px;touch-action:none;cursor:grab;"></canvas>
               </div>
             `;
             const canvas = document.getElementById("crate-canvas");
@@ -6968,10 +7006,9 @@
                   <div>
                     <div class="audit-doc-head">
                       <span>📄 ① 납품 견적서 #0${c.id}</span>
-                      <span style="color:#64748b;font-size:11px;">항목 탭 → 규정 대조</span>
+                      <span class="quote-item-pill">${c.quote.item}</span>
                     </div>
                     ${fieldHtml("q_vendor", "신청 상호", c.quote.vendor, `견적서(${c.quote.vendor}) ↔ 등록증(${c.reg.vendor})`)}
-                    <div class="audit-field audit-info-row" style="cursor:default;opacity:0.92;"><span><strong>납품 품목:</strong> ${c.quote.item}</span><span class="audit-badge-mini">품목</span></div>
                     ${fieldHtml("q_price", "제시 단가", c.quote.price)}
                     ${fieldHtml("q_delivery", "납품 기한", c.quote.delivery)}
                     ${fieldHtml("q_addr", "창고 주소", c.quote.addr)}
@@ -7487,8 +7524,8 @@
 
             const mgContent = document.getElementById("mg-content");
             mgContent.innerHTML = `
-              <div style="flex:1;display:flex;flex-direction:column;padding:6px;touch-action:none;user-select:none;-webkit-user-select:none;">
-                <canvas id="convoy-canvas" width="380" height="700" style="width:100%;flex:1;min-height:0;object-fit:cover;border-radius:10px;touch-action:none;background:#091020;cursor:pointer;"></canvas>
+              <div style="flex:1;min-height:0;height:100%;overflow:hidden;display:flex;flex-direction:column;padding:6px;touch-action:none;user-select:none;-webkit-user-select:none;">
+                <canvas id="convoy-canvas" width="380" height="700" style="width:100%;height:100%;flex:1;min-height:0;object-fit:contain;border-radius:10px;touch-action:none;background:#091020;cursor:pointer;"></canvas>
               </div>
             `;
             const canvas = document.getElementById("convoy-canvas");
@@ -8019,8 +8056,8 @@
 
             const mgContent = document.getElementById("mg-content");
             mgContent.innerHTML = `
-              <div style="flex:1;display:flex;flex-direction:column;padding:6px;touch-action:none;user-select:none;-webkit-user-select:none;">
-                <canvas id="turret-canvas" width="380" height="680" style="width:100%;flex:1;min-height:0;object-fit:cover;border-radius:10px;background:#090f1e;touch-action:none;cursor:grab;"></canvas>
+              <div style="flex:1;min-height:0;height:100%;overflow:hidden;display:flex;flex-direction:column;padding:6px;touch-action:none;user-select:none;-webkit-user-select:none;">
+                <canvas id="turret-canvas" width="380" height="680" style="width:100%;height:100%;flex:1;min-height:0;object-fit:contain;border-radius:10px;background:#090f1e;touch-action:none;cursor:grab;"></canvas>
               </div>
             `;
             const canvas = document.getElementById("turret-canvas");
@@ -8036,7 +8073,7 @@
 
             const toCanvasPt = (ev) => {
               const r = canvas.getBoundingClientRect();
-              const fit = Math.max(r.width / CW, r.height / CH);
+              const fit = Math.min(r.width / CW, r.height / CH);
               return {
                 x: (ev.clientX - r.left - (r.width - CW * fit) / 2) / fit,
                 y: (ev.clientY - r.top - (r.height - CH * fit) / 2) / fit,
@@ -9130,12 +9167,12 @@
 
             const mgContent = document.getElementById("mg-content");
             mgContent.innerHTML = `
-              <div style="flex:1;position:relative;display:flex;flex-direction:column;padding:6px;touch-action:none;user-select:none;-webkit-user-select:none;">
-                <canvas id="def-canvas" width="380" height="700" style="width:100%;flex:1;min-height:0;object-fit:cover;border-radius:10px;background:#060814;touch-action:none;cursor:crosshair;"></canvas>
-                <div style="position:absolute;left:16px;right:16px;bottom:14px;display:flex;justify-content:space-between;align-items:flex-end;pointer-events:none;">
-                  <button type="button" id="def-repair-btn" style="pointer-events:auto;width:72px;height:72px;border-radius:50%;border:2.5px solid rgba(134,239,172,0.85);background:radial-gradient(circle at 35% 30%,rgba(34,197,94,0.85),rgba(15,45,28,0.92));color:#fff;font-size:11.5px;font-weight:900;line-height:1.25;box-shadow:0 6px 18px rgba(0,0,0,0.65);touch-action:manipulation;">🛡️<br/>보진<br/><span style="font-size:10px;color:#bbf7d0;">30%</span></button>
+              <div style="flex:1;min-height:0;height:100%;overflow:hidden;position:relative;display:flex;flex-direction:column;padding:6px;touch-action:none;user-select:none;-webkit-user-select:none;">
+                <canvas id="def-canvas" width="380" height="700" style="width:100%;height:100%;flex:1;min-height:0;object-fit:contain;border-radius:10px;background:#060814;touch-action:none;cursor:crosshair;"></canvas>
+                <div style="position:absolute;left:14px;right:14px;bottom:10px;display:flex;justify-content:space-between;align-items:flex-end;pointer-events:none;">
+                  <button type="button" id="def-repair-btn" style="pointer-events:auto;width:66px;height:66px;border-radius:50%;border:2.5px solid rgba(134,239,172,0.85);background:radial-gradient(circle at 35% 30%,rgba(34,197,94,0.85),rgba(15,45,28,0.92));color:#fff;font-size:11px;font-weight:900;line-height:1.2;box-shadow:0 6px 18px rgba(0,0,0,0.65);touch-action:manipulation;">🛡️<br/>보진<br/><span style="font-size:10px;color:#bbf7d0;">30%</span></button>
                   <div style="font-size:11px;font-weight:800;color:#bae6fd;background:rgba(2,6,23,0.72);padding:4px 10px;border-radius:999px;border:1px solid rgba(56,189,248,0.4);">화면 꾹 눌러 드래그 조준</div>
-                  <button type="button" id="def-mana-btn" style="pointer-events:auto;width:78px;height:78px;border-radius:50%;border:2.5px solid rgba(125,211,252,0.95);background:radial-gradient(circle at 35% 30%,rgba(14,165,233,0.92),rgba(12,42,78,0.95));color:#fff;font-size:12px;font-weight:900;line-height:1.22;box-shadow:0 0 18px rgba(56,189,248,0.48),0 6px 18px rgba(0,0,0,0.65);touch-action:manipulation;">⚡<br/>마력방출<br/><span style="font-size:10px;color:#fde68a;">50%</span></button>
+                  <button type="button" id="def-mana-btn" style="pointer-events:auto;width:72px;height:72px;border-radius:50%;border:2.5px solid rgba(125,211,252,0.95);background:radial-gradient(circle at 35% 30%,rgba(14,165,233,0.92),rgba(12,42,78,0.95));color:#fff;font-size:11.5px;font-weight:900;line-height:1.2;box-shadow:0 0 18px rgba(56,189,248,0.48),0 6px 18px rgba(0,0,0,0.65);touch-action:manipulation;">⚡<br/>마력방출<br/><span style="font-size:10px;color:#fde68a;">50%</span></button>
                 </div>
               </div>
             `;
@@ -9231,7 +9268,7 @@
 
             const toAimPos = (ev) => {
               const rect = canvas.getBoundingClientRect();
-              const fit = Math.max(rect.width / G.CW, rect.height / G.CH);
+              const fit = Math.min(rect.width / G.CW, rect.height / G.CH);
               const rawX = (ev.clientX - rect.left - (rect.width - G.CW * fit) / 2) / fit;
               const rawY = (ev.clientY - rect.top - (rect.height - G.CH * fit) / 2) / fit;
               // 터치일 때는 손가락에 안 가리도록 위로 46px 오프셋!
@@ -9579,11 +9616,12 @@
         }
       }
       function syncFullscreenBtn() {
+        const canFs = !!(document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen);
         const fs = isFullscreen();
         const fsBtn = document.getElementById("fs-btn");
         const titleFsBtn = document.getElementById("title-fs-btn");
-        if (fsBtn) fsBtn.textContent = fs ? "창모드 전환" : "전체화면 전환";
-        if (titleFsBtn) titleFsBtn.textContent = fs ? "창모드" : "전체화면";
+        if (fsBtn) { fsBtn.style.display = canFs ? "" : "none"; fsBtn.textContent = fs ? "창모드 전환" : "전체화면 전환"; }
+        if (titleFsBtn) { titleFsBtn.style.display = canFs ? "" : "none"; titleFsBtn.textContent = fs ? "창모드" : "전체화면"; }
       }
       document.getElementById("fs-btn").addEventListener("click", toggleFullscreen);
       document.getElementById("title-fs-btn").addEventListener("click", toggleFullscreen);
@@ -9637,29 +9675,37 @@
       renderHud();
     })();
   </script>
-  <!-- 글자 크기 비례용: 게임 틀(#app) 너비를 --appw 로 알려 줌 (작은 화면 → 글자도 비율대로 작게) -->
+  <!-- iOS Safari 포함 실제 가시 화면 높이(--apph) 및 9:16 비율 기준 유효 너비(--appw) 동기화 -->
   <script id="fit-appw">
     (function () {
-      function fit() { var a = document.getElementById("app"); if (a && a.clientWidth) document.documentElement.style.setProperty("--appw", a.clientWidth + "px"); }
+      function fit() {
+        var vh = Math.round((window.visualViewport && window.visualViewport.height) || window.innerHeight || document.documentElement.clientHeight);
+        if (vh > 100) document.documentElement.style.setProperty("--apph", vh + "px");
+        var a = document.getElementById("app");
+        var aw = (a && a.clientWidth) ? a.clientWidth : window.innerWidth;
+        var effW = Math.min(aw, Math.round(vh * 9 / 16));
+        if (effW > 100) document.documentElement.style.setProperty("--appw", effW + "px");
+      }
       fit();
       window.addEventListener("resize", fit);
-      window.addEventListener("orientationchange", function () { setTimeout(fit, 120); });
+      window.addEventListener("orientationchange", function () { setTimeout(fit, 120); setTimeout(fit, 360); });
+      if (window.visualViewport) window.visualViewport.addEventListener("resize", fit);
       if (window.ResizeObserver && document.getElementById("app")) new ResizeObserver(fit).observe(document.getElementById("app"));
     })();
   </script>
   <!-- 마을 화면 SD 걷기 연출 (별도 파일, 없어도 게임은 정상 진행) -->
-  <script src="sd_walk.js"></script>
+  <script src="sd_walk.js?v=20261123b"></script>
   <!-- 마을 주민 16명 목록 (sd_walk.js 가 읽음) -->
-  <script src="village_residents.js"></script>
+  <script src="village_residents.js?v=20261123b"></script>
   <!-- 창고 미니게임 블록 그림 (별도 파일) -->
-  <script src="warehouse_art.js"></script>
+  <script src="warehouse_art.js?v=20261123b"></script>
   <!-- 본청 집무실 미니게임: 휴대폰 화면 + 대화 장면 (별도 파일) -->
-  <script src="audit_art.js"></script>
+  <script src="audit_art.js?v=20261123b"></script>
   <!-- 미니게임 시작 전 그림 튜토리얼 (별도 파일) -->
-  <script src="tutorial.js"></script>
+  <script src="tutorial.js?v=20261123b"></script>
   <!-- 미니게임 효과(FX) 엔진 (별도 파일) -->
-  <script src="fx.js"></script>
+  <script src="fx.js?v=20261123b"></script>
   <!-- 마을 화면: 지도 위 핀 + 들어가 보기 (별도 파일) -->
-  <script src="hub_map.js"></script>
+  <script src="hub_map.js?v=20261123b"></script>
 </body>
 </html>
