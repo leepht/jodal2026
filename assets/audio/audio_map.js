@@ -1,0 +1,636 @@
+window.NAKKE_AUDIO_MAP = {
+  "version": 1795357259795,
+  "bgm": {
+    "bgm_daily": {
+      "channels": [
+        {
+          "src": "assets/audio/layers/bgm_daily_twilight.mp3",
+          "label": "Town Twilight (따뜻한 플루트·피아노 일상/마을)",
+          "folder": "sfx\\need move",
+          "volume": 0.34,
+          "loop": true,
+          "startSec": 0
+        },
+        {
+          "src": "",
+          "label": "",
+          "folder": "",
+          "volume": 0.25,
+          "loop": true,
+          "startSec": 0
+        }
+      ]
+    },
+    "bgm_crisis": {
+      "channels": [
+        {
+          "src": "assets/audio/layers/bgm_crisis_shellshock3.mp3",
+          "label": "Shell-Shock (3) (심포닉 메탈·포격 위기전)",
+          "folder": "sfx\\need move",
+          "volume": 0.34,
+          "loop": true,
+          "startSec": 0
+        },
+        {
+          "src": "",
+          "label": "",
+          "folder": "",
+          "volume": 0.25,
+          "loop": true,
+          "startSec": 0
+        }
+      ]
+    },
+    "bgm_work": {
+      "channels": [
+        {
+          "src": "assets/audio/layers/bgm_work_shellshock1.mp3",
+          "label": "Shell-Shock (1) (집시 재즈·스윙 심사 데스크)",
+          "folder": "sfx\\need move",
+          "volume": 0.34,
+          "loop": true,
+          "startSec": 0
+        },
+        {
+          "src": "",
+          "label": "",
+          "folder": "",
+          "volume": 0.25,
+          "loop": true,
+          "startSec": 0
+        }
+      ]
+    },
+    "bgm_defense": {
+      "channels": [
+        {
+          "src": "assets/audio/layers/bgm_defense_shellshock2.mp3",
+          "label": "Shell-Shock (2) (바이올린·브라스 보급 질주/구출)",
+          "folder": "sfx\\need move",
+          "volume": 0.35,
+          "loop": true,
+          "startSec": 0
+        },
+        {
+          "src": "",
+          "label": "",
+          "folder": "",
+          "volume": 0.25,
+          "loop": true,
+          "startSec": 0
+        }
+      ]
+    },
+    "bgm_boss": {
+      "channels": [
+        {
+          "src": "assets/audio/layers/bgm_boss_st1.mp3",
+          "label": "st1 (NIKKE풍 심포닉 일렉트로닉 최종 보스전)",
+          "folder": "sfx\\need move",
+          "volume": 0.36,
+          "loop": true,
+          "startSec": 0
+        },
+        {
+          "src": "",
+          "label": "",
+          "folder": "",
+          "volume": 0.25,
+          "loop": true,
+          "startSec": 0
+        }
+      ]
+    },
+    "bgm_ending": {
+      "channels": [
+        {
+          "src": "assets/audio/layers/bgm_ending_shellshock6.mp3",
+          "label": "Shell-Shock (6) (피아노·첼로 감동 엔딩/작별)",
+          "folder": "sfx\\need move",
+          "volume": 0.38,
+          "loop": true,
+          "startSec": 0
+        },
+        {
+          "src": "",
+          "label": "",
+          "folder": "",
+          "volume": 0.25,
+          "loop": true,
+          "startSec": 0
+        }
+      ]
+    },
+    "bgm_home": {
+      "channels": [
+        {
+          "src": "assets/audio/layers/bgm_home_shellshock8.mp3",
+          "label": "Shell-Shock (8) (희망찬 아침 현실 복귀/첫 출근)",
+          "folder": "sfx\\need move",
+          "volume": 0.35,
+          "loop": true,
+          "startSec": 0
+        },
+        {
+          "src": "",
+          "label": "",
+          "folder": "",
+          "volume": 0.25,
+          "loop": true,
+          "startSec": 0
+        }
+      ]
+    },
+    "bgm_title": {
+      "channels": [
+        {
+          "src": "assets/audio/bgm_title.mp3",
+          "label": "Sparkling Morning (타이틀 오프닝 테마)",
+          "folder": "assets/audio",
+          "volume": 0.36,
+          "loop": true,
+          "startSec": 0
+        },
+        {
+          "src": "",
+          "label": "",
+          "folder": "",
+          "volume": 0.25,
+          "loop": true,
+          "startSec": 0
+        }
+      ]
+    }
+  },
+  "sfx": {
+    "sfx_boom": {
+      "channels": [
+        {
+          "src": "assets/audio/layers/studio_artillery_boom.mp3",
+          "label": "Heavy Artillery Shell Explosion",
+          "folder": "sfx\\need move",
+          "volume": 0.74,
+          "delayMs": 0,
+          "startSec": 0
+        },
+        {
+          "src": "assets/audio/layers/studio_ground_rumble.mp3",
+          "label": "地響き.mp3 (지진 울림 레이어)",
+          "folder": "sfx\\need move",
+          "volume": 0.38,
+          "delayMs": 90,
+          "startSec": 0
+        },
+        {
+          "src": "",
+          "label": "",
+          "folder": "",
+          "volume": 0.45,
+          "delayMs": 220,
+          "startSec": 0
+        }
+      ]
+    },
+    "sfx_siren": {
+      "channels": [
+        {
+          "src": "assets/audio/layers/studio_emergency_siren.mp3",
+          "label": "Single Isolated Emergency Alarm Siren",
+          "folder": "sfx\\need move",
+          "volume": 0.52,
+          "delayMs": 0,
+          "startSec": 0
+        },
+        {
+          "src": "",
+          "label": "",
+          "folder": "",
+          "volume": 0.45,
+          "delayMs": 120,
+          "startSec": 0
+        }
+      ]
+    },
+    "sfx_stamp": {
+      "channels": [
+        {
+          "src": "assets/audio/layers/studio_wooden_stamp.mp3",
+          "label": "Heavy Wooden Rubber Stamp (단발 컷)",
+          "folder": "sfx\\need move",
+          "volume": 0.78,
+          "delayMs": 0,
+          "startSec": 0
+        },
+        {
+          "src": "",
+          "label": "",
+          "folder": "",
+          "volume": 0.55,
+          "delayMs": 100,
+          "startSec": 0
+        }
+      ]
+    },
+    "sfx_beam": {
+      "channels": [
+        {
+          "src": "assets/audio/layers/studio_laser_beam.mp3",
+          "label": "Single Isolated Sci-fi Laser Beam",
+          "folder": "sfx\\need move",
+          "volume": 0.56,
+          "delayMs": 0,
+          "startSec": 0
+        },
+        {
+          "src": "",
+          "label": "",
+          "folder": "",
+          "volume": 0.45,
+          "delayMs": 100,
+          "startSec": 0
+        }
+      ]
+    },
+    "sfx_chime": {
+      "channels": [
+        {
+          "src": "assets/audio/layers/studio_crystal_chime.mp3",
+          "label": "Single Isolated Crystal Chime",
+          "folder": "sfx\\need move",
+          "volume": 0.52,
+          "delayMs": 0,
+          "startSec": 0
+        },
+        {
+          "src": "",
+          "label": "",
+          "folder": "",
+          "volume": 0.45,
+          "delayMs": 120,
+          "startSec": 0
+        }
+      ]
+    },
+    "sfx_warp": {
+      "channels": [
+        {
+          "src": "assets/audio/sfx_warp.mp3",
+          "label": "sfx_warp.mp3",
+          "folder": "project\\assets\\audio",
+          "volume": 0.55,
+          "startSec": 0.0,
+          "delayMs": 0
+        },
+        {
+          "src": "",
+          "label": "",
+          "folder": "",
+          "volume": 0.6,
+          "startSec": 0.0,
+          "delayMs": 120
+        },
+        {
+          "src": "",
+          "label": "",
+          "folder": "",
+          "volume": 0.5,
+          "startSec": 0.0,
+          "delayMs": 240
+        }
+      ]
+    },
+    "sfx_clock_tick": {
+      "channels": [
+        {
+          "src": "assets/audio/layers/studio_clock_tick.mp3",
+          "label": "Isolated Mechanical Clock Ticking",
+          "folder": "sfx\\need move",
+          "volume": 0.48,
+          "delayMs": 0,
+          "startSec": 0
+        },
+        {
+          "src": "",
+          "label": "",
+          "folder": "",
+          "volume": 0.4,
+          "delayMs": 120,
+          "startSec": 0
+        }
+      ]
+    },
+    "sfx_shock": {
+      "channels": [
+        {
+          "src": "assets/audio/sfx_shock.mp3",
+          "label": "sfx_shock.mp3",
+          "folder": "project\\assets\\audio",
+          "volume": 0.55,
+          "startSec": 0.0,
+          "delayMs": 0
+        },
+        {
+          "src": "",
+          "label": "",
+          "folder": "",
+          "volume": 0.6,
+          "startSec": 0.0,
+          "delayMs": 120
+        },
+        {
+          "src": "",
+          "label": "",
+          "folder": "",
+          "volume": 0.5,
+          "startSec": 0.0,
+          "delayMs": 240
+        }
+      ]
+    },
+    "sfx_click": {
+      "channels": [
+        {
+          "src": "assets/audio/layers/ui_tactical_click.mp3",
+          "label": "click1.mp3 (깔끔한 택티컬 클릭)",
+          "folder": "sfx\\kenney_cc0",
+          "volume": 0.34,
+          "delayMs": 0,
+          "startSec": 0
+        },
+        {
+          "src": "",
+          "label": "",
+          "folder": "",
+          "volume": 0.3,
+          "delayMs": 80,
+          "startSec": 0
+        }
+      ]
+    },
+    "sfx_paper": {
+      "channels": [
+        {
+          "src": "assets/audio/layers/studio_paper_flip.mp3",
+          "label": "paper_slide.mp3 (서류 넘김)",
+          "folder": "sfx\\scene_special",
+          "volume": 0.46,
+          "delayMs": 0,
+          "startSec": 0
+        },
+        {
+          "src": "",
+          "label": "",
+          "folder": "",
+          "volume": 0.35,
+          "delayMs": 80,
+          "startSec": 0
+        }
+      ]
+    },
+    "sfx_crowd_murmur": {
+      "channels": [
+        {
+          "src": "assets/audio/layers/studio_crowd_murmur.mp3",
+          "label": "crowd_murmur_plaza.mp3 (광장 웅성거림)",
+          "folder": "sfx\\scene_special",
+          "volume": 0.56,
+          "delayMs": 0,
+          "startSec": 0
+        },
+        {
+          "src": "",
+          "label": "",
+          "folder": "",
+          "volume": 0.45,
+          "delayMs": 120,
+          "startSec": 0
+        }
+      ]
+    },
+    "sfx_crowd_cheer": {
+      "channels": [
+        {
+          "src": "assets/audio/layers/studio_crowd_cheer.mp3",
+          "label": "crowd_cheer_applause + applause_01 (군중 환호·박수)",
+          "folder": "sfx\\scene_special",
+          "volume": 0.62,
+          "delayMs": 0,
+          "startSec": 0
+        },
+        {
+          "src": "",
+          "label": "",
+          "folder": "",
+          "volume": 0.45,
+          "delayMs": 120,
+          "startSec": 0
+        }
+      ]
+    },
+    "sfx_error": {
+      "channels": [
+        {
+          "src": "assets/audio/layers/studio_ui_error.mp3",
+          "label": "sfx_error.mp3 (경고·오답 부저)",
+          "folder": "sfx\\extra",
+          "volume": 0.46,
+          "delayMs": 0,
+          "startSec": 0
+        },
+        {
+          "src": "",
+          "label": "",
+          "folder": "",
+          "volume": 0.4,
+          "delayMs": 120,
+          "startSec": 0
+        }
+      ]
+    },
+    "sfx_tear": {
+      "channels": [
+        {
+          "src": "assets/audio/layers/studio_paper_tear.mp3",
+          "label": "paper_tear.mp3 (벽보 찢기)",
+          "folder": "sfx\\scene_special",
+          "volume": 0.68,
+          "delayMs": 0,
+          "startSec": 0
+        },
+        {
+          "src": "",
+          "label": "",
+          "folder": "",
+          "volume": 0.45,
+          "delayMs": 120,
+          "startSec": 0
+        }
+      ]
+    }
+  },
+  "sections": {},
+  "scenes": {
+    "prologue_2": {
+      "cues": {
+        "step:0": {
+          "sfxChannels": [
+            {
+              "src": "assets/audio/layers/oga_rpg_cloth_02_c8f8c1bcd6.mp3",
+              "label": "oga_rpg_cloth_02.mp3",
+              "folder": "sfx\\opengameart_cc0",
+              "volume": 0.7,
+              "startSec": 0.0,
+              "delayMs": 0
+            }
+          ]
+        }
+      }
+    }
+  },
+  "voices": {
+    "chief": {
+      "enabled": true,
+      "wave": "sawtooth",
+      "freq": 155,
+      "pitchEnd": 0.86,
+      "filterHz": 640,
+      "durMs": 62,
+      "jitter": 0.06,
+      "every": 2,
+      "volume": 0.24,
+      "customSrc": ""
+    },
+    "narmi": {
+      "enabled": true,
+      "wave": "triangle",
+      "freq": 580,
+      "pitchEnd": 1.08,
+      "filterHz": 1900,
+      "durMs": 46,
+      "jitter": 0.07,
+      "every": 2,
+      "volume": 0.22,
+      "customSrc": ""
+    },
+    "dali": {
+      "enabled": true,
+      "wave": "sine",
+      "freq": 690,
+      "pitchEnd": 1.14,
+      "filterHz": 2400,
+      "durMs": 44,
+      "jitter": 0.09,
+      "every": 2,
+      "volume": 0.22,
+      "customSrc": ""
+    },
+    "captain": {
+      "enabled": true,
+      "wave": "square",
+      "freq": 235,
+      "pitchEnd": 0.93,
+      "filterHz": 920,
+      "durMs": 52,
+      "jitter": 0.05,
+      "every": 2,
+      "volume": 0.19,
+      "customSrc": ""
+    },
+    "guard": {
+      "enabled": true,
+      "wave": "square",
+      "freq": 330,
+      "pitchEnd": 1.04,
+      "filterHz": 1250,
+      "durMs": 44,
+      "jitter": 0.07,
+      "every": 2,
+      "volume": 0.18,
+      "customSrc": ""
+    },
+    "inventor": {
+      "enabled": true,
+      "wave": "square",
+      "freq": 510,
+      "pitchEnd": 1.16,
+      "filterHz": 2100,
+      "durMs": 42,
+      "jitter": 0.11,
+      "every": 2,
+      "volume": 0.2,
+      "customSrc": ""
+    },
+    "merchant": {
+      "enabled": true,
+      "wave": "sawtooth",
+      "freq": 395,
+      "pitchEnd": 0.82,
+      "filterHz": 1450,
+      "durMs": 50,
+      "jitter": 0.12,
+      "every": 2,
+      "volume": 0.2,
+      "customSrc": ""
+    },
+    "clerk": {
+      "enabled": true,
+      "wave": "triangle",
+      "freq": 430,
+      "pitchEnd": 0.98,
+      "filterHz": 1500,
+      "durMs": 40,
+      "jitter": 0.05,
+      "every": 2,
+      "volume": 0.18,
+      "customSrc": ""
+    },
+    "radio": {
+      "enabled": true,
+      "wave": "sawtooth",
+      "freq": 460,
+      "pitchEnd": 0.92,
+      "filterHz": 1750,
+      "durMs": 48,
+      "jitter": 0.09,
+      "every": 2,
+      "volume": 0.19,
+      "customSrc": ""
+    },
+    "boss": {
+      "enabled": true,
+      "wave": "sawtooth",
+      "freq": 98,
+      "pitchEnd": 0.76,
+      "filterHz": 390,
+      "durMs": 78,
+      "jitter": 0.08,
+      "every": 2,
+      "volume": 0.27,
+      "customSrc": ""
+    },
+    "mother": {
+      "enabled": true,
+      "wave": "sine",
+      "freq": 465,
+      "pitchEnd": 0.96,
+      "filterHz": 1400,
+      "durMs": 56,
+      "jitter": 0.04,
+      "every": 2,
+      "volume": 0.21,
+      "customSrc": ""
+    },
+    "narration": {
+      "enabled": true,
+      "wave": "triangle",
+      "freq": 295,
+      "pitchEnd": 0.94,
+      "filterHz": 820,
+      "durMs": 26,
+      "jitter": 0.03,
+      "every": 3,
+      "volume": 0.11,
+      "customSrc": ""
+    }
+  }
+};

@@ -1,0 +1,16 @@
+{
+  "name": "개척촌의 조달청장",
+  "short_name": "개척촌의 조달청장",
+  "start_url": "./index.html",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "background_color": "#070b16",
+  "theme_color": "#070b16",
+  "icons": [
+    {
+      "src": "assets/village/sd_narumi.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
