@@ -75,21 +75,24 @@
       ".board-feedback{font-size:" + FS(13, 0.036, 15) + "!important;line-height:1.45!important;min-height:50px!important;padding:9px 12px!important;border-radius:8px!important;",
       "  background:#0f172a!important;border:1.5px solid rgba(148,163,184,0.38)!important;color:#f8fafc!important;word-break:keep-all!important;display:block!important;}",
       ".board-actions .stamp-btn{min-height:54px!important;font-size:" + FS(15, 0.042, 17.5) + "!important;}",
-      /* 아이폰 짧은 뷰포트(≤720px) 대응: 게시판·창고 모두 한 화면에 여유롭게 표시 */
-      "@media (max-height: 720px){",
-      "  .board-wrap{padding:6px!important;gap:6px!important;}",
-      "  .board-rules-strip{padding:6px 9px!important;gap:2px!important;}",
-      "  .board-rule-row{font-size:11.5px!important;line-height:1.32!important;}",
-      "  .board-notice-card{padding:17px 10px 9px!important;}",
-      "  .board-notice-card > div:not(.board-feedback):not(.stamp-ink-overlay){gap:7px!important;}",
-      "  .board-notice-head{font-size:14px!important;padding:2px 2px 6px!important;}",
-      "  .board-clause{min-height:52px!important;max-height:84px!important;padding:7px 10px!important;font-size:13.5px!important;}",
-      "  .board-check-btn{min-width:60px!important;min-height:34px!important;padding:4px 10px!important;font-size:12px!important;}",
-      "  .board-feedback{min-height:42px!important;padding:7px 10px!important;font-size:12px!important;line-height:1.38!important;}",
-      "  .board-actions .stamp-btn{min-height:44px!important;font-size:14px!important;}",
-      "  .wh-piece-btn{min-height:60px!important;}",
-      "  .wh-controls button,.wh-ctrl-btn{min-height:40px!important;font-size:12.5px!important;}",
-      "}",
+      /* 아이폰 짧은 뷰포트(≤720px) 및 세로 모니터(short-stage) 대응: 게시판·창고 모두 한 화면에 여유롭게 표시 */
+      (function () {
+        var r = [
+          "  .board-wrap{padding:6px!important;gap:6px!important;}",
+          "  .board-rules-strip{padding:6px 9px!important;gap:2px!important;}",
+          "  .board-rule-row{font-size:11.5px!important;line-height:1.32!important;}",
+          "  .board-notice-card{padding:17px 10px 9px!important;}",
+          "  .board-notice-card > div:not(.board-feedback):not(.stamp-ink-overlay){gap:7px!important;}",
+          "  .board-notice-head{font-size:14px!important;padding:2px 2px 6px!important;}",
+          "  .board-clause{min-height:52px!important;max-height:84px!important;padding:7px 10px!important;font-size:13.5px!important;}",
+          "  .board-check-btn{min-width:60px!important;min-height:34px!important;padding:4px 10px!important;font-size:12px!important;}",
+          "  .board-feedback{min-height:42px!important;padding:7px 10px!important;font-size:12px!important;line-height:1.38!important;}",
+          "  .board-actions .stamp-btn{min-height:44px!important;font-size:14px!important;}",
+          "  .wh-piece-btn{min-height:60px!important;}",
+          "  .wh-controls button,.wh-ctrl-btn{min-height:40px!important;font-size:12.5px!important;}",
+        ];
+        return "@media (max-height: 720px){\n" + r.join("\n") + "\n}\n" + r.map(function (x) { return x.replace(/^\s*(\.)/, "html.short-stage $1"); }).join("\n");
+      })(),
     ].join("\n");
     var st = document.createElement("style"); st.id = "warehouse-art-style"; st.textContent = css; document.head.appendChild(st);
 

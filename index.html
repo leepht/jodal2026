@@ -99,9 +99,10 @@
       cursor: pointer;
     }
 
-    /* 9:16 Full-Bleed Viewport (iOS Safari visualViewport safe!) */
+    /* 9:16 Stage + 세로 모니터·스마트폰 100% 풀사이즈 비례 확대 / 가로 PC 앰비언트 베젤 자동 전환 */
     #app {
       position: relative;
+      z-index: 2;
       width: min(100vw, calc(var(--apph, 100dvh) * 9 / 16));
       height: var(--apph, 100dvh);
       max-height: none;
@@ -110,15 +111,115 @@
       box-shadow: 0 24px 64px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.08);
     }
 
-    /* 일반 바형 스마트폰(갤럭시 S/A/Flip/Fold 커버, 아이폰)은 풀블리드, Z Fold 펼침·태블릿·PC는 9:16 중앙 유지 */
-    @media (max-width: 520px) and (max-aspect-ratio: 3/4) {
+    /* 세로형 화면(스마트폰 세로 + 1080x1920 / 1440x2560 피벗 세로 모니터): 여백·베젤 없이 100% 풀사이즈 밀착 */
+    @media (max-aspect-ratio: 2/3) {
       #app {
         width: 100vw;
         height: var(--apph, 100dvh);
         max-width: none;
         max-height: none;
+        border: none;
+        border-radius: 0;
         box-shadow: none;
       }
+    }
+    html.portrait-full #app {
+      max-width: none;
+      max-height: none;
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    /* 가로형 PC 데스크톱(3안 베이스): 장면 연동 은은한 앰비언트 배경 + 1px 베젤 + 소형 조작키 카드 */
+    #pc-ambient,
+    #pc-ambient-vignette,
+    #pc-brand-tag,
+    #pc-keyguide {
+      display: none;
+    }
+    html.pc-wide-stage #pc-ambient {
+      display: block;
+      position: fixed;
+      inset: -56px;
+      z-index: 0;
+      background: url("assets/cg/title_opening.png") center center / cover no-repeat;
+      filter: blur(42px) brightness(0.50) saturate(1.12);
+      transform: scale(1.08);
+      pointer-events: none;
+      transition: background-image 0.45s ease;
+    }
+    html.pc-wide-stage #pc-ambient-vignette {
+      display: block;
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 68% 78% at 50% 48%, rgba(8, 12, 24, 0.08) 0%, rgba(5, 8, 18, 0.58) 72%, rgba(2, 4, 10, 0.88) 100%),
+        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.012) 0px, rgba(255, 255, 255, 0.012) 1px, transparent 1px, transparent 4px);
+    }
+    html.pc-wide-stage #app {
+      border-radius: 12px;
+      border: 1px solid rgba(186, 230, 253, 0.26);
+      box-shadow:
+        0 32px 90px rgba(0, 0, 0, 0.88),
+        0 0 0 1px rgba(7, 11, 22, 0.95),
+        0 0 48px rgba(56, 189, 248, 0.08);
+    }
+    @media (min-aspect-ratio: 6/5) and (min-width: 1024px) and (pointer: fine) {
+      html.pc-wide-stage #pc-brand-tag {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        position: fixed;
+        top: 22px;
+        left: 26px;
+        z-index: 3;
+        pointer-events: none;
+        opacity: 0.52;
+      }
+      html.pc-wide-stage #pc-keyguide:not(.closed) {
+        display: block;
+        position: fixed;
+        right: 26px;
+        bottom: 22px;
+        z-index: 3;
+        width: 224px;
+        padding: 12px 14px;
+        background: rgba(8, 13, 24, 0.58);
+        border: 1px solid rgba(203, 213, 225, 0.22);
+        border-left: 2px solid rgba(186, 230, 253, 0.68);
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 14px 36px rgba(0, 0, 0, 0.55);
+        color: #cbd5e1;
+        font-size: 12px;
+      }
+    }
+    #pc-brand-tag .t-ko { font-size: 13px; font-weight: 800; color: #e2e8f0; letter-spacing: 0.04em; }
+    #pc-brand-tag .t-en { font-size: 10.5px; font-weight: 600; color: #94a3b8; letter-spacing: 0.10em; }
+    #pc-keyguide .kg-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-bottom: 7px; margin-bottom: 8px;
+      border-bottom: 1px solid rgba(203, 213, 225, 0.14);
+      font-size: 11px; font-weight: 800; color: #bae6fd; letter-spacing: 0.06em;
+    }
+    #pc-keyguide .kg-close {
+      background: none; border: none; padding: 0 2px;
+      color: #94a3b8; font-size: 12px; line-height: 1; cursor: pointer;
+    }
+    #pc-keyguide .kg-close:hover { color: #ffffff; }
+    #pc-keyguide .kg-row {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 6px; font-size: 11.5px; color: #cbd5e1;
+    }
+    #pc-keyguide .kg-row:last-child { margin-bottom: 0; }
+    #pc-keyguide kbd {
+      display: inline-block; padding: 2px 6px; border-radius: 3px;
+      background: rgba(30, 41, 59, 0.85); border: 1px solid rgba(148, 163, 184, 0.36);
+      color: #f8fafc; font-family: inherit; font-size: 10.5px; font-weight: 800;
     }
 
     #landscape-guard {
@@ -644,6 +745,11 @@
         min-height: 176px;
         padding: 16px 16px calc(14px + var(--safe-bottom));
       }
+    }
+    html.short-stage #dialogue-overlay {
+      height: 31%;
+      min-height: 176px;
+      padding: 16px 16px calc(14px + var(--safe-bottom));
     }
     #dialogue-overlay::before {
       content: "";
@@ -1559,6 +1665,18 @@
         min-width: 0;
       }
     }
+    html.narrow-stage #mg-hud {
+      flex-wrap: nowrap;
+      gap: 4px;
+      padding: 2px 2px 6px;
+    }
+    html.narrow-stage #mg-hud .hud-chip {
+      flex: 1 1 auto;
+      justify-content: center;
+      padding: 5px 5px;
+      font-size: clamp(10.5px, calc(var(--appw, 360px) * 0.0305), 12.5px);
+      min-width: 0;
+    }
     /* 보스전 등 풀스크린 캔버스 미니게임: 상단 HUD가 별도 영역을 차지하지 않고 배경 위에 반투명 오버레이 */
     #minigame-layer.mg-hud-overlay {
       padding: 0;
@@ -1671,7 +1789,7 @@
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       border-radius: 50%; border: 3px solid #fff;
       box-shadow: 0 12px 28px rgba(0,0,0,0.65);
-      transform: scale(1.08) rotate(-8deg);
+      transform: scale(calc(1.08 * var(--ui-zoom, 1))) rotate(-8deg);
     }
     .floating-stamp-ghost img { width: 54px; height: 54px; object-fit: contain; filter: brightness(1.3); }
     .floating-stamp-ghost span { font-size: 11px; font-weight: 900; color: #fff; text-shadow: 0 1px 3px #000; }
@@ -2447,6 +2565,21 @@
   </style>
 </head>
 <body>
+  <div id="pc-ambient" aria-hidden="true"></div>
+  <div id="pc-ambient-vignette" aria-hidden="true"></div>
+  <div id="pc-brand-tag" aria-hidden="true">
+    <span class="t-ko">개척촌의 조달청장</span>
+    <span class="t-en">PORTRAIT 9:16 · DESKTOP STAGE</span>
+  </div>
+  <div id="pc-keyguide">
+    <div class="kg-head"><span>PC CONTROLS</span><button type="button" class="kg-close" id="pc-kg-close" title="조작 안내 닫기">✕</button></div>
+    <div id="pc-kg-body">
+      <div class="kg-row"><span>다음 대사</span><span><kbd>Space</kbd> / 클릭</span></div>
+      <div class="kg-row"><span>선택지 결정</span><span><kbd>1</kbd> ~ <kbd>3</kbd></span></div>
+      <div class="kg-row"><span>자동 진행</span><span><kbd>A</kbd></span></div>
+      <div class="kg-row"><span>전체화면 · 메뉴</span><span><kbd>F</kbd> · <kbd>Esc</kbd></span></div>
+    </div>
+  </div>
   <div id="landscape-guard">
     <strong>세로 화면(9:16) 전용 게임입니다</strong>
     <span style="font-size: 13px; color: #94a3b8;">기기를 세로로 돌려 플레이해 주세요.</span>
@@ -8451,16 +8584,16 @@
               {
                 code: "공고 #2026-01",
                 item: "성벽 보수용 삼나무 목재 (10단)",
-                price: "118G / 단",
+                price: "165G / 단",
                 bidders: "4개 지역 목수 상회 · 투찰률 86~94%",
                 qual: "개척촌 정식 등록 · 납품 실적 검증 완료",
                 isValid: true,
                 checks: {
-                  price:   { bad: false, hint: "목재 기준 단가(≤120G) 이내 — 118G 적정 가격이에요!" },
+                  price:   { bad: false, hint: "목재 기준 가격(130~200G) 안 — 165G 적정 가격이에요!" },
                   bidders: { bad: false, hint: "4개 지역 상회 공개경쟁 · 투찰률 86~94% 정상 분포예요." },
                   qual:    { bad: false, hint: "정식 등록 및 납품 실적 확인 완료 — 자격 이상 없어요!" },
                 },
-                reason: "기준 단가(≤120G) 이내, 정상 복수 경쟁, 자격 충족 — 정상 공고입니다.",
+                reason: "기준 가격(130~200G) 안, 정상 복수 경쟁, 자격 충족 — 정상 공고입니다.",
               },
               {
                 code: "공고 #2026-02",
@@ -8470,7 +8603,7 @@
                 qual: "A·B 대표자 소재지 동일 (북쪽 뒷골목 3호)",
                 isValid: false,
                 checks: {
-                  price:   { bad: false, hint: "방패 기준 단가(≤180G) 이내 — 단가 자체는 정상이에요. 아래를 확인해요!" },
+                  price:   { bad: false, hint: "방패 기준 가격(140~210G) 안 — 단가 자체는 정상이에요. 아래를 확인해요!" },
                   bidders: { bad: true,  hint: "투찰률 99.8%/99.9%에 동일 필체 — 전형적인 들러리 담합 징후예요!" },
                   qual:    { bad: true,  hint: "A·B 대표자 주소가 '북쪽 뒷골목 3호'로 완전히 같아요! 짜고 친 담합이에요!" },
                 },
@@ -8484,11 +8617,11 @@
                 qual: "외지 신생 브로커 · 원산지 증명서 미첨부",
                 isValid: false,
                 checks: {
-                  price:   { bad: true,  hint: "마력석 기준 시세(≤250G)의 2배를 넘는 520G 폭리 단가예요!" },
+                  price:   { bad: true,  hint: "마력석 기준 가격(최고 260G)의 2배인 520G — 폭리 단가예요!" },
                   bidders: { bad: true,  hint: "긴급을 핑계로 공개입찰을 생략하고 단독 수의계약을 요구했어요!" },
                   qual:    { bad: true,  hint: "검증 안 된 외지 브로커에 원산지 증명서까지 빠져 있는 무자격 공고예요!" },
                 },
-                reason: "기준 시세(250G) 2배 초과 폭리 + 원산지 미첨부 무자격 공고입니다!",
+                reason: "기준 가격(최고 260G)의 2배 폭리 + 원산지 미첨부 무자격 공고입니다!",
               },
               {
                 code: "공고 #2026-04",
@@ -8498,35 +8631,35 @@
                 qual: "왕국 광업 인증서 · 품질 보증서 첨부",
                 isValid: true,
                 checks: {
-                  price:   { bad: false, hint: "마력석 기준 단가(≤250G) 이내 — 242G 적정 가격이에요!" },
+                  price:   { bad: false, hint: "마력석 기준 가격(180~260G) 안 — 242G 적정 가격이에요!" },
                   bidders: { bad: false, hint: "3개 광산 조합 공개경쟁 · 투찰률 88~95% 정상 경쟁이에요." },
                   qual:    { bad: false, hint: "왕국 광업 인증서와 품질 보증서가 모두 첨부되어 있어요!" },
                 },
-                reason: "시세 적정(≤250G) + 3개 조합 공개경쟁 + 품질 보증 완료 — 정상 공고입니다.",
+                reason: "기준 가격(180~260G) 안 + 3개 조합 공개경쟁 + 품질 보증 완료 — 정상 공고입니다.",
               },
               {
                 code: "공고 #2026-05",
-                item: "벙커 구호 식량 · 회복 포션 세트",
-                price: "95G / 세트",
-                bidders: "5개 마을 상회 참여 · 투찰률 84~93%",
-                qual: "위생 검수 필증 · 개척촌 상인회 확인 완료",
+                item: "경비대 방패 보충분 (30개)",
+                price: "150G / 개",
+                bidders: "5개 마을 대장간 참여 · 투찰률 84~93%",
+                qual: "품질 검사 필증 · 개척촌 상인회 확인 완료",
                 isValid: true,
                 checks: {
-                  price:   { bad: false, hint: "구호 식량·포션 세트 95G — 합리적인 적정 단가예요!" },
-                  bidders: { bad: false, hint: "5개 마을 상회가 참여한 투명한 다자 경쟁이에요." },
-                  qual:    { bad: false, hint: "위생 검수 필증과 상인회 확인까지 완료된 모범 공고예요!" },
+                  price:   { bad: false, hint: "방패 기준 가격(140~210G) 안 — 150G 적정 가격이에요!" },
+                  bidders: { bad: false, hint: "5개 마을 대장간이 참여한 투명한 다자 경쟁이에요." },
+                  qual:    { bad: false, hint: "품질 검사 필증과 상인회 확인까지 끝난 모범 공고예요!" },
                 },
-                reason: "투명한 다자 경쟁과 위생 검수 확인 — 모범 공고입니다.",
+                reason: "기준 가격 안 + 투명한 다자 경쟁 + 품질 검사 확인 — 모범 공고입니다.",
               },
               {
                 code: "공고 #2026-06",
-                item: "성문 철제 보강 볼트 (100개)",
+                item: "성문 보강재 · 철제 볼트 (20묶음)",
                 price: "175G / 묶음",
                 bidders: "특정 'Z상회 전용 합금' 모델만 입찰 허용",
                 qual: "동등 규격 타 업체 입찰 불가 단서 기재",
                 isValid: false,
                 checks: {
-                  price:   { bad: false, hint: "단가(175G)만 보면 평범하지만, 아래 경쟁·규격 조항을 꼭 확인해요!" },
+                  price:   { bad: false, hint: "성문 보강재 기준 가격(160~240G) 안 — 단가는 정상이지만, 아래 경쟁·규격 조항을 꼭 확인해요!" },
                   bidders: { bad: true,  hint: "특정 'Z상회 전용 합금'만 허용! 특정 업체 밀어주기용 독소 규격이에요!" },
                   qual:    { bad: true,  hint: "동등 규격 타 업체 입찰 불가 — 공정 경쟁을 막는 위반 조항이에요!" },
                 },
@@ -8588,7 +8721,7 @@
               mgContent.innerHTML = `
                 <div class="board-wrap">
                   <div class="board-rules-strip">
-                    <div class="board-rule-row"><strong>📌 적정가 상한</strong><span>목재 ≤120G · 방패 ≤180G · 마력석 ≤250G</span></div>
+                    <div class="board-rule-row"><strong>📌 기준 가격</strong><span>목재 130~200G · 방패 140~210G · 마력석 180~260G · 성문 보강재 160~240G</span></div>
                     <div class="board-rule-row"><strong>🚫 차단 대상</strong><span>예정가 초과 · 담합(짬짜미) · 독소 규격 · 무자격</span></div>
                   </div>
                   <div class="board-notice-card" id="board-notice-card">
@@ -9231,7 +9364,11 @@
         AudioMgr.playBgm(isBoss ? "bgm_crisis" : "bgm_defense");
         openMinigameShell(
           isBoss ? "최종 결전 : 회귀의 마물 군주" : "성벽 마을 방어전",
-          "화면을 <strong>누른 채 드래그</strong>하면 조준선으로 포탑 3기가 <strong>연속 집중 사격</strong>합니다!<br/>보스의 <strong>시간 역행</strong>을 조준 사격으로 끊고, 마력 50% 시 <strong>위로 스와이프</strong> 또는 우측 코어를 눌러 격류를 방출하세요!<br/><strong>성벽 체력이 0이 되면 실패</strong>입니다.",
+          // [수정 11/24] 보스 보호막 + 코어 노출 구조 (예전: 보스에 손가락만 대면 7초 만에 끝)
+          "화면을 <strong>누른 채 드래그</strong>하면 포탑 3기가 조준선으로 <strong>집중 사격</strong>합니다.<br/>" +
+          "① 다가오는 적을 쏴서 <strong>성벽</strong>을 지키세요.<br/>" +
+          "② 보스는 <strong>보호막</strong>에 싸여 있어요. 마력 <strong>60</strong>이 차면 <strong>[격류 방출]</strong>(또는 위로 휙)로 보호막을 깨고, <strong>코어가 열린 4초</strong> 동안 보스를 집중 사격!<br/>" +
+          "③ <strong>역행</strong> 게이지가 차면 보스가 회복해요. 보스를 쏘면 게이지가 줄어요.<br/><strong>성벽 체력이 0이 되면 실패</strong>입니다.",
           "방어 개시",
           ["assets/minigame/map_04_vertical_defense.png"],
           () => {
@@ -9250,9 +9387,14 @@
             const siegeIm = getSprite("assets/minigame/enemy_siege.png");
             const bossIm = getSprite("assets/minigame/boss_rewind_lord.png");
             const FONT = "'Pretendard Variable', Pretendard, sans-serif";
+            // [수정 11/24] 균형값 (시뮬레이션: 방치·보스만 누르기·격류 버튼만으로는 거의 못 깨고, 보통 플레이 30~60초 — 앞 게임 강화가 클수록 빨라짐)
+            const BURST_COST = 60, REPAIR_COST = 30, CORE_TICKS = 118, SPAWN_EVERY = 28;
+            const MANA_REGEN = 0.17, BURST_ENEMY_DMG = 10, BURST_BOSS_DMG = 6, SHIELD_CHIP = 0.08;
+            const coreDmg = () => 0.4 + state.battleStats.turretPower * 0.025;
             let wallHp = state.battleStats.wallMaxHp;
             let bossHp = isBoss ? (config.bossHp || 100) : 0;
-            let rewind = 0, mana = 50, enemies = [], beams = [], sparks = [];
+            let core = 0, shieldTextCd = 0;
+            let rewind = 0, mana = 30, enemies = [], beams = [], sparks = [];
             let eidSeq = 1, active = true, spawnCounter = 0, breakBannerFrames = 0;
             const FXL = window.NakkeFX ? window.NakkeFX.layer() : null;
             const vib = (p) => { try { if (navigator.vibrate) navigator.vibrate(p); } catch (_) {} };
@@ -9266,9 +9408,9 @@
               <div style="flex:1;min-height:0;height:100%;overflow:hidden;position:relative;display:flex;flex-direction:column;padding:0;touch-action:none;user-select:none;-webkit-user-select:none;">
                 <canvas id="def-canvas" width="380" height="700" style="width:100%;height:100%;flex:1;min-height:0;object-fit:contain;background:#050812;touch-action:none;cursor:crosshair;"></canvas>
                 <div style="position:absolute;left:14px;right:14px;bottom:max(12px, var(--safe-bottom));display:flex;justify-content:space-between;align-items:flex-end;pointer-events:none;">
-                  <button type="button" id="def-repair-btn" style="pointer-events:auto;width:66px;height:66px;border-radius:50%;border:2.5px solid rgba(134,239,172,0.85);background:radial-gradient(circle at 35% 30%,rgba(34,197,94,0.85),rgba(15,45,28,0.92));color:#fff;font-size:11px;font-weight:900;line-height:1.2;box-shadow:0 6px 18px rgba(0,0,0,0.65);touch-action:manipulation;">🛡️<br/>보진<br/><span style="font-size:10px;color:#bbf7d0;">30%</span></button>
+                  <button type="button" id="def-repair-btn" style="pointer-events:auto;width:66px;height:66px;border-radius:50%;border:2.5px solid rgba(134,239,172,0.85);background:radial-gradient(circle at 35% 30%,rgba(34,197,94,0.85),rgba(15,45,28,0.92));color:#fff;font-size:11px;font-weight:900;line-height:1.2;box-shadow:0 6px 18px rgba(0,0,0,0.65);touch-action:manipulation;">🛡️<br/>성벽 수리<br/><span style="font-size:10px;color:#bbf7d0;">마력 30</span></button>
                   <div style="font-size:11px;font-weight:800;color:#bae6fd;background:rgba(2,6,23,0.72);padding:4px 10px;border-radius:999px;border:1px solid rgba(56,189,248,0.4);">화면 꾹 눌러 드래그 조준</div>
-                  <button type="button" id="def-mana-btn" style="pointer-events:auto;width:72px;height:72px;border-radius:50%;border:2.5px solid rgba(125,211,252,0.95);background:radial-gradient(circle at 35% 30%,rgba(14,165,233,0.92),rgba(12,42,78,0.95));color:#fff;font-size:11.5px;font-weight:900;line-height:1.2;box-shadow:0 0 18px rgba(56,189,248,0.48),0 6px 18px rgba(0,0,0,0.65);touch-action:manipulation;">⚡<br/>마력방출<br/><span style="font-size:10px;color:#fde68a;">50%</span></button>
+                  <button type="button" id="def-mana-btn" style="pointer-events:auto;width:72px;height:72px;border-radius:50%;border:2.5px solid rgba(125,211,252,0.95);background:radial-gradient(circle at 35% 30%,rgba(14,165,233,0.92),rgba(12,42,78,0.95));color:#fff;font-size:11.5px;font-weight:900;line-height:1.2;box-shadow:0 0 18px rgba(56,189,248,0.48),0 6px 18px rgba(0,0,0,0.65);touch-action:manipulation;">⚡<br/>격류 방출<br/><span style="font-size:10px;color:#fde68a;">마력 60</span></button>
                 </div>
               </div>
             `;
@@ -9282,14 +9424,14 @@
                 <span class="hud-chip combat">보스 HP ${Math.max(0, Math.round(bossHp))}%</span>
                 <span class="hud-chip combat" style="${rewind >= 80 ? "background:#dc2626;color:#fff;" : ""}">역행 ${Math.round(rewind)}%</span>
                 <span class="hud-chip">성벽 ${Math.round(wallHp)}</span>
-                <span class="hud-chip gold">마력 ${Math.round(mana)}%</span>
+                <span class="hud-chip gold">마력 ${Math.floor(mana)}</span>
               `;
               if (btnMana) {
-                btnMana.style.opacity = mana >= 50 ? "1" : "0.42";
-                btnMana.style.transform = mana >= 50 ? "scale(1.04)" : "scale(0.95)";
+                btnMana.style.opacity = mana >= BURST_COST ? "1" : "0.42";
+                btnMana.style.transform = mana >= BURST_COST ? "scale(1.04)" : "scale(0.95)";
               }
               if (btnRepair) {
-                btnRepair.style.opacity = mana >= 30 ? "1" : "0.42";
+                btnRepair.style.opacity = mana >= REPAIR_COST ? "1" : "0.42";
               }
             };
             const persp = (t) => Math.pow(Math.max(0, Math.min(1, t)), 1.7);
@@ -9311,35 +9453,43 @@
             };
 
             const fireManaBurst = () => {
-              if (!active || mana < 50) return;
+              if (!active || mana < BURST_COST) return;
               vib([28, 20, 45]);
               AudioMgr.playSfx("sfx_beam");
-              mana -= 50;
+              mana -= BURST_COST;
               if (FXL) {
                 FXL.ring(G.botX[1], G.wallY, { r0: 30, r1: 430, squash: 0.55, rgb: "90,200,255", dur: 26, w: 10 }).burst("magic", G.botX[1], G.wallY - 20, 300, { dur: 24 });
               }
-              enemies.forEach((e) => { e.hp -= 38; addSparkBurst(e.x, e.y, "#38bdf8"); if (FXL) FXL.burst("magic", e.x, e.y, 80 + 70 * e.sc, { dur: 16 }); });
-              if (FXL) FXL.burst("purple", G.boss.x, G.boss.y, 220, { dur: 22 });
-              bossHp = Math.max(0, bossHp - 20);
+              enemies.forEach((e) => { e.hp -= BURST_ENEMY_DMG; addSparkBurst(e.x, e.y, "#38bdf8"); if (FXL) FXL.burst("magic", e.x, e.y, 80 + 70 * e.sc, { dur: 16 }); });
+              if (FXL) FXL.burst("purple", G.boss.x, G.boss.y, 220, { dur: 22 }).ring(G.boss.x, G.boss.y, { r0: 40, r1: 160, rgb: "250,204,21", dur: 22, w: 8 });
+              bossHp = Math.max(0, bossHp - BURST_BOSS_DMG);
               rewind = Math.max(0, rewind - 55);
+              core = CORE_TICKS; // 보호막 붕괴 → 코어 노출
               breakBannerFrames = 32;
             };
 
             const fireAtPoint = (cx, cy, playSound) => {
-              // 보스 코어 조준 여부
+              // 보스 조준: 코어가 열렸을 때만 체력이 크게 깎임. 보호막 상태에선 역행 게이지만 끊음
               if (Math.hypot(cx - G.boss.x, cy - G.boss.y) < G.boss.s * 0.68) {
                 if (playSound) AudioMgr.playSfx("sfx_beam");
-                bossHp = Math.max(0, bossHp - 2.3);
                 [0, 1, 2].forEach((i) => {
                   const tt = turretTop(i);
                   if (FXL) FXL.beam(tt.x, tt.y, G.boss.x, G.boss.y, { w: i === 1 ? 26 : 16, dur: 6 });
                   else beams.push({ x1: tt.x, y1: tt.y, x2: G.boss.x, y2: G.boss.y, life: 5 });
                 });
-                if (FXL) FXL.burst("purple", G.boss.x, G.boss.y, 165, { dur: 12 });
-                addSparkBurst(G.boss.x, G.boss.y, "#c084fc");
-                if (rewind >= 55) {
-                  rewind = Math.max(0, rewind - 11);
-                  if (rewind < 35) breakBannerFrames = 26;
+                if (core > 0) {
+                  bossHp = Math.max(0, bossHp - coreDmg());
+                  if (FXL) FXL.burst("purple", G.boss.x, G.boss.y, 185, { dur: 12 });
+                  addSparkBurst(G.boss.x, G.boss.y, "#fde68a");
+                } else {
+                  bossHp = Math.max(0, bossHp - SHIELD_CHIP);
+                  if (FXL) FXL.ring(G.boss.x, G.boss.y, { r0: 52, r1: 74, rgb: "125,211,252", dur: 8, w: 4 });
+                  addSparkBurst(G.boss.x, G.boss.y, "#7dd3fc");
+                  if (shieldTextCd <= 0) { shieldTextCd = 40; }
+                }
+                if (rewind >= 30) {
+                  rewind = Math.max(0, rewind - 5);
+                  if (rewind < 30) breakBannerFrames = 26;
                 }
                 return;
               }
@@ -9389,7 +9539,7 @@
               const pt = toAimPos(ev);
               aim.x = pt.x; aim.y = pt.y;
               // 빠른 위로 스와이프 시 마력석 방출 필살기 발동!
-              if (mana >= 50 && (aim.startY - pt.rawY) > 135 && (performance.now() - aim.t0) < 380) {
+              if (mana >= BURST_COST && (aim.startY - pt.rawY) > 135 && (performance.now() - aim.t0) < 380) {
                 aim.startY = pt.rawY;
                 fireManaBurst();
               }
@@ -9401,10 +9551,10 @@
             btnMana.addEventListener("pointerdown", (ev) => { ev.stopPropagation(); fireManaBurst(); });
             btnRepair.addEventListener("pointerdown", (ev) => {
               ev.stopPropagation();
-              if (!active || mana < 30) return;
+              if (!active || mana < REPAIR_COST) return;
               vib(18);
               AudioMgr.playSfx("sfx_chime");
-              mana -= 30;
+              mana -= REPAIR_COST;
               wallHp = Math.min(state.battleStats.wallMaxHp, wallHp + 24);
               addSparkBurst(G.botX[1], G.wallY + 20, "#4ade80");
               if (FXL) [0, 1, 2].forEach((i) => FXL.burst("spark", G.botX[i], G.turretY - 10, 150, { dur: 20 }).particles(G.botX[i], G.turretY, { n: 8, speed: 3.5, rgb: "160,255,180" }));
@@ -9415,9 +9565,11 @@
               if (!active || document.hidden) return;
               const now = performance.now();
               tickAngle += 0.04;
-              mana = Math.min(100, mana + 0.55 * state.battleStats.manaChargeSpeed);
+              mana = Math.min(100, mana + MANA_REGEN * state.battleStats.manaChargeSpeed);
+              if (core > 0) core--;
+              if (shieldTextCd > 0) shieldTextCd--;
               spawnCounter++;
-              if (spawnCounter % 34 === 0 && enemies.length < 7) spawnEnemy();
+              if (spawnCounter % SPAWN_EVERY === 0 && enemies.length < 7) spawnEnemy();
               rewind += config.rewindSpeed || 0.22;
               if (rewind >= 80 && now - lastSirenMs >= 3800) {
                 lastSirenMs = now;
@@ -9450,7 +9602,8 @@
                   addSparkBurst(tgt.x, tgt.y, "#38bdf8");
                   if (FXL) FXL.burst("magic", tgt.x, tgt.y, 70 + 70 * tgt.sc, { dur: 12 });
                 } else {
-                  bossHp = Math.max(0, bossHp - state.battleStats.turretPower * 0.42);
+                  // [수정 11/24] 자동 사격은 보스 체력을 깎지 않고 역행 게이지만 조금 끊음 (보스 체력은 직접 조준해야)
+                  rewind = Math.max(0, rewind - 3);
                   [0, 1, 2].forEach((i) => {
                     const tt = turretTop(i);
                     if (FXL) FXL.beam(tt.x, tt.y, G.boss.x, G.boss.y, { w: 20, dur: 6 });
@@ -9477,7 +9630,7 @@
               });
               if (wallHp <= 0 && typeof showMinigameFail === "function") { // [에셋세션] 성벽 체력 0 = 실패
                 active = false; clearInterval(loop); activeMinigameCleanup = null;
-                showMinigameFail(isBoss ? "성벽 붕괴 — 결전 실패" : "성벽 붕괴 — 방어 실패", `적이 성벽을 무너뜨렸습니다. (보스 체력 <strong>${Math.max(0, Math.round(bossHp))}%</strong> 남음)<br/>조준선으로 가까운 적부터 집중 사격하고, 마력 50%가 차면 격류를 방출하세요.`, () => startVerticalDefense(config, onComplete));
+                showMinigameFail(isBoss ? "성벽 붕괴 — 결전 실패" : "성벽 붕괴 — 방어 실패", `적이 성벽을 무너뜨렸습니다. (보스 체력 <strong>${Math.max(0, Math.round(bossHp))}%</strong> 남음)<br/>성벽 가까이 온 적부터 쏘고, 마력 60이 차면 <strong>격류 방출</strong> → 코어가 열린 4초 동안 보스를 집중 사격하세요. 위험하면 <strong>성벽 수리</strong>!`, () => startVerticalDefense(config, onComplete));
                 return;
               }
               if (bossHp <= 0) {
@@ -9503,11 +9656,39 @@
               ctx.beginPath(); ctx.arc(0, 0, G.boss.s * 0.47 + 8, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * (rewind / 100)); ctx.stroke();
               ctx.restore();
               if (bossIm.complete && bossIm.naturalWidth) ctx.drawImage(bossIm, G.boss.x - G.boss.s / 2, G.boss.y - G.boss.s / 2, G.boss.s, G.boss.s);
+              // [수정 11/24] 보호막 / 코어 노출 표시
+              {
+                const R = G.boss.s * 0.58;
+                ctx.save(); ctx.textAlign = "center"; ctx.lineJoin = "round";
+                if (core > 0) {
+                  const pulse = 0.5 + 0.5 * Math.sin(tickAngle * 9);
+                  ctx.strokeStyle = `rgba(250,204,21,${0.55 + 0.4 * pulse})`; ctx.lineWidth = 5;
+                  ctx.beginPath(); ctx.arc(G.boss.x, G.boss.y, R, 0, Math.PI * 2); ctx.stroke();
+                  ctx.strokeStyle = "#fde68a"; ctx.lineWidth = 7;
+                  ctx.beginPath(); ctx.arc(G.boss.x, G.boss.y, R + 9, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * (core / CORE_TICKS)); ctx.stroke();
+                  ctx.font = `900 17px ${FONT}`; ctx.lineWidth = 5; ctx.strokeStyle = "rgba(40,24,0,0.92)"; ctx.fillStyle = "#fde68a";
+                  const ct = `코어 노출! 집중 사격 ${(core * 0.034).toFixed(1)}초`;
+                  ctx.strokeText(ct, G.boss.x, G.boss.y - R - 18); ctx.fillText(ct, G.boss.x, G.boss.y - R - 18);
+                } else {
+                  const g = ctx.createRadialGradient(G.boss.x, G.boss.y, R * 0.55, G.boss.x, G.boss.y, R);
+                  g.addColorStop(0, "rgba(125,211,252,0)"); g.addColorStop(0.8, "rgba(125,211,252,0.16)"); g.addColorStop(1, "rgba(186,230,253,0.42)");
+                  ctx.fillStyle = g; ctx.beginPath(); ctx.arc(G.boss.x, G.boss.y, R, 0, Math.PI * 2); ctx.fill();
+                  ctx.strokeStyle = "rgba(186,230,253,0.75)"; ctx.lineWidth = 2.5;
+                  ctx.beginPath(); ctx.arc(G.boss.x, G.boss.y, R, 0, Math.PI * 2); ctx.stroke();
+                  ctx.font = `900 13px ${FONT}`; ctx.lineWidth = 4; ctx.strokeStyle = "rgba(2,6,23,0.9)";
+                  let lbl = "🛡 보호막 — 격류 방출로 깨기", col = "#bae6fd";
+                  if (mana >= BURST_COST) { lbl = "⚡ 지금 [격류 방출]!"; col = (Math.floor(tickAngle * 6) % 2) ? "#fde68a" : "#ffffff"; }
+                  else if (shieldTextCd > 0) { lbl = "보호막! 체력이 안 깎여요"; col = "#7dd3fc"; }
+                  ctx.fillStyle = col;
+                  ctx.strokeText(lbl, G.boss.x, G.boss.y - R - 14); ctx.fillText(lbl, G.boss.x, G.boss.y - R - 14);
+                }
+                ctx.restore();
+              }
               if (rewind >= 80) {
                 ctx.save(); ctx.textAlign = "center"; ctx.lineJoin = "round"; ctx.font = `900 14px ${FONT}`;
                 ctx.lineWidth = 4; ctx.strokeStyle = "rgba(60,0,0,0.9)"; ctx.fillStyle = "#fecaca";
-                ctx.strokeText("시간 역행 경고! 보스 코어를 조준 사격!", G.boss.x, G.boss.y + G.boss.s * 0.62);
-                ctx.fillText("시간 역행 경고! 보스 코어를 조준 사격!", G.boss.x, G.boss.y + G.boss.s * 0.62);
+                ctx.strokeText("시간 역행 경고! 보스를 쏴서 끊으세요!", G.boss.x, G.boss.y + G.boss.s * 0.62);
+                ctx.fillText("시간 역행 경고! 보스를 쏴서 끊으세요!", G.boss.x, G.boss.y + G.boss.s * 0.62);
                 ctx.restore();
               }
 
@@ -9560,7 +9741,8 @@
                 breakBannerFrames--;
                 ctx.save(); ctx.textAlign = "center"; ctx.font = `900 22px ${FONT}`;
                 ctx.lineWidth = 5; ctx.strokeStyle = "rgba(15,23,42,0.9)"; ctx.fillStyle = "#fde68a";
-                ctx.strokeText("⚡ 시간 역행 저지!", G.CW / 2, 265); ctx.fillText("⚡ 시간 역행 저지!", G.CW / 2, 265);
+                const bt = core > CORE_TICKS - 40 ? "⚡ 보호막 붕괴!" : "⚡ 시간 역행 저지!";
+                ctx.strokeText(bt, G.CW / 2, 265); ctx.fillText(bt, G.CW / 2, 265);
                 ctx.restore();
               }
               updateHud();
@@ -9771,37 +9953,127 @@
       renderHud();
     })();
   </script>
-  <!-- iOS Safari 포함 실제 가시 화면 높이(--apph) 및 9:16 비율 기준 유효 너비(--appw) 동기화 -->
+  <!-- 세로 모니터·스마트폰 풀사이즈 비례 확대(1+2번) & 가로 PC 앰비언트/단축키 동기화 -->
   <script id="fit-appw">
     (function () {
+      var canZoom = !window.CSS || !window.CSS.supports || window.CSS.supports("zoom", "2");
       function fit() {
+        var vw = Math.round((window.visualViewport && window.visualViewport.width) || window.innerWidth || document.documentElement.clientWidth);
         var vh = Math.round((window.visualViewport && window.visualViewport.height) || window.innerHeight || document.documentElement.clientHeight);
-        if (vh > 100) document.documentElement.style.setProperty("--apph", vh + "px");
-        var a = document.getElementById("app");
-        var aw = (a && a.clientWidth) ? a.clientWidth : window.innerWidth;
-        var effW = Math.min(aw, Math.round(vh * 9 / 16));
-        if (effW > 100) document.documentElement.style.setProperty("--appw", effW + "px");
+        if (vw < 100 || vh < 100) return;
+        var ar = vw / vh;
+        var isPortraitScreen = ar <= 0.67;
+        var isDesktopWide = !isPortraitScreen && vw >= 900 && window.matchMedia && window.matchMedia("(pointer: fine)").matches;
+        var root = document.documentElement;
+        root.classList.toggle("portrait-full", isPortraitScreen);
+        root.classList.toggle("pc-wide-stage", isDesktopWide);
+        var physH = isDesktopWide ? Math.max(320, vh - 28) : vh;
+        var physW = isPortraitScreen ? vw : Math.min(vw, Math.round(physH * 9 / 16));
+        var BASE_W = 430;
+        var z = (canZoom && physW > 450) ? +(physW / BASE_W).toFixed(4) : 1;
+        var logW = z > 1 ? BASE_W : physW;
+        var logH = z > 1 ? Math.round(physH / z) : physH;
+        var app = document.getElementById("app");
+        if (app) {
+          app.style.width = logW + "px";
+          app.style.height = logH + "px";
+          app.style.zoom = z > 1 ? String(z) : "";
+        }
+        root.style.setProperty("--apph", logH + "px");
+        root.style.setProperty("--appw", logW + "px");
+        root.style.setProperty("--ui-zoom", String(z));
+        root.classList.toggle("short-stage", logH <= 780);
+        root.classList.toggle("ultra-short-stage", logH <= 680);
+        root.classList.toggle("narrow-stage", logW <= 390);
+        root.classList.toggle("ultra-narrow-stage", logW <= 355);
       }
       fit();
       window.addEventListener("resize", fit);
       window.addEventListener("orientationchange", function () { setTimeout(fit, 120); setTimeout(fit, 360); });
       if (window.visualViewport) window.visualViewport.addEventListener("resize", fit);
-      if (window.ResizeObserver && document.getElementById("app")) new ResizeObserver(fit).observe(document.getElementById("app"));
+      /* 가로 PC 앰비언트 배경 URL 동기화 + PC 단축키 */ 
+      var amb = document.getElementById("pc-ambient");
+      var lastAmb = "";
+      function syncAmbient() {
+        if (!amb || !document.documentElement.classList.contains("pc-wide-stage")) return;
+        var ts = document.getElementById("title-screen");
+        var hub = document.getElementById("village-hub-layer");
+        var cg = document.getElementById("cg-layer");
+        var cgIm = document.getElementById("cg-img");
+        var bgIm = document.getElementById("bg-img");
+        var u = "";
+        if (ts && !ts.classList.contains("hidden")) u = "assets/cg/title_opening.png";
+        else if (hub && hub.classList.contains("active")) {
+          var hm = hub.querySelector("img"); u = (hm && hm.getAttribute("src")) || "assets/village/map_village_ruined.png";
+        } else if (cg && cg.classList.contains("active") && cgIm && cgIm.getAttribute("src")) u = cgIm.getAttribute("src");
+        else if (bgIm && bgIm.getAttribute("src")) u = bgIm.getAttribute("src");
+        if (u && u !== lastAmb) { lastAmb = u; amb.style.backgroundImage = 'url("' + u + '")'; }
+      }
+      var appEl = document.getElementById("app");
+      if (appEl && window.MutationObserver) {
+        var pend = false;
+        new MutationObserver(function () {
+          if (pend) return; pend = true;
+          requestAnimationFrame(function () { pend = false; syncAmbient(); });
+        }).observe(appEl, { attributes: true, subtree: true, attributeFilter: ["src", "class"] });
+      }
+      syncAmbient();
+      var kgClose = document.getElementById("pc-kg-close");
+      if (kgClose) kgClose.addEventListener("click", function () { document.getElementById("pc-keyguide").classList.add("closed"); });
+      window.addEventListener("keydown", function (e) {
+        if (e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+        if (e.code === "KeyF") { var fb = document.getElementById("fs-btn"); if (fb) { e.preventDefault(); fb.click(); } return; }
+        if (e.code === "Escape") {
+          var closed = false;
+          ["backlog-modal", "jump-modal", "utility-modal"].forEach(function (id) {
+            var m = document.getElementById(id); if (m && m.classList.contains("active")) { m.classList.remove("active"); closed = true; }
+          });
+          var hb = document.getElementById("hud-menu-banner");
+          if (!closed && hb) { var mt = document.getElementById("menu-toggle-btn"); if (mt) mt.click(); }
+          return;
+        }
+        var mgOn = document.getElementById("minigame-layer") && document.getElementById("minigame-layer").classList.contains("active");
+        if (e.code === "Space" || e.code === "Enter") {
+          var ts2 = document.getElementById("title-screen");
+          if (ts2 && !ts2.classList.contains("hidden")) { e.preventDefault(); document.getElementById("title-logo").click(); return; }
+          var mb = document.getElementById("mg-banner-overlay");
+          if (mb && mb.classList.contains("active")) {
+            var b1 = mb.querySelector("#mg-rule-start, #mg-result-next, #mg-fail-retry");
+            if (b1) { e.preventDefault(); b1.click(); return; }
+          }
+          var at = document.getElementById("audit-talk");
+          if (at && at.classList.contains("on")) { e.preventDefault(); at.click(); return; }
+          if (mgOn) {
+            var dm = document.getElementById("def-mana-btn");
+            if (dm && e.code === "Space") { e.preventDefault(); dm.click(); }
+            return;
+          }
+          var dlg = document.getElementById("dialogue-overlay");
+          if (dlg && !dlg.classList.contains("hidden")) { e.preventDefault(); dlg.click(); return; }
+        }
+        if (mgOn && e.code === "KeyR") { var dr = document.getElementById("def-repair-btn"); if (dr) dr.click(); return; }
+        if (!mgOn && e.code === "KeyA") { var ab = document.getElementById("auto-btn"); if (ab) ab.click(); return; }
+        if (!mgOn && /^Digit[1-4]$/.test(e.code)) {
+          var idx = parseInt(e.code.slice(-1), 10) - 1;
+          var cbs = document.querySelectorAll("#choice-overlay.active .nikke-choice-btn");
+          if (cbs[idx]) { e.preventDefault(); cbs[idx].click(); }
+        }
+      });
     })();
   </script>
   <!-- 마을 화면 SD 걷기 연출 (별도 파일, 없어도 게임은 정상 진행) -->
-  <script src="sd_walk.js?v=20261123c"></script>
+  <script src="sd_walk.js?v=20261124a"></script>
   <!-- 마을 주민 16명 목록 (sd_walk.js 가 읽음) -->
-  <script src="village_residents.js?v=20261123c"></script>
+  <script src="village_residents.js?v=20261124a"></script>
   <!-- 창고 미니게임 블록 그림 (별도 파일) -->
-  <script src="warehouse_art.js?v=20261123c"></script>
+  <script src="warehouse_art.js?v=20261124a"></script>
   <!-- 본청 집무실 미니게임: 휴대폰 화면 + 대화 장면 (별도 파일) -->
-  <script src="audit_art.js?v=20261123c"></script>
+  <script src="audit_art.js?v=20261124a"></script>
   <!-- 미니게임 시작 전 그림 튜토리얼 (별도 파일) -->
-  <script src="tutorial.js?v=20261123c"></script>
+  <script src="tutorial.js?v=20261124a"></script>
   <!-- 미니게임 효과(FX) 엔진 (별도 파일) -->
-  <script src="fx.js?v=20261123c"></script>
+  <script src="fx.js?v=20261124a"></script>
   <!-- 마을 화면: 지도 위 핀 + 들어가 보기 (별도 파일) -->
-  <script src="hub_map.js?v=20261123c"></script>
+  <script src="hub_map.js?v=20261124a"></script>
 </body>
 </html>
