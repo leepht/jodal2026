@@ -123,7 +123,11 @@
       return t ? BY_NAME[(t.textContent || "").trim()] : null;
     }
 
-    function walkTo(f) {
+    function walkTo(f, instant) {
+      if (typeof window.NakkeWalkPlayerTo === "function") {
+        window.NakkeWalkPlayerTo(f[0], f[1], !!instant);
+        return;
+      }
       if (!walkers) return;
       var p = toPx(f);
       walkers.style.left = Math.round(p.x) + "px";
@@ -245,7 +249,7 @@
       var isOn = hub.classList.contains("active");
       if (app) app.classList.toggle("hub-open", isOn);
       if (!isOn) { if (visit) visit.classList.remove("on"); return; }
-      setTimeout(function () { layout(); walkTo(START); }, 60);
+      setTimeout(function () { layout(); walkTo(START, true); }, 60);
     }
 
     function init() {

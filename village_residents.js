@@ -10,8 +10,8 @@
     st.id = "village-sd-size";
     st.textContent = [
       "#village-hub-layer .sdw-npc-wrap{width:53px!important;height:53px!important;margin-left:-26.5px!important;margin-top:-46px!important;}",
-      "#village-hub-layer .sdw-player img{width:62px!important;height:62px!important;}",
-      "#village-hub-layer .hub-sd-walkers > img{width:53px!important;height:53px!important;}",
+      "#village-hub-layer .sdw-player img{width:66px!important;height:66px!important;}",
+      "#village-hub-layer .hub-sd-walkers > img{width:60px!important;height:60px!important;}",
       // 탑뷰 마을 화면 아래 바로가기 독은 쓰지 않음 (핀을 눌러 이동)
       "#hub-thumb-dock{display:none!important;}",
       // 마을 화면 위쪽은 지도만: 직급·재건·예산·신뢰·성벽 정보 카드를 화면 맨 아래 얇은 띠로 내림, '개척촌' 제목·안내 문구는 뺌

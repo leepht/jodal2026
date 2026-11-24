@@ -6700,17 +6700,19 @@
       // [MG #1] Rescue Falling Supply Crates & Build Temporary Barricade
       // ---------------------------------------------------------------------
       function startMinigameCrate(onComplete) {
-        // [터치 개편] 실시간 드래그 & 플릭 화물 분류 — 하단 웹 버튼 제거, 손가락으로 직접 상자를 잡아 좌/우로 던지기!
+        // [11/24 개편] 정품/불량을 '체크 표시'가 아니라 상자 상태(그을림·금·구멍)로 구분 + 맨 앞 상자 제한 시간(3.0초 → 2.0초)
         AudioMgr.playBgm("bgm_defense");
         openMinigameShell(
           "긴급 보급 화물 분류",
-          "맨 앞 상자를 <strong>손가락으로 직접 잡아 좌우로 끌어 던지세요!</strong><br/><strong>온전한 정품</strong>은 오른쪽 [구출 수레]로, <strong>불탄 불량품</strong>은 왼쪽 [폐기 구덩이]로 휙 밀어 넣으세요.<br/><strong>정품 4개 이상 구출 · 실수 3번 이하</strong>면 통과!",
+          "맨 앞 상자를 <strong>손가락으로 잡아 좌우로 던지세요!</strong><br/>" +
+          "<strong>멀쩡한 정품</strong>은 오른쪽 [구출 수레]로, <strong>그을리거나 금 가거나 구멍 난 불량품</strong>은 왼쪽 [폐기 구덩이]로!<br/>" +
+          "상자마다 <strong>제한 시간</strong>이 있어요(상자 둘레 링). 시간이 지나면 실수!<br/>" +
+          "<strong>정품 4개 이상 구출 · 실수 3번 이하</strong>면 통과!",
           "분류 시작",
           ["assets/minigame/map_01_crate.png"],
           () => {
             const bgIm = getSprite("assets/minigame/map_01_crate.png");
-            const goodIm = getSprite("assets/minigame/obj_crate_good.png");
-            const badIm = getSprite("assets/minigame/obj_crate_bad.png");
+            const plainIm = getSprite("assets/minigame/obj_crate_plain.png");
             const CW = 380, CH = 700;
             const FONT = "'Pretendard Variable', Pretendard, sans-serif";
             const SLOTS = [
@@ -6723,12 +6725,76 @@
               const a = SLOTS[k], b = SLOTS[Math.min(SLOTS.length - 1, k + 1)];
               return { y: a.y + (b.y - a.y) * t, s: a.s + (b.s - a.s) * t };
             };
+
+            // ---- 불량 상자 결함 그리기 (정품 = 깨끗한 상자 그대로) ----
+            const seeded = (seed) => { let x = Math.floor(seed * 1e6) || 1; return () => { x = (x * 16807) % 2147483647; return (x - 1) / 2147483646; }; };
+            const FACE = { L: { u: -0.2, v: 0.07 }, R: { u: 0.19, v: 0.06 } };
+            const makeDefect = () => ({
+              type: ["scorch", "crack", "hole"][Math.floor(Math.random() * 3)],
+              face: Math.random() < 0.5 ? "L" : "R",
+              ju: (Math.random() - 0.5) * 0.1, jv: (Math.random() - 0.5) * 0.1, seed: Math.random(),
+            });
+            const drawDefect = (d, s, tNow) => {
+              const r = seeded(d.seed);
+              const f = FACE[d.face];
+              const cx = (f.u + d.ju) * s, cy = (f.v + d.jv) * s;
+              ctx.save();
+              if (d.type === "scorch") {
+                for (let i = 0; i < 4; i++) {
+                  const bx = cx + (r() - 0.5) * s * 0.14, by = cy + (r() - 0.5) * s * 0.14, br = s * (0.07 + r() * 0.07);
+                  const g = ctx.createRadialGradient(bx, by, br * 0.1, bx, by, br);
+                  g.addColorStop(0, "rgba(18,9,4,0.92)"); g.addColorStop(0.55, "rgba(48,24,8,0.62)"); g.addColorStop(1, "rgba(70,35,10,0)");
+                  ctx.fillStyle = g; ctx.beginPath(); ctx.arc(bx, by, br, 0, Math.PI * 2); ctx.fill();
+                }
+                for (let i = 0; i < 5; i++) {
+                  const ex = cx + (r() - 0.5) * s * 0.18, ey = cy + (r() - 0.5) * s * 0.16, ph = r() * 6.28;
+                  const fl = 0.55 + 0.45 * Math.sin(tNow / 140 + ph);
+                  ctx.fillStyle = `rgba(255,${120 + Math.floor(60 * fl)},40,${0.55 + 0.4 * fl})`;
+                  ctx.beginPath(); ctx.arc(ex, ey, Math.max(1, s * 0.012 * (0.7 + fl)), 0, Math.PI * 2); ctx.fill();
+                }
+              } else if (d.type === "crack") {
+                const ang = Math.PI / 2 + (r() - 0.5) * 0.9, len = s * 0.34;
+                const pts = [];
+                for (let i = 0; i <= 7; i++) {
+                  const t = i / 7 - 0.5, side = (i % 2 ? 1 : -1) * s * (0.018 + r() * 0.02);
+                  pts.push([cx + Math.cos(ang) * len * t - Math.sin(ang) * side, cy + Math.sin(ang) * len * t + Math.cos(ang) * side]);
+                }
+                ctx.lineJoin = "round"; ctx.lineCap = "round";
+                ctx.strokeStyle = "rgba(255,236,196,0.75)"; ctx.lineWidth = Math.max(1, s * 0.014);
+                ctx.beginPath(); pts.forEach(([x, y], i) => (i ? ctx.lineTo(x + s * 0.01, y + s * 0.01) : ctx.moveTo(x + s * 0.01, y + s * 0.01))); ctx.stroke();
+                ctx.strokeStyle = "rgba(28,14,6,0.95)"; ctx.lineWidth = Math.max(1.2, s * 0.03);
+                ctx.beginPath(); pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y))); ctx.stroke();
+                ctx.lineWidth = Math.max(1, s * 0.016);
+                [2, 5].forEach((k) => {
+                  const [x, y] = pts[k], a2 = ang + (k === 2 ? 0.9 : -0.9);
+                  ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + Math.cos(a2) * s * 0.08, y + Math.sin(a2) * s * 0.08); ctx.stroke();
+                });
+              } else {
+                const n = 9, rad = s * 0.085;
+                ctx.fillStyle = "rgba(16,8,4,0.94)";
+                ctx.beginPath();
+                for (let i = 0; i < n; i++) {
+                  const a = (i / n) * Math.PI * 2, rr = rad * (0.6 + r() * 0.65);
+                  const x = cx + Math.cos(a) * rr * 1.25, y = cy + Math.sin(a) * rr;
+                  i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+                }
+                ctx.closePath(); ctx.fill();
+                ctx.strokeStyle = "rgba(255,226,170,0.85)"; ctx.lineWidth = Math.max(1, s * 0.012);
+                for (let i = 0; i < 5; i++) {
+                  const a = r() * Math.PI * 2, x = cx + Math.cos(a) * rad * 1.1, y = cy + Math.sin(a) * rad * 0.9;
+                  ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + Math.cos(a) * s * 0.05, y + Math.sin(a) * s * 0.04); ctx.stroke();
+                }
+              }
+              ctx.restore();
+            };
+
             const TOTAL_GOOD = 6, TOTAL_BAD = 4;
             const kinds = [];
             for (let i = 0; i < TOTAL_GOOD; i++) kinds.push(true);
             for (let i = 0; i < TOTAL_BAD; i++) kinds.push(false);
             for (let i = kinds.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const tmp = kinds[i]; kinds[i] = kinds[j]; kinds[j] = tmp; }
-            const queue = kinds.map((isGood, i) => ({ isGood, pos: i, target: i, wob: Math.random() * 6.28 }));
+            const queue = kinds.map((isGood, i) => ({ isGood, defect: isGood ? null : makeDefect(), pos: i, target: i, wob: Math.random() * 6.28, limit: null, left: 0 }));
+            const N_CRATES = queue.length;
             const flying = [];
             const bins = { left: [], right: [] };
             const BIN = {
@@ -6736,14 +6802,14 @@
               right: { cx: 302, baseY: 630, cols: [272, 298, 324], rowH: 18, label: { x: 304, y: 536 } },
             };
             const ITEM_S = 34;
-            let rescued = 0, wallHp = 100, timeLeft = 32, active = true, combo = 0, bestCombo = 0, sorted = 0, comboFlash = 0, misses = 0;
-            const MIN_RESCUE = 4, MAX_MISS = 3; // [에셋세션] 통과 기준: 정품 4개 이상 구출 + 실수 3번 이하
+            const T_FIRST = 3.0, T_LAST = 2.0; // 맨 앞 상자 제한 시간(초): 처음 3.0 → 마지막 2.0
+            let rescued = 0, active = true, combo = 0, bestCombo = 0, sorted = 0, comboFlash = 0, misses = 0, ending = false;
+            const MIN_RESCUE = 4, MAX_MISS = 3; // 통과 기준: 정품 4개 이상 구출 + 실수 3번 이하
             const particles = Array.from({ length: 16 }, () => ({ x: Math.random() * CW, y: Math.random() * CH, vy: -0.5 - Math.random() * 1.1, r: 1.4 + Math.random() * 2.2 }));
             const fxTexts = [];
             const FXL = window.NakkeFX ? window.NakkeFX.layer() : null;
             const vib = (p) => { try { if (navigator.vibrate) navigator.vibrate(p); } catch (_) {} };
 
-            // 실시간 드래그 물리 상태
             let drag = { active: false, pid: null, startX: 0, startY: 0, dx: 0, dy: 0, lastX: 0, vx: 0, t0: 0 };
             let curDx = 0, curDy = 0, hintAlpha = 1;
 
@@ -6759,30 +6825,36 @@
             const updateHud = () => {
               el.mgHud.innerHTML = `
                 <span class="hud-chip combat">구출 ${rescued}/${TOTAL_GOOD}</span>
-                <span class="hud-chip combat">방벽 ${wallHp}%</span>
+                <span class="hud-chip ${misses >= MAX_MISS ? "combat" : ""}">실수 ${misses}/${MAX_MISS}</span>
                 <span class="hud-chip gold">콤보 ${combo}</span>
-                <span class="hud-chip">${timeLeft}s</span>
+                <span class="hud-chip">남은 상자 ${queue.length}</span>
               `;
             };
 
-            let secTimer = null, rafId = null;
-            const finish = (msg) => {
+            let rafId = null;
+            const stopAll = () => { active = false; cancelAnimationFrame(rafId); window.removeEventListener("keydown", onKey); activeMinigameCleanup = null; };
+            const finish = () => {
               if (!active) return;
-              active = false; clearInterval(secTimer); cancelAnimationFrame(rafId); window.removeEventListener("keydown", onKey); activeMinigameCleanup = null;
+              stopAll();
               if ((rescued < MIN_RESCUE || misses > MAX_MISS) && typeof showMinigameFail === "function") {
-                showMinigameFail("화물 분류 실패", `정품 <strong>${rescued}/${TOTAL_GOOD}</strong>개 구출 · 실수 <strong>${misses}</strong>번<br/>통과하려면 정품 <strong>${MIN_RESCUE}개 이상</strong> 구출하고 실수는 <strong>${MAX_MISS}번 이하</strong>여야 합니다.`, () => startMinigameCrate(onComplete));
+                showMinigameFail("화물 분류 실패", `정품 <strong>${rescued}/${TOTAL_GOOD}</strong>개 구출 · 실수 <strong>${misses}</strong>번<br/>통과하려면 정품 <strong>${MIN_RESCUE}개 이상</strong> 구출하고 실수는 <strong>${MAX_MISS}번 이하</strong>여야 합니다.<br/>그을림·금·구멍이 있는 상자가 불량이에요.`, () => startMinigameCrate(onComplete));
                 return;
               }
-              showMinigameResult("보급 화물 분류 완료", msg, "계속", onComplete);
+              showMinigameResult("보급 화물 분류 완료", `화물 ${sorted}개 분류 · 정품 <strong>${rescued}/${TOTAL_GOOD}</strong>개 구출 · 실수 ${misses}번 · 최고 콤보 ${bestCombo}`, "계속", onComplete);
+            };
+            const checkEnd = () => {
+              if (ending) return;
+              if (misses > MAX_MISS || !queue.length) { ending = true; setTimeout(finish, misses > MAX_MISS ? 700 : 560); }
             };
 
+            const advanceQueue = () => { queue.shift(); queue.forEach((c) => { c.target = Math.max(0, c.target - 1); }); };
+
             const judge = (toRight, startOffX = 0, startOffY = 0) => {
-              if (!active || !queue.length) return;
+              if (!active || ending || !queue.length) return;
               const front = queue[0];
               if (front.pos > 0.38) return;
               hintAlpha = 0;
-              queue.shift();
-              queue.forEach((c) => { c.target = Math.max(0, c.target - 1); });
+              advanceQueue();
               const side = toRight ? "right" : "left";
               const b = BIN[side];
               const cnt = bins[side].length + flying.filter((f) => f.side === side).length;
@@ -6790,7 +6862,7 @@
               const ty = b.baseY - Math.floor(cnt / b.cols.length) * b.rowH;
               const p0 = slotAt(front.pos);
               const sx = CW / 2 + startOffX, sy = p0.y + startOffY;
-              flying.push({ isGood: front.isGood, side, sx, sy, ss: p0.s, tx, ty, t: 0, rot: startOffX * 0.004, vr: toRight ? 0.22 : -0.22 });
+              flying.push({ isGood: front.isGood, defect: front.defect, side, sx, sy, ss: p0.s, tx, ty, t: 0, rot: startOffX * 0.004, vr: toRight ? 0.22 : -0.22 });
               curDx = 0; curDy = 0;
               sorted++;
               const correct = toRight === front.isGood;
@@ -6808,13 +6880,34 @@
                 combo = 0; misses++;
                 vib([40, 30, 50]);
                 AudioMgr.playSfx("sfx_error");
-                wallHp = Math.max(20, wallHp - 12);
                 triggerStageQuake();
                 if (FXL) FXL.burst("boom", sx, sy, 210, { dur: 20 }).particles(sx, sy, { n: 16, speed: 6.5 }).particles(sx, sy, { shape: "chip", n: 9, speed: 5.5 });
-                fxTexts.push({ x: CW / 2, y: p0.y - 76, txt: front.isGood ? "정품을 버렸다! -12%" : "불량품이 섞였다! -12%", col: "#fca5a5", life: 44 });
+                fxTexts.push({ x: CW / 2, y: p0.y - 76, txt: front.isGood ? "정품을 버렸다!" : "불량품이 섞였다!", col: "#fca5a5", life: 44 });
               }
               updateHud();
-              if (!queue.length) setTimeout(() => finish(`화물 ${sorted}개 분류 · 정품 ${rescued}/${TOTAL_GOOD}개 구출 · 최고 콤보 ${bestCombo} (방벽 ${wallHp}%)`), 560);
+              checkEnd();
+            };
+
+            // 시간 초과: 정품이면 놓침(떨어짐), 불량이면 수레에 섞임 → 둘 다 실수
+            const timeoutFront = () => {
+              if (!active || ending || !queue.length) return;
+              const front = queue[0];
+              advanceQueue();
+              const p0 = slotAt(front.pos);
+              sorted++; misses++; combo = 0;
+              vib([40, 30, 50]);
+              AudioMgr.playSfx("sfx_error");
+              triggerStageQuake();
+              if (front.isGood) {
+                flying.push({ isGood: true, defect: null, side: "drop", sx: CW / 2, sy: p0.y, ss: p0.s, tx: CW / 2 + (Math.random() - 0.5) * 60, ty: CH + 90, t: 0, rot: 0, vr: 0.3, drop: true });
+              } else {
+                const b = BIN.right;
+                const cnt = bins.right.length + flying.filter((f) => f.side === "right").length;
+                flying.push({ isGood: false, defect: front.defect, side: "right", sx: CW / 2, sy: p0.y, ss: p0.s, tx: b.cols[cnt % b.cols.length], ty: b.baseY - Math.floor(cnt / b.cols.length) * b.rowH, t: 0, rot: 0, vr: 0.2 });
+              }
+              fxTexts.push({ x: CW / 2, y: p0.y - 82, txt: front.isGood ? "시간 초과! 정품을 놓쳤다" : "시간 초과! 불량이 섞였다", col: "#fca5a5", life: 48 });
+              updateHud();
+              checkEnd();
             };
 
             const onKey = (e) => {
@@ -6823,17 +6916,17 @@
             };
             window.addEventListener("keydown", onKey);
 
-            // Pointer Events: 손가락으로 상자를 집어 실시간 드래그 & 휙 플릭!
+            // 터치 좌표: 캔버스가 object-fit:contain 이므로 같은 기준(min)으로 변환
             const toCanvasPos = (ev) => {
               const r = canvas.getBoundingClientRect();
-              const fit = Math.max(r.width / CW, r.height / CH);
+              const fit = Math.min(r.width / CW, r.height / CH);
               return {
                 x: (ev.clientX - r.left - (r.width - CW * fit) / 2) / fit,
                 y: (ev.clientY - r.top - (r.height - CH * fit) / 2) / fit,
               };
             };
             canvas.addEventListener("pointerdown", (ev) => {
-              if (!active || !queue.length) return;
+              if (!active || ending || !queue.length) return;
               ev.preventDefault();
               try { canvas.setPointerCapture(ev.pointerId); } catch (_) {}
               const pt = toCanvasPos(ev);
@@ -6856,12 +6949,9 @@
               const dt = performance.now() - drag.t0;
               const throwRight = drag.dx > 52 || (drag.dx > 18 && drag.vx > 7);
               const throwLeft = drag.dx < -52 || (drag.dx < -18 && drag.vx < -7);
-              if (throwRight) {
-                judge(true, drag.dx, drag.dy);
-              } else if (throwLeft) {
-                judge(false, drag.dx, drag.dy);
-              } else if (Math.abs(drag.dx) < 12 && dt < 220) {
-                // 빠른 좌/우 측 탭도 지원
+              if (throwRight) judge(true, drag.dx, drag.dy);
+              else if (throwLeft) judge(false, drag.dx, drag.dy);
+              else if (Math.abs(drag.dx) < 12 && dt < 220) {
                 const pt = toCanvasPos(ev);
                 if (pt.x < CW * 0.36) judge(false);
                 else if (pt.x > CW * 0.64) judge(true);
@@ -6871,20 +6961,14 @@
             canvas.addEventListener("pointerup", endDrag);
             canvas.addEventListener("pointercancel", endDrag);
 
-            secTimer = setInterval(() => {
-              if (!active || document.hidden) return;
-              timeLeft--; updateHud();
-              if (timeLeft <= 0) finish(`제한 시간 종료 · 정품 ${rescued}/${TOTAL_GOOD}개 구출 · 최고 콤보 ${bestCombo} (방벽 ${wallHp}%)`);
-            }, 1000);
-
-            const drawCrate = (isGood, cx, cy, s, rot, lifted) => {
-              const spr = isGood ? goodIm : badIm;
+            const drawCrate = (c, cx, cy, s, rot, lifted, tNow) => {
               ctx.save(); ctx.translate(cx, cy);
               ctx.fillStyle = lifted ? "rgba(0,0,0,0.46)" : "rgba(0,0,0,0.34)";
               ctx.beginPath(); ctx.ellipse(0, s * (lifted ? 0.56 : 0.43), s * (lifted ? 0.36 : 0.42), s * 0.1, 0, 0, Math.PI * 2); ctx.fill();
               if (rot) ctx.rotate(rot);
               if (lifted) ctx.scale(1.07, 1.07);
-              if (spr.complete && spr.naturalWidth) ctx.drawImage(spr, -s / 2, -s / 2, s, s);
+              if (plainIm.complete && plainIm.naturalWidth) ctx.drawImage(plainIm, -s / 2, -s / 2, s, s);
+              if (c.defect) drawDefect(c.defect, s, tNow);
               ctx.restore();
             };
             const rrect = (x, y, w, h, r) => {
@@ -6905,24 +6989,25 @@
               ctx.restore();
             };
 
+            let lastT = performance.now();
             const renderFrame = () => {
               if (!active) return;
+              const tNow = performance.now();
+              const dtS = Math.min(0.05, Math.max(0, (tNow - lastT) / 1000)); // 탭을 숨겼다 돌아와도 시간이 한꺼번에 줄지 않게
+              lastT = tNow;
               ctx.clearRect(0, 0, CW, CH);
               if (bgIm.complete && bgIm.naturalWidth) ctx.drawImage(bgIm, 0, 0, CW, CH);
 
-              // 좌/우 드래그 방향에 따라 폐기 구덩이·구출 수레 하이라이트 글로우!
               const leftPull = Math.max(0, Math.min(1, -curDx / 72));
               const rightPull = Math.max(0, Math.min(1, curDx / 72));
               if (leftPull > 0.04) {
                 const gl = ctx.createRadialGradient(64, 590, 10, 64, 590, 140);
-                gl.addColorStop(0, `rgba(239,68,68,${0.48 * leftPull})`);
-                gl.addColorStop(1, "rgba(239,68,68,0)");
+                gl.addColorStop(0, `rgba(239,68,68,${0.48 * leftPull})`); gl.addColorStop(1, "rgba(239,68,68,0)");
                 ctx.fillStyle = gl; ctx.fillRect(0, 420, CW * 0.55, 280);
               }
               if (rightPull > 0.04) {
                 const gr = ctx.createRadialGradient(310, 590, 10, 310, 590, 140);
-                gr.addColorStop(0, `rgba(74,222,128,${0.48 * rightPull})`);
-                gr.addColorStop(1, "rgba(74,222,128,0)");
+                gr.addColorStop(0, `rgba(74,222,128,${0.48 * rightPull})`); gr.addColorStop(1, "rgba(74,222,128,0)");
                 ctx.fillStyle = gr; ctx.fillRect(CW * 0.45, 420, CW * 0.55, 280);
               }
 
@@ -6933,13 +7018,30 @@
                 ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
               });
 
-              ["left", "right"].forEach((side) => bins[side].slice().sort((a, b) => a.y - b.y).forEach((it) => drawCrate(it.isGood, it.x, it.y, ITEM_S, it.rot, false)));
+              // 위쪽 구분 안내
+              ctx.save();
+              ctx.font = `800 12.5px ${FONT}`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+              const lg = "멀쩡한 상자 → 구출   ·   그을림·금·구멍 → 폐기";
+              const lw = ctx.measureText(lg).width + 26;
+              ctx.fillStyle = "rgba(2,6,23,0.72)"; ctx.strokeStyle = "rgba(255,255,255,0.28)"; ctx.lineWidth = 1;
+              rrect(CW / 2 - lw / 2, 22, lw, 26, 13); ctx.fill(); ctx.stroke();
+              ctx.fillStyle = "#f8fafc"; ctx.fillText(lg, CW / 2, 35.5);
+              ctx.restore();
 
-              // 실시간 드래그 스프링 보간
+              ["left", "right"].forEach((side) => bins[side].slice().sort((a, b) => a.y - b.y).forEach((it) => drawCrate(it, it.x, it.y, ITEM_S, it.rot, false, tNow)));
+
               const tgtDx = drag.active ? drag.dx : 0;
               const tgtDy = drag.active ? drag.dy : 0;
               curDx += (tgtDx - curDx) * (drag.active ? 0.55 : 0.28);
               curDy += (tgtDy - curDy) * (drag.active ? 0.55 : 0.28);
+
+              // 맨 앞 상자 제한 시간
+              if (queue.length && !ending && queue[0].pos < 0.08) {
+                const f0 = queue[0];
+                if (f0.limit === null) { f0.limit = T_FIRST - (T_FIRST - T_LAST) * (sorted / Math.max(1, N_CRATES - 1)); f0.left = f0.limit; }
+                f0.left -= dtS;
+                if (f0.left <= 0) timeoutFront();
+              }
 
               for (let i = queue.length - 1; i >= 0; i--) {
                 const c = queue[i];
@@ -6951,13 +7053,24 @@
                 const ox = isFront ? curDx : 0;
                 const oy = isFront ? curDy : 0;
                 const rot = isFront ? (curDx * 0.0042) : 0;
-                const bob = (isFront && !drag.active) ? Math.sin(performance.now() / 240 + c.wob) * 2.5 : 0;
-                drawCrate(c.isGood, CW / 2 + ox, p.y + oy + bob, p.s, rot, isFront && drag.active);
+                const bob = (isFront && !drag.active) ? Math.sin(tNow / 240 + c.wob) * 2.5 : 0;
+                if (isFront && c.limit !== null) {
+                  const ratio = Math.max(0, c.left / c.limit);
+                  const rr = p.s * 0.68, rx = CW / 2 + ox, ry = p.y + oy + bob;
+                  ctx.save();
+                  ctx.lineWidth = 6; ctx.strokeStyle = "rgba(2,6,23,0.55)";
+                  ctx.beginPath(); ctx.arc(rx, ry, rr, 0, Math.PI * 2); ctx.stroke();
+                  const col = ratio > 0.5 ? "#4ade80" : (ratio > 0.25 ? "#facc15" : "#f87171");
+                  ctx.strokeStyle = col; ctx.lineWidth = ratio <= 0.25 ? 6 + 2 * Math.abs(Math.sin(tNow / 80)) : 5;
+                  ctx.lineCap = "round";
+                  ctx.beginPath(); ctx.arc(rx, ry, rr, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * ratio); ctx.stroke();
+                  ctx.restore();
+                }
+                drawCrate(c, CW / 2 + ox, p.y + oy + bob, p.s, rot, isFront && drag.active, tNow);
               }
 
-              // 첫 조작 전 직관적 좌/우 드래그 안내 화살표
               if (hintAlpha > 0.05 && queue.length && queue[0].pos < 0.2) {
-                const tWave = Math.sin(performance.now() / 240) * 10;
+                const tWave = Math.sin(tNow / 240) * 10;
                 ctx.save(); ctx.globalAlpha = 0.85 * hintAlpha;
                 ctx.font = `900 15px ${FONT}`; ctx.textAlign = "center"; ctx.fillStyle = "#fde68a";
                 ctx.strokeStyle = "rgba(2,6,23,0.9)"; ctx.lineWidth = 4;
@@ -6967,19 +7080,24 @@
               }
 
               for (let i = flying.length - 1; i >= 0; i--) {
-                const f = flying[i]; f.t = Math.min(1, f.t + 0.08);
-                const e = 1 - Math.pow(1 - f.t, 2);
+                const f = flying[i]; f.t = Math.min(1, f.t + (f.drop ? 0.05 : 0.08));
+                const e = f.drop ? f.t * f.t : 1 - Math.pow(1 - f.t, 2);
                 const x = f.sx + (f.tx - f.sx) * e;
-                const y = f.sy + (f.ty - f.sy) * e - Math.sin(f.t * Math.PI) * 68;
-                const s = f.ss + (ITEM_S - f.ss) * e;
+                const y = f.sy + (f.ty - f.sy) * e - (f.drop ? 0 : Math.sin(f.t * Math.PI) * 68);
+                const s = f.drop ? f.ss * (1 - 0.3 * f.t) : f.ss + (ITEM_S - f.ss) * e;
                 f.rot += f.vr * (1 - f.t);
-                drawCrate(f.isGood, x, y, s, f.rot, false);
+                if (f.drop) { ctx.save(); ctx.globalAlpha = 1 - f.t * 0.8; }
+                drawCrate(f, x, y, s, f.rot, false, tNow);
+                if (f.drop) ctx.restore();
                 if (f.t >= 1) {
-                  bins[f.side].push({ isGood: f.isGood, x: f.tx, y: f.ty, rot: (Math.random() - 0.5) * 0.5 }); flying.splice(i, 1);
-                  if (FXL) {
-                    FXL.particles(f.tx, f.ty + 10, { shape: "dust", n: 6, speed: 1.6, angle: -Math.PI / 2, spread: Math.PI * 0.9, size: 8 });
-                    if (f.side === "left") FXL.particles(f.tx, f.ty, { n: 8, speed: 3.5, angle: -Math.PI / 2, spread: 1.4 });
+                  if (!f.drop) {
+                    bins[f.side].push({ isGood: f.isGood, defect: f.defect, x: f.tx, y: f.ty, rot: (Math.random() - 0.5) * 0.5 });
+                    if (FXL) {
+                      FXL.particles(f.tx, f.ty + 10, { shape: "dust", n: 6, speed: 1.6, angle: -Math.PI / 2, spread: Math.PI * 0.9, size: 8 });
+                      if (f.side === "left") FXL.particles(f.tx, f.ty, { n: 8, speed: 3.5, angle: -Math.PI / 2, spread: 1.4 });
+                    }
                   }
+                  flying.splice(i, 1);
                 }
               }
 
@@ -7007,7 +7125,7 @@
               rafId = requestAnimationFrame(renderFrame);
             };
 
-            activeMinigameCleanup = () => { active = false; clearInterval(secTimer); cancelAnimationFrame(rafId); window.removeEventListener("keydown", onKey); };
+            activeMinigameCleanup = () => { active = false; cancelAnimationFrame(rafId); window.removeEventListener("keydown", onKey); };
             updateHud();
             rafId = requestAnimationFrame(renderFrame);
           }
@@ -10062,18 +10180,18 @@
     })();
   </script>
   <!-- 마을 화면 SD 걷기 연출 (별도 파일, 없어도 게임은 정상 진행) -->
-  <script src="sd_walk.js?v=20261124a"></script>
+  <script src="sd_walk.js?v=20261124b"></script>
   <!-- 마을 주민 16명 목록 (sd_walk.js 가 읽음) -->
-  <script src="village_residents.js?v=20261124a"></script>
+  <script src="village_residents.js?v=20261124b"></script>
   <!-- 창고 미니게임 블록 그림 (별도 파일) -->
-  <script src="warehouse_art.js?v=20261124a"></script>
+  <script src="warehouse_art.js?v=20261124b"></script>
   <!-- 본청 집무실 미니게임: 휴대폰 화면 + 대화 장면 (별도 파일) -->
-  <script src="audit_art.js?v=20261124a"></script>
+  <script src="audit_art.js?v=20261124b"></script>
   <!-- 미니게임 시작 전 그림 튜토리얼 (별도 파일) -->
-  <script src="tutorial.js?v=20261124a"></script>
+  <script src="tutorial.js?v=20261124b"></script>
   <!-- 미니게임 효과(FX) 엔진 (별도 파일) -->
-  <script src="fx.js?v=20261124a"></script>
+  <script src="fx.js?v=20261124b"></script>
   <!-- 마을 화면: 지도 위 핀 + 들어가 보기 (별도 파일) -->
-  <script src="hub_map.js?v=20261124a"></script>
+  <script src="hub_map.js?v=20261124b"></script>
 </body>
 </html>
