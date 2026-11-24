@@ -26,6 +26,8 @@
 
   function layer() {
     var items = [];
+    var lastDraw = 0; // [11/24] 화면 주사율(60/100/144Hz)과 상관없이 같은 속도: 실제 흐른 시간으로 진행
+
     var api = {
       // 그림 효과 한 번 (kind: boom | magic | purple | spark)
       burst: function (kind, x, y, size, o) {
@@ -61,14 +63,17 @@
       },
       clear: function () { items.length = 0; },
       draw: function (ctx) {
+        var nowD = performance.now();
+        var f = lastDraw ? Math.min(3, Math.max(0, (nowD - lastDraw) / 16.667)) : 1; // 60Hz 한 장 = 1
+        lastDraw = nowD;
         for (var i = items.length - 1; i >= 0; i--) {
-          var it = items[i]; it.life++;
+          var it = items[i]; it.life += f;
           var k = it.life / it.dur;
           if (k >= 1) { items.splice(i, 1); continue; }
           ctx.save();
           if (it.t === "burst") {
             var s = it.s * (0.45 + (it.grow - 0.45) * easeOut(k)), a = it.a * (k < 0.5 ? 1 : 1 - (k - 0.5) / 0.5);
-            it.rot += it.vr;
+            it.rot += it.vr * f;
             ctx.globalCompositeOperation = "lighter"; ctx.globalAlpha = Math.max(0, a);
             ctx.translate(it.x, it.y); ctx.rotate(it.rot);
             var im = IMG[it.kind];
@@ -86,7 +91,7 @@
             }
             glow(ctx, 0, 0, w * 0.9, it.rgb, 0.6 * ab);
           } else if (it.t === "p") {
-            it.x += it.vx; it.y += it.vy; it.vy += it.g; it.vx *= 0.97; it.rot += it.vr;
+            it.x += it.vx * f; it.y += it.vy * f; it.vy += it.g * f; it.vx *= Math.pow(0.97, f); it.rot += it.vr * f;
             var ap = 1 - k;
             if (it.shape === "spark") {
               ctx.globalCompositeOperation = "lighter"; ctx.globalAlpha = ap;
