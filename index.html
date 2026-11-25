@@ -265,6 +265,7 @@
       height: 100%;
       object-fit: cover;
       opacity: 0;
+      transform: translate3d(var(--para-bg-x, 0px), var(--para-bg-y, 0px), 0) scale(1.018);
       transition: opacity 0.4s ease;
     }
     #bg-img.loaded { opacity: 1; }
@@ -338,6 +339,7 @@
       z-index: 3;
       pointer-events: none;
       overflow: hidden;
+      transform: translate3d(var(--para-ch-x, 0px), var(--para-ch-y, 0px), 0);
     }
     .char-slot {
       position: absolute;
@@ -526,18 +528,82 @@
     }
     #policy-toast strong { color: var(--accent-gold); display: block; font-size: 14px; margin-bottom: 3px; }
 
+    #item-toast {
+      position: absolute;
+      top: calc(58px + var(--safe-top));
+      left: 50%;
+      transform: translateX(-50%) translateY(-10px) scale(0.96);
+      width: min(92%, 386px);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 9px 13px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(12, 19, 36, 0.90) 0%, rgba(7, 11, 22, 0.94) 100%);
+      border: 1px solid rgba(240, 201, 105, 0.55);
+      border-left: 3.5px solid var(--accent-gold);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.65), 0 0 18px rgba(240, 201, 105, 0.16);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.32s ease, transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    #item-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0) scale(1);
+    }
+    #item-toast img {
+      width: 54px;
+      height: 54px;
+      object-fit: contain;
+      flex-shrink: 0;
+      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.65)) drop-shadow(0 0 8px rgba(240, 201, 105, 0.32));
+    }
+    .item-toast-body { flex: 1; min-width: 0; }
+    .item-toast-badge {
+      display: inline-block;
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      color: #fde68a;
+      background: rgba(240, 201, 105, 0.16);
+      border: 1px solid rgba(240, 201, 105, 0.45);
+      padding: 1px 7px;
+      border-radius: 999px;
+      margin-bottom: 3px;
+    }
+    .item-toast-title {
+      font-size: 14.5px;
+      font-weight: 900;
+      color: #f8fafc;
+      line-height: 1.25;
+      word-break: keep-all;
+    }
+    .item-toast-desc {
+      font-size: 12px;
+      font-weight: 600;
+      color: #cbd5e1;
+      line-height: 1.35;
+      margin-top: 2px;
+      word-break: keep-all;
+    }
+
     .plush-drop {
       position: absolute;
-      top: -40px;
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      animation: plushFall 2.1s cubic-bezier(0.25, 0.8, 0.5, 1) forwards;
+      top: -64px;
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+      pointer-events: none;
+      filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.52));
+      animation: plushFall 2.45s cubic-bezier(0.25, 0.78, 0.5, 1) forwards;
     }
     @keyframes plushFall {
-      0% { transform: translateY(0) scale(0.9); opacity: 0; }
-      15% { opacity: 0.95; }
-      100% { transform: translateY(620px) scale(1.1); opacity: 0; }
+      0% { transform: translateY(0) rotate(-14deg) scale(0.86); opacity: 0; }
+      14% { opacity: 0.98; }
+      60% { transform: translateY(370px) rotate(12deg) scale(1.02); opacity: 0.96; }
+      100% { transform: translateY(650px) rotate(-8deg) scale(1.06); opacity: 0; }
     }
 
     /* Ultra-Simple Minimal Top HUD */
@@ -1125,7 +1191,7 @@
     .title-bg-art {
       position: absolute;
       inset: 0;
-      background-image: url("assets/cg/title_opening.webp"), url("assets/cg/title_opening.gif"), url("assets/cg/title_opening.png");
+      background-image: url("assets/cg/title_opening.png");
       background-size: cover;
       background-position: center bottom;
       background-repeat: no-repeat;
@@ -2688,6 +2754,7 @@
       <div id="fx-layer">
         <div id="flash-overlay"></div>
         <div id="policy-toast"></div>
+        <div id="item-toast"></div>
       </div>
     </div>
 
@@ -2782,7 +2849,7 @@
     <!-- Simple Minimal Title Screen (Animated Opening Key Visual!) -->
     <div id="title-screen">
       <div class="title-bg-art">
-        <video class="title-bg-video" src="assets/cg/title_opening.mp4" poster="assets/cg/title_opening.webp" autoplay loop muted playsinline></video>
+        <video class="title-bg-video" src="assets/cg/title_opening.mp4" poster="assets/cg/title_opening.png" autoplay loop muted playsinline></video>
       </div>
       <div class="title-grad-veil"></div>
       <button type="button" class="hud-icon-btn" id="title-bgm-btn" style="position:absolute;top:calc(12px + var(--safe-top));left:12px;z-index:3;">🔊 오프닝 음악</button>
@@ -3950,6 +4017,7 @@
         bright2: document.querySelector("#charSlotSecondary .char-bright img"),
         flash: document.getElementById("flash-overlay"),
         policyToast: document.getElementById("policy-toast"),
+        itemToast: document.getElementById("item-toast"),
         fxLayer: document.getElementById("fx-layer"),
         hudChips: document.getElementById("hud-chips"),
         menuToggleBtn: document.getElementById("menu-toggle-btn"),
@@ -4126,16 +4194,45 @@
       }
 
       function triggerPlushBomb() {
-        const cols = ["#f8fafc", "#94a3b8", "#f0c969", "#fb923c"];
-        for (let i = 0; i < 16; i++) {
-          const sp = document.createElement("span");
-          sp.className = "plush-drop";
-          sp.style.background = cols[i % cols.length];
-          sp.style.left = `${8 + Math.random() * 84}%`;
-          sp.style.animationDelay = `${(Math.random() * 0.55).toFixed(2)}s`;
-          el.fxLayer.appendChild(sp);
-          setTimeout(() => sp.remove(), 2900);
+        const dolls = [
+          "assets/items/item_cat_doll_01.png",
+          "assets/items/item_cat_doll_02.png",
+          "assets/items/item_cat_doll_03.png",
+          "assets/items/item_cat_doll_04.png",
+        ];
+        for (let i = 0; i < 14; i++) {
+          const im = document.createElement("img");
+          im.className = "plush-drop";
+          im.src = dolls[i % dolls.length];
+          im.alt = "";
+          const sz = 44 + (i % 3) * 8;
+          im.style.width = `${sz}px`;
+          im.style.height = `${sz}px`;
+          im.style.left = `${4 + ((i * 6.8 + Math.random() * 5) % 82)}%`;
+          im.style.animationDelay = `${(i * 0.08 + Math.random() * 0.18).toFixed(2)}s`;
+          el.fxLayer.appendChild(im);
+          setTimeout(() => im.remove(), 3100);
         }
+      }
+
+      let itemToastTimer = null;
+      function showItemToast(card) {
+        if (!el.itemToast) return;
+        clearTimeout(itemToastTimer);
+        if (!card || !card.img) {
+          el.itemToast.classList.remove("show");
+          return;
+        }
+        el.itemToast.innerHTML = `
+          <img src="${card.img}" alt="" onerror="this.style.display='none'" />
+          <div class="item-toast-body">
+            <span class="item-toast-badge">${escHtml(card.badge || "ITEM")}</span>
+            <div class="item-toast-title">${escHtml(card.title || "")}</div>
+            ${card.desc ? `<div class="item-toast-desc">${escHtml(card.desc)}</div>` : ""}
+          </div>
+        `;
+        el.itemToast.classList.add("show");
+        itemToastTimer = setTimeout(() => el.itemToast.classList.remove("show"), 4100);
       }
 
       let toastTimer = null;
@@ -4317,6 +4414,7 @@
           bg: "room_night",
           hud: "real",
           cg: "cg_01_desk_open",
+          itemCard: { img: "assets/items/item_gift_box_open.png", badge: "입사 기념 선물 개봉", title: "나르미 · 달이 마스코트 피규어", desc: "조달청 신규 임용 상자 속 두 작은 마스코트" },
           mode: "narration",
           text: "상자를 열자 조달청의 공식 마스코트 피규어 둘이 모습을 드러냈다.",
           choiceLabel: "독백",
@@ -4816,6 +4914,7 @@
           hud: "isekai",
           unlockSystem: true,
           cg: "cg_06_seal_fairies",
+          itemCard: { img: "assets/items/item_brass_seal.png", badge: "직권 인계 · 시스템 해금", title: "신임 행정관 황동 직인", desc: "개척촌 입찰 결재권 및 초도 예산 +400G 부여" },
           char: "narumi",
           expr: "normal",
           secondaryChar: "dali",
@@ -5141,6 +5240,7 @@
           bg: "town_sunset",
           hud: "isekai",
           cg: "cg_07_chief_award",
+          itemCard: { img: "assets/items/item_chief_badge.png", badge: "초대 청장 임명", title: "냥-조달청장 황금 휘장", desc: "개척촌 전 공급망 및 성문 방어 지휘권 통합" },
           sfx: "sfx_crowd_cheer",
           mode: "narration",
           text: "광장의 환호성 아래, 황금 조달청장 휘장과 결재 인장이 수여된다.",
@@ -5366,6 +5466,7 @@
           hud: "isekai",
           char: "dali",
           expr: "normal",
+          itemCard: { img: "assets/items/item_cat_doll_01.png", badge: "개척촌 주민 감사 선물", title: "특산 수제 고양이 인형 보따리", desc: "마을을 되살려 준 초대 청장에게 건네는 마음" },
           speaker: "달이",
           text: "잠깐만요, 그냥 보내드릴 순 없어요! 이건 우리 개척촌 최고의 특산품인 수제 고양이 인형이에요! 청장님 덕분에 마을이 살아났다고 주민들이 감사의 마음을 담아 잔뜩 챙겨 왔어요!",
           choiceLabel: "행동",
@@ -6043,6 +6144,7 @@
 
         showCg(sc.cg || null);
         if (sc.policy) showPolicyToast(sc.policy);
+        showItemToast(sc.itemCard || null);
 
         if (sc.char === null || sc.cg) {
           state.primaryCharKey = sc.char || null;
@@ -6682,7 +6784,7 @@
                 setTimeout(() => {
                   el.villageHub.classList.remove("active");
                   runScene(findSceneIndex("farewell_chief_1"));
-                }, 220);
+                }, 720);
                 return;
               }
               el.hubStatus.textContent = z.restoredInfo;
@@ -6694,7 +6796,7 @@
               setTimeout(() => {
                 el.villageHub.classList.remove("active");
                 runScene(findSceneIndex(z.sceneId));
-              }, 220);
+              }, 720);
               return;
             }
             el.hubStatus.textContent = isMainDone
@@ -10342,6 +10444,40 @@ function startMinigameConvoy(onComplete) {
       }
 
       AudioMgr.initLiveSync();
+
+      // Ultra-subtle rigid 2.5D depth parallax (zero mesh distortion, zero idle CPU drain)
+      (function initMicroParallax() {
+        const stage = el.mainStage;
+        const appRoot = el.app;
+        if (!stage || !appRoot) return;
+        let tx = 0, ty = 0, cx = 0, cy = 0, raf = 0;
+        function step() {
+          cx += (tx - cx) * 0.14;
+          cy += (ty - cy) * 0.14;
+          stage.style.setProperty("--para-bg-x", `${(-cx * 3.2).toFixed(2)}px`);
+          stage.style.setProperty("--para-bg-y", `${(-cy * 1.8).toFixed(2)}px`);
+          stage.style.setProperty("--para-ch-x", `${(cx * 1.8).toFixed(2)}px`);
+          stage.style.setProperty("--para-ch-y", `${(cy * 1.0).toFixed(2)}px`);
+          if (Math.abs(tx - cx) > 0.003 || Math.abs(ty - cy) > 0.003) {
+            raf = requestAnimationFrame(step);
+          } else {
+            raf = 0;
+          }
+        }
+        function wake() { if (!raf) raf = requestAnimationFrame(step); }
+        appRoot.addEventListener("pointermove", (ev) => {
+          if (state.phase !== "dialogue" && state.phase !== "choice") {
+            if (tx !== 0 || ty !== 0) { tx = 0; ty = 0; wake(); }
+            return;
+          }
+          const r = appRoot.getBoundingClientRect();
+          if (r.width < 50 || r.height < 50) return;
+          tx = Math.max(-1, Math.min(1, ((ev.clientX - r.left) / r.width - 0.5) * 2));
+          ty = Math.max(-1, Math.min(1, ((ev.clientY - r.top) / r.height - 0.5) * 2));
+          wake();
+        }, { passive: true });
+        appRoot.addEventListener("pointerleave", () => { tx = 0; ty = 0; wake(); }, { passive: true });
+      })();
       if (loadSavedGame()) el.resumeBtn.classList.remove("hidden");
       renderHud();
     })();
@@ -10460,18 +10596,16 @@ function startMinigameConvoy(onComplete) {
     })();
   </script>
   <!-- 마을 화면 SD 걷기 연출 (별도 파일, 없어도 게임은 정상 진행) -->
-  <script src="sd_walk.js?v=20261124c"></script>
+  <script src="sd_walk.js?v=20261126a"></script>
   <!-- 마을 주민 16명 목록 (sd_walk.js 가 읽음) -->
-  <script src="village_residents.js?v=20261124c"></script>
+  <script src="village_residents.js?v=20261126a"></script>
   <!-- 창고 미니게임 블록 그림 (별도 파일) -->
-  <script src="warehouse_art.js?v=20261124c"></script>
-  <!-- 본청 집무실 미니게임: 휴대폰 화면 + 대화 장면 (별도 파일) -->
-  <script src="audit_art.js?v=20261124c"></script>
+  <script src="warehouse_art.js?v=20261126a"></script>
   <!-- 미니게임 시작 전 그림 튜토리얼 (별도 파일) -->
-  <script src="tutorial.js?v=20261124c"></script>
+  <script src="tutorial.js?v=20261126a"></script>
   <!-- 미니게임 효과(FX) 엔진 (별도 파일) -->
-  <script src="fx.js?v=20261124c"></script>
+  <script src="fx.js?v=20261126a"></script>
   <!-- 마을 화면: 지도 위 핀 + 들어가 보기 (별도 파일) -->
-  <script src="hub_map.js?v=20261124c"></script>
+  <script src="hub_map.js?v=20261126a"></script>
 </body>
 </html>

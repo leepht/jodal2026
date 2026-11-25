@@ -44,55 +44,12 @@
       ".wh-piece-icon{width:34px;height:34px;object-fit:contain;filter:drop-shadow(0 2px 3px rgba(0,0,0,.6));pointer-events:none;}",
       ".wh-controls button,.wh-ctrl-btn{min-height:46px!important;font-size:" + FS(13, 0.037, 15.5) + "!important;}",
       ".wh-drag-ghost{transform:translate(-50%,-50%) scale(var(--wh-ghost-scale,1.06))!important;}",
-      /* ---------- 공통 재질 (창고는 나무 프레임 유지, 게시판은 고대비 깔끔 카드) ---------- */
+      /* ---------- 공통 재질 (창고 나무 프레임) ---------- */
       ".wh-top-info{background:url('assets/ui_art/ui_wood_frame.png') center/100% 100% no-repeat, rgba(28,18,10,0.92)!important;border:none!important;color:#fff7e6!important;padding:10px 14px!important;}",
       ".wh-piece-btn{background:url('assets/ui_art/ui_wood_frame.png') center/100% 100% no-repeat, rgba(28,18,10,0.92)!important;border:none!important;}",
       ".wh-piece-btn.selected{filter:brightness(1.25) drop-shadow(0 0 6px rgba(240,201,105,0.9));}",
-      /* ---------- 개척촌 나라장터 게시판 (초고대비 가독성 개편) ---------- */
-      ".board-wrap{padding:8px!important;gap:8px!important;background:rgba(7,11,22,0.58)!important;}",
-      ".board-rules-strip{background:linear-gradient(180deg,#111d36 0%,#0b1326 100%)!important;border:1.5px solid rgba(250,204,21,0.58)!important;border-radius:10px!important;",
-      "  color:#f8fafc!important;padding:9px 12px!important;display:flex!important;flex-direction:column!important;gap:4px!important;box-shadow:0 4px 14px rgba(0,0,0,0.45)!important;word-break:keep-all!important;}",
-      ".board-rule-row{display:flex!important;align-items:baseline!important;gap:7px!important;font-size:" + FS(12.5, 0.035, 14.5) + "!important;line-height:1.4!important;}",
-      ".board-rule-row strong{flex-shrink:0!important;color:#fde68a!important;font-weight:900!important;}",
-      ".board-rule-row span{color:#e2e8f0!important;font-weight:600!important;}",
-      ".board-notice-card{background:#faf6eb!important;border:2px solid #c9b58c!important;border-radius:12px!important;padding:20px 12px 12px!important;color:#0f172a!important;box-shadow:0 10px 26px rgba(0,0,0,0.48)!important;}",
-      ".board-notice-card > div:not(.board-feedback):not(.stamp-ink-overlay){flex:1;display:flex;flex-direction:column;gap:10px;min-height:0;}",
-      ".board-notice-head{font-size:" + FS(15, 0.042, 18) + "!important;font-weight:900!important;color:#1e293b!important;line-height:1.35!important;word-break:keep-all!important;",
-      "  flex-wrap:wrap;gap:4px;padding:4px 2px 8px!important;margin-bottom:2px!important;border-bottom:2px solid #d4c39e!important;}",
-      ".board-notice-head span:last-child{display:none!important;}",
-      ".board-clause{flex:1 1 0;max-height:112px;min-height:68px;flex-direction:row!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;",
-      "  padding:11px 12px!important;margin:0!important;border-radius:10px!important;font-size:" + FS(14.5, 0.04, 17) + "!important;line-height:1.42!important;color:#0f172a!important;word-break:keep-all!important;",
-      "  background:#ffffff!important;border:1.5px solid #dfd3b8!important;box-shadow:0 2px 6px rgba(60,40,10,0.08)!important;}",
-      ".board-clause.flagged{background:#fef2f2!important;border:2px solid #dc2626!important;box-shadow:inset 4px 0 0 #dc2626!important;}",
-      ".board-clause.checked-ok{background:#f0fdf4!important;border:2px solid #16a34a!important;box-shadow:inset 4px 0 0 #16a34a!important;}",
-      ".board-clause-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;}",
-      ".board-clause-text strong{display:block;color:#9a3412!important;font-size:0.8em;font-weight:900;letter-spacing:0.02em;}",
-      ".board-clause-text span{color:#0f172a!important;font-weight:700!important;word-break:keep-all!important;}",
-      ".board-check-btn{flex-shrink:0!important;min-width:68px!important;min-height:38px!important;padding:6px 12px!important;border-radius:999px!important;",
-      "  border:2px solid #b91c1c!important;background:#fff5f5!important;color:#b91c1c!important;font-size:" + FS(12.5, 0.035, 14.5) + "!important;font-weight:900!important;white-space:nowrap!important;cursor:pointer!important;}",
-      ".board-clause.flagged .board-check-btn{background:#dc2626!important;border-color:#dc2626!important;color:#ffffff!important;}",
-      ".board-clause.checked-ok .board-check-btn{background:#16a34a!important;border-color:#16a34a!important;color:#ffffff!important;}",
-      ".board-feedback{font-size:" + FS(13, 0.036, 15) + "!important;line-height:1.45!important;min-height:50px!important;padding:9px 12px!important;border-radius:8px!important;",
-      "  background:#0f172a!important;border:1.5px solid rgba(148,163,184,0.38)!important;color:#f8fafc!important;word-break:keep-all!important;display:block!important;}",
-      ".board-actions .stamp-btn{min-height:54px!important;font-size:" + FS(15, 0.042, 17.5) + "!important;}",
-      /* 아이폰 짧은 뷰포트(≤720px) 및 세로 모니터(short-stage) 대응: 게시판·창고 모두 한 화면에 여유롭게 표시 */
-      (function () {
-        var r = [
-          "  .board-wrap{padding:6px!important;gap:6px!important;}",
-          "  .board-rules-strip{padding:6px 9px!important;gap:2px!important;}",
-          "  .board-rule-row{font-size:11.5px!important;line-height:1.32!important;}",
-          "  .board-notice-card{padding:17px 10px 9px!important;}",
-          "  .board-notice-card > div:not(.board-feedback):not(.stamp-ink-overlay){gap:7px!important;}",
-          "  .board-notice-head{font-size:14px!important;padding:2px 2px 6px!important;}",
-          "  .board-clause{min-height:52px!important;max-height:84px!important;padding:7px 10px!important;font-size:13.5px!important;}",
-          "  .board-check-btn{min-width:60px!important;min-height:34px!important;padding:4px 10px!important;font-size:12px!important;}",
-          "  .board-feedback{min-height:42px!important;padding:7px 10px!important;font-size:12px!important;line-height:1.38!important;}",
-          "  .board-actions .stamp-btn{min-height:44px!important;font-size:14px!important;}",
-          "  .wh-piece-btn{min-height:60px!important;}",
-          "  .wh-controls button,.wh-ctrl-btn{min-height:40px!important;font-size:12.5px!important;}",
-        ];
-        return "@media (max-height: 720px){\n" + r.join("\n") + "\n}\n" + r.map(function (x) { return x.replace(/^\s*(\.)/, "html.short-stage $1"); }).join("\n");
-      })(),
+      "@media (max-height: 720px){ .wh-piece-btn{min-height:60px!important;} .wh-controls button,.wh-ctrl-btn{min-height:40px!important;font-size:12.5px!important;} }",
+      "html.short-stage .wh-piece-btn{min-height:60px!important;} html.short-stage .wh-controls button,html.short-stage .wh-ctrl-btn{min-height:40px!important;font-size:12.5px!important;}",
     ].join("\n");
     var st = document.createElement("style"); st.id = "warehouse-art-style"; st.textContent = css; document.head.appendChild(st);
 
