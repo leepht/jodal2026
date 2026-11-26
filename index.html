@@ -1092,7 +1092,7 @@ const STORY_SECTIONS = [
 { id: "sec_08", start: 59,  end: 61,  startId: "convoy_intro_1",         endId: "convoy_after" },
 { id: "sec_09", start: 62,  end: 64,  startId: "workshop_intro_1",       endId: "workshop_after" },
 { id: "sec_10", start: 65,  end: 67,  startId: "award_cut1_nar",         endId: "award_cut2_cg" },
-{ id: "sec_11", start: 68,  end: 71,  startId: "boss_intro_1",           endId: "boss_dali_call" },
+{ id: "sec_11", start: 68,  end: 71,  startId: "boss_intro_1",           endId: "boss_captain_charge" },
 { id: "sec_12", start: 72,  end: 87,  startId: "boss_beam_win_1",        endId: "farewell_white_flash" },
 { id: "sec_13", start: 88,  end: 97,  startId: "morning_wake_1a",        endId: "ending_pps_3" },
 { id: "sec_14", start: 98,  end: 101, startId: "board_event_1",          endId: "board_event_after" },
@@ -2383,7 +2383,7 @@ afterAction: "next",
 },
 {
 id: "outpost_guard_1",
-bg: "outpost_fire",
+bg: "town_fire",
 hud: "hidden",
 char: "guard",
 expr: "combat",
@@ -2392,7 +2392,7 @@ text: "동쪽 외곽 방어선이 무너졌습니다! 마물 척후병들이 주
 },
 {
 id: "outpost_siren_2",
-bg: "outpost_fire",
+bg: "town_fire",
 hud: "hidden",
 char: "guard",
 expr: "pain",
@@ -3091,7 +3091,7 @@ text: "맞아요! 공공이 먼저 시제품을 구매해 **테스트베드(Test
 },
 {
 id: "workshop_flashback_1",
-bg: "workshop",
+bg: "town_fire",
 hud: "isekai",
 char: "player",
 expr: "pain",
@@ -3234,6 +3234,20 @@ stepButtons: [
 { text: "전략 비축창고의 고순도 마력석 전량 방출! 보급은 절대 끊기지 않는다!", expr: "normal" },
 { text: "발명냥이의 실증 포탑 리미트 해제—경비대, 정품 방패로 방진을 짜고 전군 일제 사격!", expr: "normal" },
 ],
+afterAction: "next",
+},
+{
+id: "boss_captain_charge",
+bg: "gate_siege",
+hud: "isekai",
+char: "captain",
+expr: "command",
+secondaryChar: "guard",
+secondaryExpr: "combat",
+speakerSlot: "left",
+sfx: "sfx_crowd_cheer",
+speaker: "경비대장",
+text: "전군 들었나! 청장님의 명령이다! 정품 방패로 방진을 세우고, 자동 마력 포탑과 함께 일제 사격 개시!!",
 afterAction: "mg_stage5",
 },
 {
@@ -3291,7 +3305,7 @@ buttons: [
 {
 id: "farewell_chief_1",
 bg: "town_day",
-bgm: "bgm_daily",
+bgm: "bgm_ending",
 hud: "isekai",
 cg: null,
 char: "chief",
@@ -4999,14 +5013,16 @@ AudioMgr.playBgm("bgm_defense");
 openMinigameShell(
 "긴급 보급 화물 분류",
 "맨 앞 상자를 <strong>손가락으로 잡아 좌우로 던지세요!</strong> (총 20상자)<br/>" +
-"<strong>멀쩡한 정품</strong>은 오른쪽 [구출 수레]로, <strong>그을리거나 금 가거나 구멍 난 불량품</strong>은 왼쪽 [폐기 구덩이]로!<br/>" +
+"<strong>멀쩡한 정품</strong>은 오른쪽 [구출 수레]로, <strong>그을리거나·오염되거나·금 가거나·구멍 난 불량품</strong>은 왼쪽 [폐기 구덩이]로!<br/>" +
 "상자마다 <strong>제한 시간</strong>이 있어요(상자 둘레 링). 시간이 지나면 실수!<br/>" +
 "<strong>정품 8개 이상 구출 · 실수 4번 이하</strong>면 통과!",
 "분류 시작",
-["assets/minigame/map_01_crate.png"],
+["assets/minigame/map_01_crate.png", "assets/minigame/obj_crate_bad.png", "assets/minigame/obj_crate_good.png"],
 () => {
 const bgIm = getSprite("assets/minigame/map_01_crate.png");
 const plainIm = getSprite("assets/minigame/obj_crate_plain.png");
+const badCrateIm = getSprite("assets/minigame/obj_crate_bad.png");
+const goodIconIm = getSprite("assets/minigame/obj_crate_good.png");
 const CW = 380, CH = 700;
 const FONT = "'Pretendard Variable', Pretendard, sans-serif";
 const SLOTS = [
@@ -5021,8 +5037,8 @@ return { y: a.y + (b.y - a.y) * t, s: a.s + (b.s - a.s) * t };
 };
 const seeded = (seed) => { let x = Math.floor(seed * 1e6) || 1; return () => { x = (x * 16807) % 2147483647; return (x - 1) / 2147483646; }; };
 const FACE = { L: { u: -0.2, v: 0.07 }, R: { u: 0.19, v: 0.06 } };
-const makeDefect = () => ({
-type: ["scorch", "crack", "hole"][Math.floor(Math.random() * 3)],
+const makeDefect = (typeOverride) => ({
+type: typeOverride || ["scorch", "crack", "hole"][Math.floor(Math.random() * 3)],
 face: Math.random() < 0.5 ? "L" : "R",
 ju: (Math.random() - 0.5) * 0.1, jv: (Math.random() - 0.5) * 0.1, seed: Math.random(),
 });
@@ -5080,11 +5096,14 @@ ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + Math.cos(a) * s * 0.05, y + Ma
 ctx.restore();
 };
 const TOTAL_GOOD = 12, TOTAL_BAD = 8; // 총 20상자
+const defectBag = ["stain", "stain", "scorch", "scorch", "crack", "crack", "hole", "hole"];
+for (let i = defectBag.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const tmp = defectBag[i]; defectBag[i] = defectBag[j]; defectBag[j] = tmp; }
 const kinds = [];
 for (let i = 0; i < TOTAL_GOOD; i++) kinds.push(true);
 for (let i = 0; i < TOTAL_BAD; i++) kinds.push(false);
 for (let i = kinds.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const tmp = kinds[i]; kinds[i] = kinds[j]; kinds[j] = tmp; }
-const queue = kinds.map((isGood, i) => ({ isGood, defect: isGood ? null : makeDefect(), pos: i, target: i, wob: Math.random() * 6.28, limit: null, left: 0 }));
+let badSeq = 0;
+const queue = kinds.map((isGood, i) => ({ isGood, defect: isGood ? null : makeDefect(defectBag[badSeq++ % defectBag.length]), pos: i, target: i, wob: Math.random() * 6.28, limit: null, left: 0 }));
 const N_CRATES = queue.length;
 const flying = [];
 const bins = { left: [], right: [] };
@@ -5257,8 +5276,12 @@ ctx.fillStyle = lifted ? "rgba(0,0,0,0.46)" : "rgba(0,0,0,0.34)";
 ctx.beginPath(); ctx.ellipse(0, s * (lifted ? 0.56 : 0.43), s * (lifted ? 0.36 : 0.42), s * 0.1, 0, 0, Math.PI * 2); ctx.fill();
 if (rot) ctx.rotate(rot);
 if (lifted) ctx.scale(1.07, 1.07);
+if (c.defect && c.defect.type === "stain" && badCrateIm.complete && badCrateIm.naturalWidth) {
+ctx.drawImage(badCrateIm, -s / 2, -s / 2, s, s);
+} else {
 if (plainIm.complete && plainIm.naturalWidth) ctx.drawImage(plainIm, -s / 2, -s / 2, s, s);
 if (c.defect) drawDefect(c.defect, s, tNow);
+}
 ctx.restore();
 };
 const rrect = (x, y, w, h, r) => {
@@ -5310,7 +5333,7 @@ ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
 });
 ctx.save();
 ctx.font = `800 12.5px ${FONT}`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-const lg = "멀쩡한 상자 → 구출   ·   그을림·금·구멍 → 폐기";
+const lg = "멀쩡한 상자 → 구출   ·   그을림·오염·금·구멍 → 폐기";
 const lw = ctx.measureText(lg).width + 26;
 ctx.fillStyle = "rgba(2,6,23,0.76)"; ctx.strokeStyle = "rgba(255,255,255,0.28)"; ctx.lineWidth = 1;
 rrect(CW / 2 - lw / 2, 54, lw, 26, 13); ctx.fill(); ctx.stroke();
@@ -5383,6 +5406,20 @@ flying.splice(i, 1);
 }
 }
 if (FXL) FXL.draw(ctx);
+if (badCrateIm.complete && badCrateIm.naturalWidth) {
+const sL = 34 * (1 + leftPull * 0.16);
+ctx.save();
+ctx.globalAlpha = 0.88 + 0.12 * leftPull;
+ctx.drawImage(badCrateIm, BIN.left.label.x - sL / 2, BIN.left.label.y - 34 - sL / 2, sL, sL);
+ctx.restore();
+}
+if (goodIconIm.complete && goodIconIm.naturalWidth) {
+const sR = 34 * (1 + rightPull * 0.16);
+ctx.save();
+ctx.globalAlpha = 0.88 + 0.12 * rightPull;
+ctx.drawImage(goodIconIm, BIN.right.label.x - sR / 2, BIN.right.label.y - 34 - sR / 2, sR, sR);
+ctx.restore();
+}
 zoneBadge("← 폐기", BIN.left.label.x, BIN.left.label.y, "rgba(220,38,38,0.92)", leftPull);
 zoneBadge("구출 →", BIN.right.label.x, BIN.right.label.y, "rgba(22,163,74,0.92)", rightPull);
 if (combo >= 2) {
@@ -5413,11 +5450,11 @@ function startMinigameAudit(onComplete) {
 AudioMgr.playBgm("bgm_work");
 openMinigameShell(
 "입찰 심사 데스크 — 틀린 곳 찾아 적발",
-"상인 3명의 납품 서류를 심사해요. <strong>모든 서류에 규정과 다른 곳이 1개 이상</strong> 있어요.<br/>" +
+"상인 5명의 납품 서류를 심사해요. <strong>모든 서류에 규정과 다른 곳이 1개 이상</strong> 있어요.<br/>" +
 "줄마다 적힌 <strong>기준</strong>과 비교해 이상한 줄을 눌러 표시하고 <strong>[제재 도장]</strong>을 찍으세요. 틀린 곳을 <strong>빠짐없이, 그것만</strong> 표시해야 정답!<br/>" +
-"뇌물은 밀어내고, <strong>3명 중 2명 이상</strong> 맞히면 통과!",
+"뇌물은 밀어내고, <strong>5명 중 3명 이상</strong> 맞히면 통과!",
 "창구 개시 (첫 상인!)",
-["assets/minigame/map_02_audit_desk.png"],
+["assets/minigame/map_02_audit_desk.png", "assets/ui/ui_bribe_pouch.png", "assets/char/merchant_02_normal.png", "assets/char/merchant_04_normal.png"],
 () => {
 const SEAL_REAL = "assets/items/icon_seal_real.png", SEAL_FAKE = "assets/items/icon_seal_fake.png";
 const AREAS = "서쪽 제재소 · 중앙 공방로 · 남쪽 광장 · 동쪽 보급창";
@@ -5430,12 +5467,28 @@ excuse: "어, 어라?! 북쪽 헛간은 내일 고칠 창고고요… 인장은 
 hint: "말이 꼬이는 걸 보니 수상해요! 값이 너무 싼 건 아닌지, 창고 위치와 도장 그림도 기준과 하나씩 비교해 봐요.",
 caught: "으악! 들켰다…! 이, 이건 오해입니다요!",
 escaped: "헤헤, 거긴 멀쩡한뎁쇼? 엉뚱한 데만 보시네요~",
-bribe: "황금 참치 주머니 (+500G) — \"눈 한 번만 감아주시죠…\"",
+bribeImg: "assets/ui/ui_bribe_pouch.png",
+bribe: "황금 냥코인 뇌물 주머니 (+500G) — \"눈 한 번만 감아주시죠…\"",
 lines: [
 { lbl: "제시 단가", val: "80G / 단", std: "기준 · 목재 130~200G", bad: true, why: "80G — 목재 기준 130~200G보다 너무 싸요 (덤핑)" },
 { lbl: "납품 기한", val: "D+3 (3일 이내)", std: "기준 · 5일(D+5) 이내", bad: false, why: "D+3 — 5일 이내라 정상이에요" },
 { lbl: "창고 주소", val: "개척촌 북쪽 제3 폐헛간", std: "기준 · 등기 구역: " + AREAS, bad: true, why: "북쪽 폐헛간 — 등기 구역 4곳에 없어요 (유령 주소)" },
 { lbl: "상회 인장", seal: SEAL_FAKE, tilt: 15, val: "상회 직인 날인됨", std: "기준 · 견본과 똑같아야 (기울임·번짐 X)", bad: true, why: "15° 기울어진 가짜 인장이에요" },
+],
+},
+{
+charImg: "assets/char/merchant_02_normal.png", shockImg: "assets/expr/merchant_02_shock.png",
+name: "모노클 비단 브로커", item: "경비대 방패 (1묶음)", vendor: "에메랄드 비단상회",
+opening: "호호, 경비대 방패를 시세보다 훨씬 저렴한 특가로 맞춰 왔소. 서류는 일류답게 깔끔하오.",
+excuse: "어, 어흠?! 95G는 특별 할인이고… 인장은 급히 찍다 살짝 기울어졌을 뿐이오!",
+hint: "고급 상인 행세를 하지만 단가가 너무 낮아요! 방패 기준 가격과 인장 그림을 기준 견본과 비교해 봐요!",
+caught: "크윽…! 단안경까지 쓰고 왔는데 들키다니!",
+escaped: "후후, 역시 제 안목이 통했군요.",
+lines: [
+{ lbl: "제시 단가", val: "95G / 개", std: "기준 · 방패 140~210G", bad: true, why: "95G — 방패 기준 140~210G보다 너무 싸요 (저가 덤핑)" },
+{ lbl: "납품 기한", val: "D+2 (2일 이내)", std: "기준 · 5일(D+5) 이내", bad: false, why: "D+2 — 5일 이내라 정상이에요" },
+{ lbl: "창고 주소", val: "중앙 공방로 4번지", std: "기준 · 등기 구역: " + AREAS, bad: false, why: "중앙 공방로는 등기 구역이라 정상이에요" },
+{ lbl: "상회 인장", seal: SEAL_FAKE, tilt: -14, val: "상회 직인 날인됨", std: "기준 · 견본과 똑같아야 (기울임·번짐 X)", bad: true, why: "기울어진 가짜 인장이에요" },
 ],
 },
 {
@@ -5451,6 +5504,23 @@ lines: [
 { lbl: "제시 단가", val: "220G / 상자", std: "기준 · 마력석 180~260G", bad: false, why: "220G — 마력석 기준 180~260G 안이라 정상이에요" },
 { lbl: "납품 기한", val: "D+4 (4일 이내)", std: "기준 · 5일(D+5) 이내", bad: false, why: "D+4 — 5일 이내라 정상이에요" },
 { lbl: "등록증 유효기한", val: "2025.11.30 까지", std: "기준 · 오늘(2026.03.02) 이후까지 유효해야", bad: true, why: "2025.11.30 — 이미 지난 날짜라 만료됐어요" },
+],
+},
+{
+charImg: "assets/char/merchant_04_normal.png", shockImg: "assets/expr/merchant_04_shock.png",
+name: "주판 장부 거상", item: "삼나무 목재 (1단)", vendor: "황금주판 물류상회",
+opening: "주판으로 딱 맞춘 정가 175G입니다요. 정품 인장까지 찍혔으니 고민할 것 없지 않습니까?",
+excuse: "앗, 아차차! 창고는 성벽 밖에 임시로 쳤고, 배송이 며칠 늦는 건 길 사정 때문입니다요!",
+hint: "가격과 도장은 멀쩡해요! 대신 며칠 걸리는지와 창고 주소가 등기 구역인지 꼭 확인해 봐요!",
+caught: "아이고 내 주판알…! 날짜랑 창고까지 다 걸렸네!",
+escaped: "헤헤, 주판 계산이 딱 맞아떨어졌구먼!",
+bribeImg: "assets/items/item_tuna_pouch.png",
+bribe: "황금 참치 주머니 (+400G) — \"주판알 몇 개만 눈감아 주시죠…\"",
+lines: [
+{ lbl: "제시 단가", val: "175G / 단", std: "기준 · 목재 130~200G", bad: false, why: "175G — 목재 기준 130~200G 안이라 정상이에요" },
+{ lbl: "납품 기한", val: "D+9 (9일 후)", std: "기준 · 5일(D+5) 이내", bad: true, why: "D+9 — 5일 이내 납품 기한을 어겼어요" },
+{ lbl: "창고 주소", val: "성벽 밖 무허가 천막", std: "기준 · 등기 구역: " + AREAS, bad: true, why: "성벽 밖 무허가 천막 — 등기 구역 4곳에 없어요 (유령 주소)" },
+{ lbl: "상회 인장", seal: SEAL_REAL, tilt: 0, val: "개척촌 공식 직인", std: "기준 · 견본과 똑같아야 (기울임·번짐 X)", bad: false, why: "견본과 같은 정품 인장이에요" },
 ],
 },
 {
@@ -5634,7 +5704,7 @@ document.getElementById("mg-content").innerHTML = `
                     ${rowsHtml}
                     <div class="aud2-stamp" id="aud2-stamp"></div>
                   </div>
-                  ${c.bribe ? `<div class="aud2-bribe" id="aud2-bribe"><img src="assets/items/item_tuna_pouch.png" alt="" onerror="this.style.display='none'" /><span style="flex:1;min-width:0;">${c.bribe}</span><span class="push">밀어내기 →</span></div>` : ""}
+                  ${c.bribe ? `<div class="aud2-bribe" id="aud2-bribe"><img src="${c.bribeImg || "assets/ui/ui_bribe_pouch.png"}" alt="" onerror="this.style.display='none'" /><span style="flex:1;min-width:0;">${c.bribe}</span><span class="push">밀어내기 →</span></div>` : ""}
                   <div class="aud2-actions" id="aud2-actions">
                     <button type="button" class="aud2-btn aud2-ask" id="aud2-ask">❓ 추궁</button>
                     <button type="button" class="aud2-btn aud2-submit" id="aud2-submit" disabled><img src="assets/ui_tactical/stamp_reject.png" alt="" />제재 도장 · 적발 제출</button>
@@ -5769,21 +5839,21 @@ if (!active) return;
 active = false;
 activeMinigameCleanup = null;
 if (talk && talk.isConnected) talk.remove();
-const need = 2;
+const need = 3;
 if (correctN < need && typeof showMinigameFail === "function") {
 showMinigameFail("입찰 심사 실패",
 `정확히 적발한 상인 <strong>${correctN}/${cases.length}</strong>명<br/>통과하려면 <strong>${need}명 이상</strong> 틀린 곳을 빠짐없이(그것만) 표시하고 뇌물은 밀어내야 해요.`,
 () => startMinigameAudit(onComplete));
 return;
 }
-state.budget += 300 * correctN;
-state.trust = Math.min(100, state.trust + 8 * correctN);
-state.battleStats.wallMaxHp = Math.min(140, state.battleStats.wallMaxHp + 10 * correctN);
+state.budget += 200 * correctN;
+state.trust = Math.min(100, state.trust + 5 * correctN);
+state.battleStats.wallMaxHp = Math.min(140, state.battleStats.wallMaxHp + 6 * correctN);
 state.auditScore = correctN;
 renderHud();
 showMinigameResult(
 "입찰 적격심사 데스크 결산",
-`상인 3명 심사 완료! 정확한 적발 <strong>${correctN}/${cases.length}</strong>명<br/>예산 <strong>+${300 * correctN}G</strong> · 신뢰도 <strong>+${8 * correctN}</strong> · 성벽 최대 HP <strong>${state.battleStats.wallMaxHp}</strong>`,
+`상인 ${cases.length}명 심사 완료! 정확한 적발 <strong>${correctN}/${cases.length}</strong>명<br/>예산 <strong>+${200 * correctN}G</strong> · 신뢰도 <strong>+${5 * correctN}</strong> · 성벽 최대 HP <strong>${state.battleStats.wallMaxHp}</strong>`,
 "결재 확정",
 onComplete
 );
@@ -8110,7 +8180,7 @@ initRound();
 }
 function startVerticalDefense(config, onComplete) {
 const isBoss = !!config.hasBoss;
-AudioMgr.playBgm(isBoss ? "bgm_crisis" : "bgm_defense");
+AudioMgr.playBgm(isBoss ? "bgm_boss" : "bgm_defense");
 openMinigameShell(
 isBoss ? "최종 결전 : 회귀의 마물 군주" : "성벽 마을 방어전",
 "화면을 <strong>누른 채 드래그</strong>하면 포탑 3기가 조준선으로 <strong>집중 사격</strong>합니다.<br/>" +
@@ -8118,7 +8188,7 @@ isBoss ? "최종 결전 : 회귀의 마물 군주" : "성벽 마을 방어전",
 "② 보스는 <strong>보호막</strong>에 싸여 있어요. 마력 <strong>60</strong>이 차면 <strong>[격류 방출]</strong>(또는 위로 휙)로 보호막을 깨고, <strong>코어가 열린 4초</strong> 동안 보스를 집중 사격!<br/>" +
 "③ <strong>역행</strong> 게이지가 차면 보스가 회복해요. 보스를 쏘면 게이지가 줄어요.<br/><strong>성벽 체력이 0이 되면 실패</strong>입니다.",
 "방어 개시",
-["assets/minigame/map_04_vertical_defense.png"],
+["assets/minigame/map_04_vertical_defense.png", "assets/items/obj_barricade.png", "assets/ui/ui_title_emblem.png"],
 () => {
 const G = {
 CW: 380, CH: 700,
@@ -8134,6 +8204,8 @@ const turretIm = getSprite("assets/minigame/obj_turret_blue.png");
 const scoutIm = getSprite("assets/minigame/enemy_scout.png");
 const siegeIm = getSprite("assets/minigame/enemy_siege.png");
 const bossIm = getSprite("assets/minigame/boss_rewind_lord.png");
+const barricadeIm = getSprite("assets/items/obj_barricade.png");
+const emblemIm = getSprite("assets/ui/ui_title_emblem.png");
 const FONT = "'Pretendard Variable', Pretendard, sans-serif";
 const BURST_COST = 60, REPAIR_COST = 30, CORE_TICKS = 118, SPAWN_EVERY = 28;
 const MANA_REGEN = 0.17, BURST_ENEMY_DMG = 10, BURST_BOSS_DMG = 6, SHIELD_CHIP = 0.08;
@@ -8142,6 +8214,8 @@ let wallHp = state.battleStats.wallMaxHp;
 let bossHp = isBoss ? (config.bossHp || 100) : 0;
 let core = 0, shieldTextCd = 0;
 let rewind = 0, mana = 30, enemies = [], beams = [], sparks = [];
+const laneHit = [0, 0, 0];
+let repairFlash = 0, emblemBurst = 0;
 let eidSeq = 1, active = true, spawnCounter = 0, breakBannerFrames = 0;
 const FXL = window.NakkeFX ? window.NakkeFX.layer() : null;
 const vib = (p) => { try { if (navigator.vibrate) navigator.vibrate(p); } catch (_) {} };
@@ -8154,7 +8228,7 @@ mgContent.innerHTML = `
                 <div style="position:absolute;left:14px;right:14px;bottom:max(12px, var(--safe-bottom));display:flex;justify-content:space-between;align-items:flex-end;pointer-events:none;">
                   <button type="button" id="def-repair-btn" style="pointer-events:auto;width:66px;height:66px;border-radius:50%;border:2.5px solid rgba(134,239,172,0.85);background:radial-gradient(circle at 35% 30%,rgba(34,197,94,0.85),rgba(15,45,28,0.92));color:#fff;font-size:11px;font-weight:900;line-height:1.2;box-shadow:0 6px 18px rgba(0,0,0,0.65);touch-action:manipulation;">🛡️<br/>성벽 수리<br/><span style="font-size:10px;color:#bbf7d0;">마력 30</span></button>
                   <div style="font-size:11px;font-weight:800;color:#bae6fd;background:rgba(2,6,23,0.72);padding:4px 10px;border-radius:999px;border:1px solid rgba(56,189,248,0.4);">화면 꾹 눌러 드래그 조준</div>
-                  <button type="button" id="def-mana-btn" style="pointer-events:auto;width:72px;height:72px;border-radius:50%;border:2.5px solid rgba(125,211,252,0.95);background:radial-gradient(circle at 35% 30%,rgba(14,165,233,0.92),rgba(12,42,78,0.95));color:#fff;font-size:11.5px;font-weight:900;line-height:1.2;box-shadow:0 0 18px rgba(56,189,248,0.48),0 6px 18px rgba(0,0,0,0.65);touch-action:manipulation;">⚡<br/>격류 방출<br/><span style="font-size:10px;color:#fde68a;">마력 60</span></button>
+                  <button type="button" id="def-mana-btn" style="pointer-events:auto;width:72px;height:72px;border-radius:50%;border:2.5px solid rgba(125,211,252,0.95);background:radial-gradient(circle at 35% 30%,rgba(14,165,233,0.92),rgba(12,42,78,0.95));color:#fff;font-size:11.5px;font-weight:900;line-height:1.15;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;box-shadow:0 0 18px rgba(56,189,248,0.48),0 6px 18px rgba(0,0,0,0.65);touch-action:manipulation;"><img src="assets/ui/ui_title_emblem.png" alt="" style="width:22px;height:22px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(56,189,248,0.85));" /><span>격류 방출</span><span style="font-size:10px;color:#fde68a;">마력 60</span></button>
                 </div>
               </div>
             `;
@@ -8228,6 +8302,7 @@ bossHp = Math.max(0, bossHp - BURST_BOSS_DMG);
 rewind = Math.max(0, rewind - 55);
 core = CORE_TICKS; // 보호막 붕괴 → 코어 노출
 breakBannerFrames = 32;
+emblemBurst = 34;
 };
 const fireAtPoint = (cx, cy, playSound) => {
 if (Math.hypot(cx - G.boss.x, cy - G.boss.y) < G.boss.s * 0.68) {
@@ -8309,6 +8384,7 @@ vib(18);
 AudioMgr.playSfx("sfx_chime");
 mana -= REPAIR_COST;
 wallHp = Math.min(state.battleStats.wallMaxHp, wallHp + 24);
+repairFlash = 26;
 addSparkBurst(G.botX[1], G.wallY + 20, "#4ade80");
 if (FXL) [0, 1, 2].forEach((i) => FXL.burst("spark", G.botX[i], G.turretY - 10, 150, { dur: 20 }).particles(G.botX[i], G.turretY, { n: 8, speed: 3.5, rgb: "160,255,180" }));
 };
@@ -8328,6 +8404,9 @@ tickAngle += 0.04 * fr;
 mana = Math.min(100, mana + MANA_REGEN * state.battleStats.manaChargeSpeed * fr);
 if (core > 0) core = Math.max(0, core - fr);
 if (shieldTextCd > 0) shieldTextCd = Math.max(0, shieldTextCd - fr);
+for (let i = 0; i < 3; i++) if (laneHit[i] > 0) laneHit[i] = Math.max(0, laneHit[i] - fr);
+if (repairFlash > 0) repairFlash = Math.max(0, repairFlash - fr);
+if (emblemBurst > 0) emblemBurst = Math.max(0, emblemBurst - fr);
 stepAcc += fr;
 while (stepAcc >= 1) {
 stepAcc -= 1;
@@ -8382,7 +8461,7 @@ return false;
 }
 if (e.t >= 1) {
 vib([30, 20, 30]);
-AudioMgr.playSfx("sfx_boom"); wallHp = Math.max(0, wallHp - 10); triggerStageQuake();
+AudioMgr.playSfx("sfx_boom"); wallHp = Math.max(0, wallHp - 10); laneHit[e.lane] = 16; triggerStageQuake();
 if (FXL) FXL.burst("boom", e.x, G.wallY + 10, 200, { dur: 20 }).particles(e.x, G.wallY + 10, { shape: "chip", n: 10, speed: 6, rgb: "120,120,130" }).particles(e.x, G.wallY + 10, { shape: "dust", n: 8, speed: 2, size: 12, rgb: "140,140,150" });
 return false;
 }
@@ -8460,6 +8539,39 @@ const bw = Math.max(24, s * 0.62);
 ctx.fillStyle = "rgba(0,0,0,0.6)"; ctx.fillRect(e.x - bw / 2, e.y - s * 0.56, bw, 4);
 ctx.fillStyle = e.isSiege ? "#f59e0b" : "#f87171"; ctx.fillRect(e.x - bw / 2, e.y - s * 0.56, bw * Math.max(0, e.hp / e.maxHp), 4);
 });
+{
+const wallRatio = Math.max(0, Math.min(1, wallHp / Math.max(1, state.battleStats.wallMaxHp)));
+const repA = repairFlash > 0 ? repairFlash / 26 : 0;
+[0, 1, 2].forEach((i) => {
+const hitT = laneHit[i] / 16;
+const bx = G.botX[i] + (hitT > 0 ? Math.sin(laneHit[i] * 2.2) * 5 * hitT : 0);
+const by = G.wallY - 4;
+ctx.fillStyle = "rgba(0,0,0,0.38)";
+ctx.beginPath(); ctx.ellipse(bx, by + 22, 34, 8, 0, 0, Math.PI * 2); ctx.fill();
+if (barricadeIm.complete && barricadeIm.naturalWidth) {
+ctx.save();
+ctx.translate(bx, by);
+if (wallRatio < 0.45) ctx.rotate((i === 1 ? -1 : 1) * (0.45 - wallRatio) * 0.08);
+ctx.globalAlpha = wallRatio < 0.35 ? 0.78 : 0.96;
+ctx.drawImage(barricadeIm, -43, -31, 86, 62);
+ctx.restore();
+}
+if (hitT > 0) {
+ctx.save();
+ctx.strokeStyle = `rgba(239,68,68,${(0.55 * hitT).toFixed(3)})`;
+ctx.lineWidth = 3;
+ctx.beginPath(); ctx.ellipse(bx, by + 2, 42, 24, 0, 0, Math.PI * 2); ctx.stroke();
+ctx.restore();
+}
+if (repA > 0) {
+ctx.save();
+ctx.strokeStyle = `rgba(74,222,128,${(0.65 * repA).toFixed(3)})`;
+ctx.lineWidth = 3;
+ctx.beginPath(); ctx.ellipse(bx, by + 2, 44, 25, 0, 0, Math.PI * 2); ctx.stroke();
+ctx.restore();
+}
+});
+}
 [0, 1, 2].forEach((i) => {
 if (turretIm.complete && turretIm.naturalWidth) ctx.drawImage(turretIm, G.botX[i] - G.turretS / 2, G.turretY - G.turretS / 2, G.turretS, G.turretS);
 });
@@ -8470,6 +8582,30 @@ ctx.beginPath(); ctx.moveTo(b.x1, b.y1); ctx.lineTo(b.x2, b.y2); ctx.stroke();
 if (b.life <= 0) beams.splice(i, 1);
 }
 if (FXL) FXL.draw(ctx);
+if (emblemBurst > 0 && emblemIm.complete && emblemIm.naturalWidth) {
+const p = 1 - emblemBurst / 34;
+const alpha = p < 0.18 ? (p / 0.18) * 0.92 : Math.max(0, (1 - (p - 0.18) / 0.82) * 0.92);
+const sc = 0.62 + 0.50 * (1 - Math.pow(1 - Math.min(1, p * 2.2), 3));
+ctx.save();
+ctx.translate(G.CW / 2, 292);
+ctx.globalAlpha = alpha;
+const g = ctx.createRadialGradient(0, 0, 10, 0, 0, 86 * sc);
+g.addColorStop(0, "rgba(56,189,248,0.52)");
+g.addColorStop(0.55, "rgba(250,204,21,0.22)");
+g.addColorStop(1, "rgba(56,189,248,0)");
+ctx.fillStyle = g;
+ctx.beginPath(); ctx.arc(0, 0, 86 * sc, 0, Math.PI * 2); ctx.fill();
+ctx.save();
+ctx.rotate(p * 3.2);
+ctx.strokeStyle = "rgba(186,230,253,0.85)";
+ctx.lineWidth = 2.5;
+ctx.setLineDash([10, 8]);
+ctx.beginPath(); ctx.arc(0, 0, 66 * sc, 0, Math.PI * 2); ctx.stroke();
+ctx.restore();
+const es = 104 * sc;
+ctx.drawImage(emblemIm, -es / 2, -es / 2, es, es);
+ctx.restore();
+}
 if (aim.holding) {
 ctx.save(); ctx.translate(aim.x, aim.y);
 ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 2.4;
@@ -8996,6 +9132,32 @@ lines: ["남쪽 보급로로 수레가 술술 들어오고 있어요!", "마을�
 { key: "captain",     home: "inspect_fork",  zone: ["gate", "upper_road", "workshop_fork", "mid_plaza", "inspect_fork", "center_sq"],
 lines: ["전선 경비대 전원, 보급 물자 수령 완료했습니다.", "공정한 조달이 곧 최강의 방어선입니다!"] },
 ];
+var RESIDENT_META = {
+chief: { portrait: "assets/char/chief_normal.png", name: "이전 촌장", role: "개척촌 원로" },
+inventor: { portrait: "assets/char/inventor_normal.png", name: "발명냥이", role: "혁신 마도공방" },
+guard: { portrait: "assets/char/guard_normal.png", name: "개척촌 경비대", role: "성문 수비대" },
+captain: { portrait: "assets/char/captain_normal.png", name: "경비대장", role: "방어 총지휘" },
+merchant: { portrait: "assets/char/merchant_normal.png", name: "외지 상인", role: "목재 상회" },
+villager_01: { portrait: "assets/char/villager_woman_normal.png", name: "개척촌 주민", role: "광장 상인" },
+villager_02: { portrait: "assets/char/villager_man_normal.png", name: "개척촌 목수", role: "재건 기술자" },
+villager_03: { portrait: "assets/char/npc_kid_boy_normal.png", name: "개척촌 소년", role: "마을 꼬마" },
+npc_baker: { portrait: "assets/char/npc_baker_normal.png", name: "빵집 주인", role: "중앙 광장 빵집" },
+npc_baker_staff_01: { portrait: "assets/char/npc_baker_staff_01_normal.png", name: "제빵 조수", role: "밀가루 운반" },
+npc_baker_staff_02: { portrait: "assets/char/npc_baker_staff_02_normal.png", name: "반죽 담당냥", role: "새벽 제빵팀" },
+npc_clerk: { portrait: "assets/char/npc_clerk_normal.png", name: "본청 서기관", role: "입찰 행정팀" },
+npc_farmer: { portrait: "assets/char/npc_farmer_normal.png", name: "개척촌 농부", role: "남쪽 농장" },
+npc_granny_cat: { portrait: "assets/char/npc_granny_cat_normal.png", name: "마을 할머니", role: "개척촌 이웃" },
+npc_kid_girl: { portrait: "assets/char/npc_kid_girl_normal.png", name: "사과 소녀", role: "마을 꼬마" },
+npc_kitten_kid: { portrait: "assets/char/npc_kitten_kid_normal.png", name: "아기 고양이", role: "꼬마 수습생" },
+npc_militia: { portrait: "assets/char/npc_militia_normal.png", name: "마을 민병대", role: "성문 순찰대" },
+npc_militia_c: { portrait: "assets/char/militia_C_normal_00001_.png", name: "망루 경계병", role: "성벽 감시조" },
+villager_man: { portrait: "assets/char/villager_man_normal.png", name: "목재상 주민", role: "지붕 보수반" },
+villager_woman: { portrait: "assets/char/villager_woman_normal.png", name: "시장 주민", role: "생활 물자" },
+merchant_02: { portrait: "assets/char/merchant_02_normal.png", name: "모노클 상인", role: "공정 입찰 상회" },
+merchant_03: { portrait: "assets/char/merchant_03_normal.png", name: "납기 준수 상인", role: "특급 운송단" },
+merchant_04: { portrait: "assets/char/merchant_04_normal.png", name: "주판 장부 상인", role: "비축 물류 상회" },
+merchant_05: { portrait: "assets/char/merchant_05_normal.png", name: "공방 부품 상인", role: "마도 부품 상단" },
+};
 var css = [
 "#village-hub-layer #hub-sd-walkers{position:absolute!important;left:0!important;top:0!important;bottom:auto!important;width:118px!important;height:70px!important;margin-left:-59px!important;margin-top:-62px!important;",
 "  display:block!important;pointer-events:auto!important;cursor:grab!important;touch-action:none!important;user-select:none!important;-webkit-user-select:none!important;transition:none!important;will-change:transform;}",
@@ -9019,6 +9181,14 @@ var css = [
 ".sdw-bubble.show{opacity:1;transform:translateX(-50%) scale(1);}",
 "#village-hub-layer #hub-grid{z-index:80!important;}",
 "#village-hub-layer #hub-unified-hud{z-index:85!important;}",
+"#sdw-portrait-card{position:absolute;left:10px;right:10px;bottom:calc(var(--sdw-hud-h, 88px) + 14px + env(safe-area-inset-bottom));z-index:92;display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;background:rgba(10,16,28,0.90);border:1px solid rgba(240,201,105,0.62);box-shadow:0 8px 24px rgba(0,0,0,0.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);opacity:0;transform:translate3d(0,10px,0) scale(0.97);pointer-events:none;transition:opacity .18s ease,transform .18s ease;will-change:transform,opacity;}",
+"#sdw-portrait-card.show{opacity:1;transform:translate3d(0,0,0) scale(1);pointer-events:auto;cursor:pointer;}",
+"#sdw-portrait-card .sdw-pc-img{width:66px;height:80px;object-fit:cover;object-position:center 12%;border-radius:7px;flex-shrink:0;border:1px solid rgba(240,201,105,0.45);background:radial-gradient(circle at 50% 40%,rgba(240,201,105,0.16),rgba(15,23,42,0.8));}",
+"#sdw-portrait-card .sdw-pc-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;}",
+"#sdw-portrait-card .sdw-pc-head{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}",
+"#sdw-portrait-card .sdw-pc-name{font-size:13.5px;font-weight:900;color:#fde68a;}",
+"#sdw-portrait-card .sdw-pc-role{font-size:10.5px;font-weight:700;color:#cbd5e1;padding:1px 6px;border-radius:4px;background:rgba(255,255,255,0.08);border:1px solid rgba(203,213,225,0.28);}",
+"#sdw-portrait-card .sdw-pc-line{font-size:12.5px;line-height:1.42;color:#f8fafc;font-weight:600;word-break:keep-all;}",
 "@keyframes sdIdleSoft{0%{transform:translateY(0) rotate(-1.2deg)}100%{transform:translateY(-3px) rotate(1.2deg)}}",
 "@keyframes sdStepSoft{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-4px) rotate(3deg)}}",
 "@keyframes sdTapHop{0%{transform:translateY(0) scale(1)}40%{transform:translateY(-12px) scale(1.12)}100%{transform:translateY(0) scale(1)}}",
@@ -9072,6 +9242,27 @@ var hub, walkers, mapBox, mapImg, playerImg, npcLayer;
 var npcs = [];
 var rafId = null;
 var cachedRect = null, rectDirty = true;
+var portraitCard = null, portraitTimer = null;
+function hidePortraitCard() {
+clearTimeout(portraitTimer);
+portraitTimer = null;
+if (portraitCard) portraitCard.classList.remove("show");
+}
+function ensurePortraitCard() {
+if (portraitCard && portraitCard.isConnected) return portraitCard;
+if (!hub) return null;
+portraitCard = document.createElement("div");
+portraitCard.id = "sdw-portrait-card";
+portraitCard.innerHTML =
+'<img class="sdw-pc-img" alt="" />' +
+'<div class="sdw-pc-body">' +
+'<div class="sdw-pc-head"><span class="sdw-pc-name"></span><span class="sdw-pc-role"></span></div>' +
+'<div class="sdw-pc-line"></div>' +
+'</div>';
+portraitCard.addEventListener("click", function (ev) { ev.stopPropagation(); hidePortraitCard(); });
+hub.appendChild(portraitCard);
+return portraitCard;
+}
 var player = {
 x: 0.55, y: 0.78,
 sx: 0.55, sy: 0.78,
@@ -9247,6 +9438,7 @@ return [];
 }
 function stopNpcs() {
 if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
+hidePortraitCard();
 npcs.forEach(function (n) {
 clearInterval(n.img._sdwT);
 clearTimeout(n.bubbleTimer);
@@ -9297,7 +9489,8 @@ var wrap = npc.wrap, bubble = npc.bubble, def = npc.def;
 wrap.classList.remove("sdw-hop");
 void wrap.offsetWidth;
 wrap.classList.add("sdw-hop");
-bubble.textContent = def.lines[npc.lineIdx % def.lines.length];
+var line = def.lines[npc.lineIdx % def.lines.length];
+bubble.textContent = line;
 npc.lineIdx++;
 bubble.classList.add("show");
 clearTimeout(npc.bubbleTimer);
@@ -9305,6 +9498,30 @@ npc.bubbleTimer = setTimeout(function () {
 bubble.classList.remove("show");
 wrap.classList.remove("sdw-hop");
 }, 2400);
+var card = ensurePortraitCard();
+if (card) {
+var meta = RESIDENT_META[def.key] || {};
+var portraitSrc = def.portrait || meta.portrait || "";
+var pName = def.name || meta.name || def.key;
+var pRole = def.role || meta.role || "개척촌 주민";
+if (portraitSrc) {
+var hud = document.getElementById("hub-unified-hud");
+if (hud) {
+var hudH = Math.max(60, Math.round(hud.offsetHeight || 88));
+hub.style.setProperty("--sdw-hud-h", hudH + "px");
+}
+var pImg = card.querySelector(".sdw-pc-img");
+pImg.style.display = "";
+pImg.onerror = function () { this.style.display = "none"; };
+pImg.src = portraitSrc;
+card.querySelector(".sdw-pc-name").textContent = pName;
+card.querySelector(".sdw-pc-role").textContent = pRole;
+card.querySelector(".sdw-pc-line").textContent = line;
+card.classList.add("show");
+clearTimeout(portraitTimer);
+portraitTimer = setTimeout(hidePortraitCard, 3600);
+}
+}
 }
 function startNpcs() {
 if (!mapBox) return;
@@ -9319,7 +9536,7 @@ var step = progressStep();
 var activeCount = step >= 3 ? NPC_DEFS.length : (step >= 1 ? 7 : 6);
 var defs = NPC_DEFS.slice(0, activeCount);
 var EXTRA = Array.isArray(window.NAKKE_EXTRA_RESIDENTS) ? window.NAKKE_EXTRA_RESIDENTS : [];
-defs = defs.concat(EXTRA.slice(0, Math.min(EXTRA.length, 8 + step * 3)));
+defs = defs.concat(EXTRA.slice(0, Math.min(EXTRA.length, 10 + step * 3)));
 var now = performance.now();
 defs.forEach(function (def, idx) {
 var home = NODES[def.home] || NODES.center_sq;
@@ -9602,6 +9819,12 @@ lines: ["시간은 금! 납기는 반드시 지킵니다.", "검수 통과, 이�
 lines: ["비축 물량 장부, 주판으로 딱 맞췄습니다.", "마력석 단가는 공정가 그대로입니다."] },
 { key: "merchant_05", home: "workshop_door", zone: ["workshop_door", "workshop_fork"],
 lines: ["공방 부품 납품하러 왔습니다요.", "포탑 부품 주문, 언제든 말씀만 하세요!"] },
+{ key: "villager_03", id: "villager_child_extra", portrait: "assets/char/villager_child_normal.png", name: "개척촌 꼬마", role: "광장 구경꾼",
+home: "mid_plaza", zone: ["mid_plaza", "center_sq", "board_door"],
+lines: ["우와, 게시판 새 공고가 반짝반짝해요!", "나르미랑 달이 너무 귀여워요!"] },
+{ key: "npc_militia", id: "militia_extra", portrait: "assets/char/militia_normal_00003_.png", name: "동문 민병대", role: "보급로 경계",
+home: "workshop_fork", zone: ["workshop_fork", "upper_road", "warehouse_door"],
+lines: ["비축 창고 주변 이상 없습니다!", "정품 목재로 방벽을 보강하니 든든하군요."] },
 ];</script>
 <script>(function () {
 "use strict";
@@ -9721,7 +9944,7 @@ audit: { match: /입찰 심사 데스크/, steps: [
 "기준과 다른 줄을 누르면 <b>🚨 적발</b> 표시! 다시 누르면 지워져요. 모든 서류에 틀린 곳이 <b>1개 이상</b> 있어요.",
 "헷갈리면 <b>[추궁]</b>! 상인의 변명 뒤에 제가 어디를 볼지 알려드려요. (상인마다 1번)",
 "뇌물 주머니는 <b>밀어내기</b>! 그냥 두고 제출하면 틀린 걸로 쳐요.",
-"틀린 줄을 <b>빠짐없이, 그것만</b> 표시했으면 <b>[제재 도장]</b>! 3명 중 <b>2명 이상</b> 맞히면 통과예요.",
+"틀린 줄을 <b>빠짐없이, 그것만</b> 표시했으면 <b>[제재 도장]</b>! 5명 중 <b>3명 이상</b> 맞히면 통과예요.",
 ] },
 turret: { match: /포탑 직접 조립/, steps: [
 "아래 작업대의 부품을 손가락으로 집어, 포탑 위 <b>빛나는 슬롯</b>까지 끌어다 놓아요.",
