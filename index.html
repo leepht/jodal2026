@@ -3043,11 +3043,11 @@ expr: "shock",
 action: "act-hit",
 policy: "innov",
 mode: "narration",
-text: "저녁 무렵, 비축창고 옆 기름 냄새가 자욱한 마도공방 문을 열자마자 매캐한 열기와 함께 둔탁한 과열 폭발음이 정면에서 터져 나왔다!",
+text: "저녁 무렵, 비축창고 옆 기름 냄새가 자욱한 마도공방 문을 열자마자 매캐한 열기와 함께 시제품 과부하 폭발음이 정면에서 터져 나왔다!",
 choiceLabel: "독백",
 stepButtons: [
-{ text: "헉…?! 공방 안쪽에서 갑자기 폭발이?!", label: "독백", char: "player", expr: "shock", action: "act-flinch" },
-{ text: "콜록, 콜록…! 눈을 뜰 수가 없을 정도로 매캐한 연기야…!", label: "독백", char: "player", expr: "pain", action: "act-shake" },
+{ text: "헉…?! 공방 안쪽에서 갑자기 마력 폭발이?!", label: "독백", char: "player", expr: "shock", action: "act-flinch" },
+{ text: "콜록, 콜록…! 이 화약 냄새랑 열기… 처음 전초기지에 떨어졌을 때 포탄 세례를 맞던 기억이 떠올라…!", label: "독백", char: "player", expr: "pain", action: "act-shake" },
 ],
 afterAction: "next",
 },
@@ -3059,19 +3059,19 @@ char: "inventor",
 expr: "normal",
 action: "act-flinch",
 speaker: "발명냥이",
-text: "쿨럭, 쿨럭… 끼약! 새로 온 {이름} 행정관인가냥?! 내가 개발한 '자동 마력 포탑' 시제품인데, 기존 투석기보다 연사력이 세 배는 빠르다냥! 그런데 실증 시험만 하면 자꾸 과열로 터져서 시범구매 탈락 위기다냥…!",
+text: "쿨럭, 쿨럭… 끼약! 새로 온 {이름} 행정관인가냥?! 내가 개발한 '자동 마력 포탑' 시제품인데, 기존 투석기보다 연사력이 세 배는 빠르다냥! 하지만 납품 실적이 한 건도 없는 1인 공방이라 아무도 안 사주고, 혼자 무리하게 출력 시험을 하다 또 과열됐다냥…!",
 },
 {
 id: "workshop_intro_3",
 bg: "workshop",
 hud: "isekai",
 char: "narumi",
-expr: "shock",
+expr: "normal",
 secondaryChar: "dali",
 secondaryExpr: "normal",
 speakerSlot: "left",
 speaker: "나르미",
-text: "잠깐만요, 행정관님! 공방 구석에 쌓인 부품 상자들 좀 보세요! 상자 겉면에 미세한 균열이랑 그을림 자국이 잔뜩 섞여 있어요!",
+text: "기술력은 혁신적인데 초기 판로와 검증 기회가 없어서 묻히고 있던 거군요! 이럴 때 쓰는 제도가 바로 조달청의 **혁신제품 시범구매**예요!",
 },
 {
 id: "workshop_intro_4",
@@ -3080,42 +3080,30 @@ hud: "isekai",
 char: "narumi",
 expr: "normal",
 secondaryChar: "dali",
-secondaryExpr: "shock",
+secondaryExpr: "blink",
 speakerSlot: "right",
 speaker: "달이",
-text: "쫓겨난 악덕 브로커 녀석이 예전에 공방으로 떠넘긴 **불량 덤핑 자재**들이에요! 설계 결함이 아니라, 하자 부품이 섞여 들어가서 시험 때마다 터졌던 거라고요!",
-},
-{
-id: "workshop_intro_5",
-bg: "workshop",
-hud: "isekai",
-char: "inventor",
-expr: "normal",
-action: "act-shake",
-speaker: "발명냥이",
-text: "뭐, 뭐라고냥?! 난 설계에만 미쳐서 납품 상자 상태는 미처 못 봤다냥! 큰일이다냥, 해가 지기 전까지 포탑 3기 분량인 **순정 부품 상자 최소 12개**를 골라내지 못하면 오늘 밤 성벽 배치는 물 건너간다냥!",
+text: "맞아요! 공공이 먼저 시제품을 구매해 **테스트베드(Test-Bed) 현장 실증**을 거치고, 성능과 안전성이 입증되면 우수조달물품으로 정식 보급하는 거죠!",
 },
 {
 id: "workshop_flashback_1",
 bg: "workshop",
 hud: "isekai",
 char: "player",
-expr: "shock",
+expr: "pain",
 action: "act-flinch",
 mode: "narration",
-text: "매캐한 연기 너머로 그을리고 금이 간 나무 상자들을 마주한 순간, 이 세계에 처음 떨어졌던 그날 밤의 기억이 뜨거운 섬광처럼 뇌리를 스쳤다.",
+text: "그을린 포탑 설계도를 내려다보는 순간, 이 세계에 처음 떨어졌던 그날 밤 불타는 전초기지의 기억이 다시금 뇌리를 스쳤다.",
 choiceLabel: "독백 / 행동",
 stepButtons: [
-{ text: "헉… 이 타들어 가는 냄새와 열기… 처음 불타는 전초기지에 떨어졌을 때랑 똑같아!", label: "독백", char: "player", expr: "shock", action: "act-flinch" },
-{ text: "그땐 포탄이 쏟아지는 아수라장 속에서, 영문도 모른 채 손바닥이 다 까지도록 상자를 끌어냈었지…!", label: "독백", char: "player", expr: "pain", action: "act-shake" },
-{ text: "숨이 턱 끝까지 차오르고 팔이 끊어질 듯 아팠지만… 그때 지켜낸 보급품이 결국 전초기지 사람들을 살렸어.", label: "독백", char: "player", expr: "pain" },
-{ text: "그날의 얼떨떨하던 수습이 아니야. 이제는 개척촌의 조달을 책임지는 행정관으로서 불량 자재를 전부 걸러내겠어!", label: "독백", char: "player", expr: "normal" },
-{ text: "25초 안에 멀쩡한 순정 부품 상자 12개 이상을 고속 선별한다!", label: "행동", char: "player", expr: "normal" },
+{ text: "처음 여기 떨어졌을 땐 방어 무기 하나 없이, 손바닥이 다 까지도록 상자만 끌어안고 버텼었지…!", label: "독백", char: "player", expr: "pain", action: "act-shake" },
+{ text: "만약 그날 성벽 위에 이런 자동 마력 포탑이 있었다면 경비대원들이 그렇게 쓰러지지 않았을 거야!", label: "독백", char: "player", expr: "shock", action: "act-flinch" },
+{ text: "납품 실적이 없다는 이유만으로 혁신 기술을 사장시킬 순 없어. 먼저 시제품 본체 조립부터 직접 돕자!", label: "행동", char: "player", expr: "normal" },
 ],
-afterAction: "mg_stage4_sort",
+afterAction: "mg_stage4_turret",
 },
 {
-id: "workshop_mid_1",
+id: "workshop_testbed_1",
 bg: "workshop",
 bgm: "bgm_work",
 hud: "isekai",
@@ -3123,12 +3111,13 @@ char: "inventor",
 expr: "normal",
 sfx: "sfx_chime",
 speaker: "발명냥이",
-text: "우와아앙! 산더미 같은 상자에서 불량 자재만 눈 깜짝할 새에 쳐내다니 괴물 같은 선별 속도다냥! 이 순정 마력 코어와 포신이면 절대 폭발할 일 없다냥!",
-choiceLabel: "독백 / 행동",
+text: "우와아앙! 코어·포신·냉각 동력기까지 유격 하나 없이 완벽하게 체결됐다냥! 이제 바로 성벽에 올리면 되는 거냥?!",
+choiceLabel: "대답 / 행동",
 stepButtons: [
-{ text: "전초기지 때 몸으로 익힌 감각이 아직 살아 있었어. 이제 걸러낸 순정 부품으로 포탑 본체를 직접 조립하자!", label: "행동", char: "player", expr: "normal" },
+{ text: "아직 한 단계 남았어! 혁신제품 시범구매의 핵심은 실전 배치 전 '현장 실증(Test-Bed) 성능·안전 검증'이야.", label: "대답", char: "player", expr: "normal" },
+{ text: "공방 뒤편 실증 사격장에서 표적 명중 정밀도와 아군 수레 오사 방지 안전성을 직접 검증한다!", label: "행동", char: "player", expr: "normal" },
 ],
-afterAction: "mg_stage4_turret",
+afterAction: "mg_stage4_testbed",
 },
 {
 id: "workshop_after",
@@ -3139,11 +3128,11 @@ char: "inventor",
 expr: "normal",
 sfx: "sfx_chime",
 mode: "narration",
-text: "걸러낸 순정 자재로 조립한 자동 마력 포탑 3기가 단 한 번의 오작동도 없이 영롱한 푸른 마력광을 내뿜으며 성벽 배치를 완료했다.",
+text: "정밀 타격과 아군 보호 안전성 실증을 모두 통과한 자동 마력 포탑에 [혁신제품 실증 성공 · 우수조달물품 지정] 인장이 찍히고, 성벽 3기 배치가 완료되었다.",
 choiceLabel: "독백",
 stepButtons: [
-{ text: "기술은 뛰어났지만 불량 자재 때문에 묻힐 뻔한 혁신 시제품이었어. 시범구매 예산을 정식 승인한다!", expr: "normal" },
-{ text: "성벽 위에 자동 마력 포탑 3기를 고정 배치한다. 밤 습격 때 진가를 발휘할 거야.", expr: "blink" },
+{ text: "실증 데이터까지 완벽해! 시범구매 예산을 정식 집행하고 성벽 방어선에 3기를 고정 배치한다!", char: "player", expr: "normal" },
+{ text: "이제 오늘 밤 마물 군주가 몰려와도 전초기지 때처럼 당하지 않아.", char: "player", expr: "blink" },
 ],
 afterAction: "open_hub",
 },
@@ -4367,13 +4356,13 @@ state.hubStep = Math.max(state.hubStep, 2);
 runScene(findSceneIndex("convoy_after"));
 });
 break;
-case "mg_stage4_sort":
-startMinigameCrate(() => {
-runScene(findSceneIndex("workshop_mid_1"));
-}, { mode: "workshop" });
-break;
 case "mg_stage4_turret":
 startMinigameTurret(() => {
+runScene(findSceneIndex("workshop_testbed_1"));
+});
+break;
+case "mg_stage4_testbed":
+startMinigameTurretTestbed(() => {
 state.clearedStages.add(4);
 state.hubStep = Math.max(state.hubStep, 3);
 runScene(findSceneIndex("workshop_after"));
@@ -4780,33 +4769,19 @@ if (!found || !el.minigameLayer.classList.contains("active") || document.querySe
 const im = document.getElementById("mg-bg-img");
 if (im) { im.src = found; im.style.display = "block"; }
 }
-function startMinigameCrate(onComplete, opts) {
-const isWorkshop = !!(opts && opts.mode === "workshop");
+function startMinigameCrate(onComplete) {
 AudioMgr.playBgm("bgm_defense");
 openMinigameShell(
-isWorkshop ? "시제품 순정 부품 상자 긴급 선별 (25초 타임어택)" : "긴급 보급 화물 분류",
-isWorkshop
-? "악덕 브로커가 섞어 놓은 <strong>불량 덤핑 자재</strong>를 <strong>25초</strong> 안에 걸러내세요!<br/>" +
-"<strong>멀쩡한 순정 부품 상자</strong>는 오른쪽 [순정 확보], <strong>그을림·금·구멍 난 불량 상자</strong>는 왼쪽 [불량 폐기]!<br/>" +
-"실수할 때마다 <strong>제한 시간 -1.5초</strong>! <strong>순정 12개 이상</strong> 확보 시 통과하며, 초과 선별할수록 <strong>포탑 화력·연사력</strong>이 추가 상승합니다!"
-: "맨 앞 상자를 <strong>손가락으로 잡아 좌우로 던지세요!</strong> (총 20상자)<br/>" +
+"긴급 보급 화물 분류",
+"맨 앞 상자를 <strong>손가락으로 잡아 좌우로 던지세요!</strong> (총 20상자)<br/>" +
 "<strong>멀쩡한 정품</strong>은 오른쪽 [구출 수레]로, <strong>그을리거나 금 가거나 구멍 난 불량품</strong>은 왼쪽 [폐기 구덩이]로!<br/>" +
 "상자마다 <strong>제한 시간</strong>이 있어요(상자 둘레 링). 시간이 지나면 실수!<br/>" +
 "<strong>정품 8개 이상 구출 · 실수 4번 이하</strong>면 통과!",
-isWorkshop ? "부품 선별 시작" : "분류 시작",
-isWorkshop
-? ["assets/minigame/map_03_workbench.png", "assets/minigame/map_01_crate.png"]
-: ["assets/minigame/map_01_crate.png"],
+"분류 시작",
+["assets/minigame/map_01_crate.png"],
 () => {
-const bgIm = getSprite(isWorkshop ? "assets/minigame/map_03_workbench.png" : "assets/minigame/map_01_crate.png");
+const bgIm = getSprite("assets/minigame/map_01_crate.png");
 const plainIm = getSprite("assets/minigame/obj_crate_plain.png");
-const partImgs = isWorkshop
-? [
-getSprite("assets/items/part_core.png"),
-getSprite("assets/items/part_barrel.png"),
-getSprite("assets/items/part_power.png"),
-]
-: null;
 const CW = 380, CH = 700;
 const FONT = "'Pretendard Variable', Pretendard, sans-serif";
 const SLOTS = [
@@ -4879,36 +4854,12 @@ ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + Math.cos(a) * s * 0.05, y + Ma
 }
 ctx.restore();
 };
-const TOTAL_GOOD = 12, TOTAL_BAD = 8; // 초반 전초기지: 총 20개 (정품 12 + 불량 8)
-const MIN_RESCUE = 8, MAX_MISS = 4;   // 초반 통과 기준: 정품 8개 이상 구출 · 실수 4번 이하
-const TIME_LIMIT = 25.0, TARGET_GOOD = 12, PENALTY_SEC = 1.5; // 공방 타임어택 기준
-let crateSeq = 0;
-const wsBag = [];
-const nextWorkshopGood = () => {
-if (!wsBag.length) {
-const b = [true, true, true, false, false];
-for (let i = b.length - 1; i > 0; i--) {
-const j = Math.floor(Math.random() * (i + 1));
-const tmp = b[i]; b[i] = b[j]; b[j] = tmp;
-}
-wsBag.push(...b);
-}
-return wsBag.pop();
-};
-const makeCrateObj = (isGood, slotIdx) => {
-const pIdx = crateSeq++ % 3;
-return { isGood, defect: isGood ? null : makeDefect(), partIdx: pIdx, pos: slotIdx, target: slotIdx, wob: Math.random() * 6.28, limit: null, left: 0 };
-};
-const queue = [];
-if (isWorkshop) {
-for (let i = 0; i < 8; i++) queue.push(makeCrateObj(nextWorkshopGood(), i));
-} else {
+const TOTAL_GOOD = 12, TOTAL_BAD = 8; // 총 20상자
 const kinds = [];
 for (let i = 0; i < TOTAL_GOOD; i++) kinds.push(true);
 for (let i = 0; i < TOTAL_BAD; i++) kinds.push(false);
 for (let i = kinds.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const tmp = kinds[i]; kinds[i] = kinds[j]; kinds[j] = tmp; }
-kinds.forEach((g, i) => queue.push(makeCrateObj(g, i)));
-}
+const queue = kinds.map((isGood, i) => ({ isGood, defect: isGood ? null : makeDefect(), pos: i, target: i, wob: Math.random() * 6.28, limit: null, left: 0 }));
 const N_CRATES = queue.length;
 const flying = [];
 const bins = { left: [], right: [] };
@@ -4917,9 +4868,9 @@ left: { cx: 66, baseY: 618, cols: [30, 54, 78, 102], rowH: 14, label: { x: 68, y
 right: { cx: 302, baseY: 630, cols: [272, 298, 324], rowH: 18, label: { x: 304, y: 536 } },
 };
 const ITEM_S = 34;
-const T_FIRST = 3.0, T_LAST = 1.95; // 초반 모드 맨 앞 상자 제한 시간(초): 3.0 → 1.95
+const T_FIRST = 3.0, T_LAST = 1.95;
 let rescued = 0, active = true, combo = 0, bestCombo = 0, sorted = 0, comboFlash = 0, misses = 0, ending = false;
-let timeLeft = TIME_LIMIT, penaltyFlash = 0;
+const MIN_RESCUE = 8, MAX_MISS = 4; // 통과 기준: 정품 8개 이상 구출 + 실수 4번 이하
 const particles = Array.from({ length: 16 }, () => ({ x: Math.random() * CW, y: Math.random() * CH, vy: -0.5 - Math.random() * 1.1, r: 1.4 + Math.random() * 2.2 }));
 const fxTexts = [];
 const FXL = window.NakkeFX ? window.NakkeFX.layer() : null;
@@ -4943,20 +4894,7 @@ ctx.imageSmoothingEnabled = true;
 ctx.imageSmoothingQuality = "high";
 let lastHudSig = "";
 const updateHud = () => {
-if (isWorkshop) {
-const secCeil = Math.max(0, Math.ceil(timeLeft));
-const okGoal = rescued >= TARGET_GOOD;
-const sig = `W|${rescued}|${okGoal ? 1 : 0}|${combo}|${secCeil}`;
-if (sig === lastHudSig) return;
-lastHudSig = sig;
-el.mgHud.innerHTML = `
-                  <span class="hud-chip ${okGoal ? "gold" : "combat"}">순정 ${rescued}/${TARGET_GOOD}${okGoal ? " ✓" : ""}</span>
-                  <span class="hud-chip gold">콤보 ${combo}</span>
-                  <span class="hud-chip ${secCeil <= 6 ? "combat" : ""}">⏱ ${secCeil}s</span>
-                `;
-return;
-}
-const sig = `O|${rescued}|${misses}|${combo}|${queue.length}`;
+const sig = `${rescued}|${misses}|${combo}|${queue.length}`;
 if (sig === lastHudSig) return;
 lastHudSig = sig;
 el.mgHud.innerHTML = `
@@ -4971,50 +4909,17 @@ const stopAll = () => { active = false; cancelAnimationFrame(rafId); window.remo
 const finish = () => {
 if (!active) return;
 stopAll();
-if (isWorkshop) {
-if (rescued < TARGET_GOOD && typeof showMinigameFail === "function") {
-showMinigameFail(
-"시제품 부품 선별 미달",
-`25초 동안 순정 부품 상자 <strong>${rescued}/${TARGET_GOOD}개</strong> 확보 · 실수 <strong>${misses}회</strong><br/>포탑 3기를 조립하려면 <strong>순정 상자 ${TARGET_GOOD}개 이상</strong>이 필요합니다.<br/>멀쩡한 상자는 <strong>오른쪽</strong>, 그을림·금·구멍 난 불량 상자는 <strong>왼쪽</strong>으로 빠르게 쳐내세요!`,
-() => startMinigameCrate(onComplete, opts)
-);
-return;
-}
-const extra = Math.max(0, rescued - TARGET_GOOD);
-const pwrBonus = 1 + Math.min(4, Math.floor(extra / 2));
-const rateBonus = Math.min(90, extra * 12);
-state.battleStats.turretPower += pwrBonus;
-state.battleStats.turretFireRateMs = Math.max(380, state.battleStats.turretFireRateMs - rateBonus);
-state.workshopSorted = rescued;
-showMinigameResult(
-"순정 시제품 자재 선별 완료!",
-`25초 동안 순정 부품 상자 <strong>${rescued}개</strong> 확보! (목표 ${TARGET_GOOD}개${extra > 0 ? ` · 초과 <strong>+${extra}개</strong>` : ""} · 최고 콤보 ${bestCombo})<br/>불량 자재 완벽 배제 → 포탑 화력 <strong>+${pwrBonus}</strong>${rateBonus > 0 ? ` · 연사 <strong>-${rateBonus}ms</strong>` : ""} 선반영!`,
-"포탑 본체 조립으로 →",
-onComplete
-);
-return;
-}
 if ((rescued < MIN_RESCUE || misses > MAX_MISS) && typeof showMinigameFail === "function") {
-showMinigameFail("화물 분류 실패", `정품 <strong>${rescued}/${TOTAL_GOOD}</strong>개 구출 · 실수 <strong>${misses}</strong>번<br/>통과하려면 정품 <strong>${MIN_RESCUE}개 이상</strong> 구출하고 실수는 <strong>${MAX_MISS}번 이하</strong>여야 합니다.<br/>그을림·금·구멍이 있는 상자가 불량이에요.`, () => startMinigameCrate(onComplete, opts));
+showMinigameFail("화물 분류 실패", `정품 <strong>${rescued}/${TOTAL_GOOD}</strong>개 구출 · 실수 <strong>${misses}</strong>번<br/>통과하려면 정품 <strong>${MIN_RESCUE}개 이상</strong> 구출하고 실수는 <strong>${MAX_MISS}번 이하</strong>여야 합니다.<br/>그을림·금·구멍이 있는 상자가 불량이에요.`, () => startMinigameCrate(onComplete));
 return;
 }
 showMinigameResult("보급 화물 분류 완료", `화물 ${sorted}개 분류 · 정품 <strong>${rescued}/${TOTAL_GOOD}</strong>개 구출 · 실수 ${misses}번 · 최고 콤보 ${bestCombo}`, "계속", onComplete);
 };
 const checkEnd = () => {
 if (ending) return;
-if (isWorkshop) {
-if (timeLeft <= 0) { ending = true; setTimeout(finish, 420); }
-return;
-}
 if (misses > MAX_MISS || !queue.length) { ending = true; setTimeout(finish, misses > MAX_MISS ? 700 : 560); }
 };
-const advanceQueue = () => {
-queue.shift();
-queue.forEach((c) => { c.target = Math.max(0, c.target - 1); });
-if (isWorkshop) {
-queue.push(makeCrateObj(nextWorkshopGood(), queue.length));
-}
-};
+const advanceQueue = () => { queue.shift(); queue.forEach((c) => { c.target = Math.max(0, c.target - 1); }); };
 const judge = (toRight, startOffX = 0, startOffY = 0) => {
 if (!active || ending || !queue.length) return;
 const front = queue[0];
@@ -5028,7 +4933,7 @@ const tx = b.cols[cnt % b.cols.length] + (Math.random() - 0.5) * 4;
 const ty = b.baseY - Math.floor(cnt / b.cols.length) * b.rowH;
 const p0 = slotAt(front.pos);
 const sx = CW / 2 + startOffX, sy = p0.y + startOffY;
-flying.push({ isGood: front.isGood, defect: front.defect, partIdx: front.partIdx, side, sx, sy, ss: p0.s, tx, ty, t: 0, rot: startOffX * 0.004, vr: toRight ? 0.22 : -0.22 });
+flying.push({ isGood: front.isGood, defect: front.defect, side, sx, sy, ss: p0.s, tx, ty, t: 0, rot: startOffX * 0.004, vr: toRight ? 0.22 : -0.22 });
 curDx = 0; curDy = 0;
 sorted++;
 const correct = toRight === front.isGood;
@@ -5038,28 +4943,17 @@ vib(combo >= 3 ? [16, 20, 22] : 14);
 AudioMgr.playSfx(combo >= 3 ? "sfx_chime" : "sfx_click");
 if (front.isGood) rescued++;
 if (FXL) {
-FXL.burst(isWorkshop && front.isGood && rescued > TARGET_GOOD ? "magic" : "spark", sx, sy - 6, 175, { dur: 20 })
-.particles(sx, sy, { n: 14, speed: 5.5, rgb: isWorkshop && front.isGood && rescued > TARGET_GOOD ? "125,211,252" : "255,220,120" });
-if (combo >= 3) FXL.ring(CW / 2, 98, { r0: 18, r1: 98, rgb: "255,214,110", dur: 18, w: 5 }).burst("spark", CW / 2, 98, 120, { dur: 16 });
+FXL.burst("spark", sx, sy - 6, 175, { dur: 20 }).particles(sx, sy, { n: 14, speed: 5.5, rgb: "255,220,120" });
+if (combo >= 3) FXL.ring(CW / 2, 90, { r0: 18, r1: 98, rgb: "255,214,110", dur: 18, w: 5 }).burst("spark", CW / 2, 90, 120, { dur: 16 });
 }
-const goodLbl = isWorkshop
-? (rescued > TARGET_GOOD ? `⚡ 초과 보너스! (${rescued}개)` : (rescued === TARGET_GOOD ? "✓ 목표 12개 달성!" : "순정 확보!"))
-: "정품 구출!";
-const goodCol = (isWorkshop && front.isGood && rescued >= TARGET_GOOD) ? "#7dd3fc" : "#fde68a";
-fxTexts.push({ x: sx, y: sy - 76, txt: front.isGood ? goodLbl : "불량 폐기!", col: goodCol, life: 34 });
+fxTexts.push({ x: sx, y: sy - 76, txt: front.isGood ? "정품 구출!" : "불량 폐기!", col: "#fde68a", life: 34 });
 } else {
 combo = 0; misses++;
 vib([40, 30, 50]);
 AudioMgr.playSfx("sfx_error");
 triggerStageQuake();
 if (FXL) FXL.burst("boom", sx, sy, 210, { dur: 20 }).particles(sx, sy, { n: 16, speed: 6.5 }).particles(sx, sy, { shape: "chip", n: 9, speed: 5.5 });
-if (isWorkshop) {
-timeLeft = Math.max(0, timeLeft - PENALTY_SEC);
-penaltyFlash = 1;
-fxTexts.push({ x: CW / 2, y: p0.y - 76, txt: front.isGood ? "⏱ -1.5초! 순정 파기!" : "⏱ -1.5초! 불량 혼입!", col: "#fca5a5", life: 44 });
-} else {
 fxTexts.push({ x: CW / 2, y: p0.y - 76, txt: front.isGood ? "정품을 버렸다!" : "불량품이 섞였다!", col: "#fca5a5", life: 44 });
-}
 }
 updateHud();
 checkEnd();
@@ -5074,11 +4968,11 @@ vib([40, 30, 50]);
 AudioMgr.playSfx("sfx_error");
 triggerStageQuake();
 if (front.isGood) {
-flying.push({ isGood: true, defect: null, partIdx: front.partIdx, side: "drop", sx: CW / 2, sy: p0.y, ss: p0.s, tx: CW / 2 + (Math.random() - 0.5) * 60, ty: CH + 90, t: 0, rot: 0, vr: 0.3, drop: true });
+flying.push({ isGood: true, defect: null, side: "drop", sx: CW / 2, sy: p0.y, ss: p0.s, tx: CW / 2 + (Math.random() - 0.5) * 60, ty: CH + 90, t: 0, rot: 0, vr: 0.3, drop: true });
 } else {
 const b = BIN.right;
 const cnt = bins.right.length + flying.filter((f) => f.side === "right").length;
-flying.push({ isGood: false, defect: front.defect, partIdx: front.partIdx, side: "right", sx: CW / 2, sy: p0.y, ss: p0.s, tx: b.cols[cnt % b.cols.length], ty: b.baseY - Math.floor(cnt / b.cols.length) * b.rowH, t: 0, rot: 0, vr: 0.2 });
+flying.push({ isGood: false, defect: front.defect, side: "right", sx: CW / 2, sy: p0.y, ss: p0.s, tx: b.cols[cnt % b.cols.length], ty: b.baseY - Math.floor(cnt / b.cols.length) * b.rowH, t: 0, rot: 0, vr: 0.2 });
 }
 fxTexts.push({ x: CW / 2, y: p0.y - 82, txt: front.isGood ? "시간 초과! 정품을 놓쳤다" : "시간 초과! 불량이 섞였다", col: "#fca5a5", life: 48 });
 updateHud();
@@ -5139,17 +5033,6 @@ ctx.beginPath(); ctx.ellipse(0, s * (lifted ? 0.56 : 0.43), s * (lifted ? 0.36 :
 if (rot) ctx.rotate(rot);
 if (lifted) ctx.scale(1.07, 1.07);
 if (plainIm.complete && plainIm.naturalWidth) ctx.drawImage(plainIm, -s / 2, -s / 2, s, s);
-if (isWorkshop && partImgs && s >= 42) {
-const pIm = partImgs[(c.partIdx || 0) % partImgs.length];
-if (pIm && pIm.complete && pIm.naturalWidth) {
-const ps = s * 0.27, py = -s * 0.24;
-ctx.fillStyle = "rgba(8,14,28,0.74)";
-ctx.strokeStyle = "rgba(125,211,252,0.55)";
-ctx.lineWidth = Math.max(1, s * 0.014);
-ctx.beginPath(); ctx.arc(0, py, ps * 0.62, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-ctx.drawImage(pIm, -ps / 2, py - ps / 2, ps, ps);
-}
-}
 if (c.defect) drawDefect(c.defect, s, tNow);
 ctx.restore();
 };
@@ -5177,24 +5060,11 @@ const tNow = performance.now();
 if (document.hidden) { lastT = tNow; rafId = requestAnimationFrame(renderFrame); return; }
 const dtS = Math.min(0.05, Math.max(0, (tNow - lastT) / 1000));
 lastT = tNow;
-const fr = dtS * 60; // 60/100/120/144Hz 동일 물리 속도
+const fr = dtS * 60;
 const ease = (a) => 1 - Math.pow(1 - a, fr);
-if (isWorkshop && !ending) {
-timeLeft = Math.max(0, timeLeft - dtS);
-if (penaltyFlash > 0) penaltyFlash = Math.max(0, penaltyFlash - 0.06 * fr);
-updateHud();
-if (timeLeft <= 0) checkEnd();
-}
 ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
 ctx.clearRect(0, 0, CW, CH);
 if (bgIm.complete && bgIm.naturalWidth) ctx.drawImage(bgIm, 0, 0, CW, CH);
-if (isWorkshop) {
-const wg = ctx.createLinearGradient(0, 0, 0, CH);
-wg.addColorStop(0, "rgba(6,11,24,0.68)");
-wg.addColorStop(0.45, "rgba(8,14,28,0.34)");
-wg.addColorStop(1, "rgba(5,9,20,0.78)");
-ctx.fillStyle = wg; ctx.fillRect(0, 0, CW, CH);
-}
 const leftPull = Math.max(0, Math.min(1, -curDx / 72));
 const rightPull = Math.max(0, Math.min(1, curDx / 72));
 if (leftPull > 0.04) {
@@ -5210,30 +5080,9 @@ ctx.fillStyle = gr; ctx.fillRect(CW * 0.45, 420, CW * 0.55, 280);
 particles.forEach((p) => {
 p.y += p.vy * fr;
 if (p.y < 0) { p.y = CH; p.x = Math.random() * CW; }
-ctx.fillStyle = isWorkshop ? "rgba(125, 211, 252, 0.58)" : "rgba(251, 146, 60, 0.7)";
+ctx.fillStyle = "rgba(251, 146, 60, 0.7)";
 ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
 });
-if (isWorkshop) {
-const ratioT = Math.max(0, Math.min(1, timeLeft / TIME_LIMIT));
-const urgent = timeLeft <= 6;
-ctx.save();
-ctx.fillStyle = "rgba(2,6,23,0.78)";
-rrect(20, 48, CW - 40, 8, 4); ctx.fill();
-ctx.fillStyle = penaltyFlash > 0.15 ? "#ef4444" : (urgent ? (Math.sin(tNow / 90) > 0 ? "#f87171" : "#fbbf24") : (rescued >= TARGET_GOOD ? "#38bdf8" : "#f0c969"));
-if (ratioT > 0) { rrect(20, 48, (CW - 40) * ratioT, 8, 4); ctx.fill(); }
-ctx.font = `800 12px ${FONT}`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-const lg = rescued >= TARGET_GOOD
-? `✓ 목표 달성! 추가 선별 시 포탑 강화 (${timeLeft.toFixed(1)}초)`
-: `멀쩡한 부품 → 순정 확보(${rescued}/${TARGET_GOOD}) · 불량 → 폐기 (-1.5초)`;
-const lw = Math.min(CW - 16, ctx.measureText(lg).width + 24);
-ctx.fillStyle = "rgba(2,6,23,0.80)";
-ctx.strokeStyle = rescued >= TARGET_GOOD ? "rgba(56,189,248,0.65)" : "rgba(255,255,255,0.28)";
-ctx.lineWidth = 1.2;
-rrect(CW / 2 - lw / 2, 62, lw, 25, 12.5); ctx.fill(); ctx.stroke();
-ctx.fillStyle = rescued >= TARGET_GOOD ? "#bae6fd" : "#f8fafc";
-ctx.fillText(lg, CW / 2, 74.5);
-ctx.restore();
-} else {
 ctx.save();
 ctx.font = `800 12.5px ${FONT}`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
 const lg = "멀쩡한 상자 → 구출   ·   그을림·금·구멍 → 폐기";
@@ -5242,22 +5091,20 @@ ctx.fillStyle = "rgba(2,6,23,0.76)"; ctx.strokeStyle = "rgba(255,255,255,0.28)";
 rrect(CW / 2 - lw / 2, 54, lw, 26, 13); ctx.fill(); ctx.stroke();
 ctx.fillStyle = "#f8fafc"; ctx.fillText(lg, CW / 2, 67.5);
 ctx.restore();
-}
 ["left", "right"].forEach((side) => bins[side].slice(-18).sort((a, b) => a.y - b.y).forEach((it) => drawCrate(it, it.x, it.y, ITEM_S, it.rot, false, tNow)));
 const tgtDx = drag.active ? drag.dx : 0;
 const tgtDy = drag.active ? drag.dy : 0;
-curDx += (tgtDx - curDx) * ease(drag.active ? 0.55 : 0.28);
+curDx += (tgtDx - curDy * 0 - curDx) * ease(drag.active ? 0.55 : 0.28);
 curDy += (tgtDy - curDy) * ease(drag.active ? 0.55 : 0.28);
-if (!isWorkshop && queue.length && !ending && queue[0].pos < 0.08) {
+if (queue.length && !ending && queue[0].pos < 0.08) {
 const f0 = queue[0];
 if (f0.limit === null) { f0.limit = T_FIRST - (T_FIRST - T_LAST) * (sorted / Math.max(1, N_CRATES - 1)); f0.left = f0.limit; }
 f0.left -= dtS;
 if (f0.left <= 0) timeoutFront();
 }
-const slideSpd = isWorkshop ? 0.28 : 0.18;
 for (let i = queue.length - 1; i >= 0; i--) {
 const c = queue[i];
-c.pos += (c.target - c.pos) * ease(slideSpd);
+c.pos += (c.target - c.pos) * ease(0.18);
 if (Math.abs(c.target - c.pos) < 0.01) c.pos = c.target;
 if (c.pos > SLOTS.length - 1.05) continue;
 const p = slotAt(c.pos);
@@ -5266,7 +5113,7 @@ const ox = isFront ? curDx : 0;
 const oy = isFront ? curDy : 0;
 const rot = isFront ? (curDx * 0.0042) : 0;
 const bob = (isFront && !drag.active) ? Math.sin(tNow / 240 + c.wob) * 2.5 : 0;
-if (!isWorkshop && isFront && c.limit !== null) {
+if (isFront && c.limit !== null) {
 const ratio = Math.max(0, c.left / c.limit);
 const rr = p.s * 0.68, rx = CW / 2 + ox, ry = p.y + oy + bob;
 ctx.save();
@@ -5276,14 +5123,6 @@ const col = ratio > 0.5 ? "#4ade80" : (ratio > 0.25 ? "#facc15" : "#f87171");
 ctx.strokeStyle = col; ctx.lineWidth = ratio <= 0.25 ? 6 + 2 * Math.abs(Math.sin(tNow / 80)) : 5;
 ctx.lineCap = "round";
 ctx.beginPath(); ctx.arc(rx, ry, rr, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * ratio); ctx.stroke();
-ctx.restore();
-} else if (isWorkshop && isFront && rescued >= TARGET_GOOD) {
-const rr = p.s * 0.66, rx = CW / 2 + ox, ry = p.y + oy + bob;
-ctx.save();
-ctx.strokeStyle = "rgba(56,189,248,0.45)";
-ctx.lineWidth = 3.5;
-ctx.setLineDash([8, 6]);
-ctx.beginPath(); ctx.arc(rx, ry, rr, tNow / 420, tNow / 420 + Math.PI * 2); ctx.stroke();
 ctx.restore();
 }
 drawCrate(c, CW / 2 + ox, p.y + oy + bob, p.s, rot, isFront && drag.active, tNow);
@@ -5309,7 +5148,7 @@ drawCrate(f, x, y, s, f.rot, false, tNow);
 if (f.drop) ctx.restore();
 if (f.t >= 1) {
 if (!f.drop) {
-bins[f.side].push({ isGood: f.isGood, defect: f.defect, partIdx: f.partIdx, x: f.tx, y: f.ty, rot: (Math.random() - 0.5) * 0.5 });
+bins[f.side].push({ isGood: f.isGood, defect: f.defect, x: f.tx, y: f.ty, rot: (Math.random() - 0.5) * 0.5 });
 if (FXL) {
 FXL.particles(f.tx, f.ty + 10, { shape: "dust", n: 6, speed: 1.6, angle: -Math.PI / 2, spread: Math.PI * 0.9, size: 8 });
 if (f.side === "left") FXL.particles(f.tx, f.ty, { n: 8, speed: 3.5, angle: -Math.PI / 2, spread: 1.4 });
@@ -5319,11 +5158,11 @@ flying.splice(i, 1);
 }
 }
 if (FXL) FXL.draw(ctx);
-zoneBadge(isWorkshop ? "← 불량 폐기" : "← 폐기", BIN.left.label.x, BIN.left.label.y, "rgba(220,38,38,0.92)", leftPull);
-zoneBadge(isWorkshop ? "순정 확보 →" : "구출 →", BIN.right.label.x, BIN.right.label.y, "rgba(22,163,74,0.92)", rightPull);
+zoneBadge("← 폐기", BIN.left.label.x, BIN.left.label.y, "rgba(220,38,38,0.92)", leftPull);
+zoneBadge("구출 →", BIN.right.label.x, BIN.right.label.y, "rgba(22,163,74,0.92)", rightPull);
 if (combo >= 2) {
 if (comboFlash > 0) comboFlash = Math.max(0, comboFlash - 0.05 * fr);
-ctx.save(); ctx.translate(CW / 2, isWorkshop ? 112 : 104); ctx.scale(1 + comboFlash * 0.3, 1 + comboFlash * 0.3);
+ctx.save(); ctx.translate(CW / 2, 104); ctx.scale(1 + comboFlash * 0.3, 1 + comboFlash * 0.3);
 ctx.font = `900 26px ${FONT}`; ctx.textAlign = "center"; ctx.lineWidth = 5;
 ctx.strokeStyle = "rgba(15,23,42,0.9)"; ctx.fillStyle = "#fde68a";
 ctx.strokeText(`${combo} COMBO!`, 0, 0); ctx.fillText(`${combo} COMBO!`, 0, 0);
@@ -6561,9 +6400,9 @@ setTimeout(() => {
 if (!active) return;
 active = false; cancelAnimationFrame(rafId); activeMinigameCleanup = null;
 showMinigameResult(
-"자동 마력 포탑 성벽 배치 완료",
-`부품 직접 조립 + Perfect ${perfects}회! 화력 <strong>${state.battleStats.turretPower}</strong> · 연사 <strong>${state.battleStats.turretFireRateMs}ms</strong>`,
-"계속",
+"1단계 · 자동 마력 포탑 시제품 조립 완료",
+`부품 직접 조립 + Perfect ${perfects}회! 화력 <strong>${state.battleStats.turretPower}</strong> · 연사 <strong>${state.battleStats.turretFireRateMs}ms</strong><br/>이제 시범구매를 위한 <strong>현장 실증(Test-Bed) 시험</strong>으로 이동합니다.`,
+"실증 사격장으로 →",
 onComplete
 );
 }, 760);
@@ -6758,6 +6597,463 @@ rafId = requestAnimationFrame(drawFrame);
 activeMinigameCleanup = () => { active = false; cancelAnimationFrame(rafId); };
 updateHud();
 rafId = requestAnimationFrame(drawFrame);
+}
+);
+}
+function startMinigameTurretTestbed(onComplete) {
+AudioMgr.playBgm("bgm_defense");
+openMinigameShell(
+"혁신제품 테스트베드(Test-Bed) · 실증 사격 시험",
+"조립한 시제품 포탑이 실전 규격에 적합한지 <strong>25초 현장 실증 시험</strong>을 실시합니다!<br/>" +
+"① 레일을 따라 움직이는 <strong>🎯 모의 마물 표적</strong>의 이동 경로를 예측해 화면을 눌러 <strong>단발 정밀 저격</strong>하세요! (정중앙 명중 시 <strong>+2점</strong>)<br/>" +
+"② 초록 보호막이 쳐진 <strong>🛡️ 아군 보급 수레 표지</strong>를 쏘면 안전성 감점(<strong>-2점 · 3회 오사 시 실격</strong>)!<br/>" +
+"<strong>실증 점수 10점 이상</strong> 달성 시 시범구매 통과 · <strong>16점 이상 무오사</strong> 시 <strong>우수조달물품 추가 강화</strong>!",
+"실증 시험 개시",
+["assets/minigame/map_04_vertical_defense.png"],
+() => {
+const CW = 380, CH = 700;
+const FONT = "'Pretendard Variable', Pretendard, sans-serif";
+const bgIm = getSprite("assets/minigame/map_04_vertical_defense.png");
+const turretIm = getSprite("assets/minigame/obj_turret_blue.png");
+const scoutIm = getSprite("assets/minigame/enemy_scout.png");
+const siegeIm = getSprite("assets/minigame/enemy_siege.png");
+const cartIm = getSprite("assets/minigame/convoy_cart.png");
+const RAILS = [
+{ y: 192, label: "300m 고속 레일", spd: 2.35, sc: 0.78 },
+{ y: 304, label: "200m 표준 레일", spd: 1.75, sc: 0.92 },
+{ y: 416, label: "100m 근접 레일", spd: 1.38, sc: 1.04 },
+];
+const TURRET_X = CW / 2, TURRET_Y = 602;
+const TEST_TIME = 25.0, PASS_SCORE = 10, S_SCORE = 16, MAX_FRIENDLY_HIT = 2;
+const RELOAD_MS = 310, BOLT_SPEED = 18.5;
+let score = 0, combo = 0, bestCombo = 0, bullseyes = 0, friendlyHits = 0;
+let timeLeft = TEST_TIME, reloadLeftMs = 0, recoil = 0;
+let reticle = { x: CW / 2, y: 304, visible: false };
+let active = true, ending = false, rafId = 0, spawnAcc = 0, seq = 0;
+const targets = [];
+const bolts = [];
+const fxTexts = [];
+const FXL = window.NakkeFX ? window.NakkeFX.layer() : null;
+const vib = (p) => { try { if (navigator.vibrate) navigator.vibrate(p); } catch (_) {} };
+const mgContent = document.getElementById("mg-content");
+mgContent.innerHTML = `
+              <div style="flex:1;min-height:0;height:100%;overflow:hidden;display:flex;flex-direction:column;padding:0;touch-action:none;user-select:none;-webkit-user-select:none;">
+                <canvas id="testbed-canvas" width="380" height="700" style="width:100%;height:100%;flex:1;min-height:0;object-fit:contain;border-radius:8px;background:#050812;touch-action:none;cursor:crosshair;"></canvas>
+              </div>
+            `;
+const canvas = document.getElementById("testbed-canvas");
+const ctx = canvas.getContext("2d");
+const uiZoom = parseFloat(document.documentElement.style.getPropertyValue("--ui-zoom")) || 1;
+const DPR = Math.min(2, Math.max(1, (window.devicePixelRatio || 1) * uiZoom));
+canvas.width = Math.round(CW * DPR);
+canvas.height = Math.round(CH * DPR);
+ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+ctx.imageSmoothingEnabled = true;
+ctx.imageSmoothingQuality = "high";
+let lastHudSig = "";
+const updateHud = () => {
+const secCeil = Math.max(0, Math.ceil(timeLeft));
+const okPass = score >= PASS_SCORE;
+const sig = `${score}|${okPass ? 1 : 0}|${friendlyHits}|${combo}|${secCeil}`;
+if (sig === lastHudSig) return;
+lastHudSig = sig;
+el.mgHud.innerHTML = `
+                <span class="hud-chip ${okPass ? "gold" : "combat"}">실증 ${score}/${PASS_SCORE}점${okPass ? " ✓" : ""}</span>
+                <span class="hud-chip ${friendlyHits > 0 ? "combat" : ""}">안전 ${MAX_FRIENDLY_HIT + 1 - friendlyHits}/${MAX_FRIENDLY_HIT + 1}</span>
+                <span class="hud-chip gold">콤보 ${combo}</span>
+                <span class="hud-chip ${secCeil <= 6 ? "combat" : ""}">⏱ ${secCeil}s</span>
+              `;
+};
+const kindBag = [];
+const nextKind = () => {
+if (!kindBag.length) {
+const b = ["scout", "scout", "scout", "siege", "friendly"];
+for (let i = b.length - 1; i > 0; i--) {
+const j = Math.floor(Math.random() * (i + 1));
+const t = b[i]; b[i] = b[j]; b[j] = t;
+}
+kindBag.push(...b);
+}
+return kindBag.pop();
+};
+const spawnTarget = (initSpread) => {
+if (targets.length >= 5) return;
+const kind = nextKind();
+let railIdx = seq++ % RAILS.length;
+if (kind === "siege") railIdx = 0; // 고득점 중장갑 표적은 상단 고속 레일 우선
+if (kind === "friendly" && railIdx === 0) railIdx = 2; // 아군 수레는 중·하단 레일
+const rail = RAILS[railIdx];
+const dir = railIdx === 1 ? -1 : 1;
+const startX = initSpread ? (70 + Math.random() * 240) : (dir > 0 ? -42 : CW + 42);
+if (!initSpread && targets.some((t) => t.railIdx === railIdx && Math.abs(t.x - startX) < 105)) return;
+const spdMul = kind === "siege" ? 1.18 : (kind === "friendly" ? 0.88 : (0.92 + Math.random() * 0.22));
+targets.push({
+kind,
+railIdx,
+x: startX,
+y: rail.y,
+vx: dir * rail.spd * spdMul,
+r: Math.round(33 * rail.sc),
+wob: Math.random() * 6.28,
+});
+};
+spawnTarget(true);
+spawnTarget(true);
+spawnTarget(true);
+const stopAll = () => {
+active = false;
+cancelAnimationFrame(rafId);
+window.removeEventListener("keydown", onKey);
+activeMinigameCleanup = null;
+};
+const finish = (failedSafety) => {
+if (!active) return;
+stopAll();
+AudioMgr.playBgm("bgm_work");
+if ((failedSafety || score < PASS_SCORE) && typeof showMinigameFail === "function") {
+const reason = failedSafety
+? `아군 보급 수레 표지를 <strong>${friendlyHits}회 오사</strong>하여 안전성 기준에서 탈락했습니다!<br/>초록 보호막이 쳐진 <strong>🛡️ 아군 수레</strong>는 절대 쏘지 마세요.`
+: `실증 점수 <strong>${score}/${PASS_SCORE}점</strong>으로 기준 명중률에 미달했습니다.<br/>표적의 이동 방향 앞쪽을 살짝 예측해 <strong>정중앙(BULLSEYE +2점)</strong>을 노리세요!`;
+showMinigameFail("테스트베드 실증 부적합 판정", reason, () => startMinigameTurretTestbed(onComplete));
+return;
+}
+const isSGrade = score >= S_SCORE && friendlyHits === 0;
+const pwrGain = isSGrade ? 3 : 1;
+const rateGain = isSGrade ? 45 : 20;
+state.battleStats.turretPower += pwrGain;
+state.battleStats.turretFireRateMs = Math.max(360, state.battleStats.turretFireRateMs - rateGain);
+const badgeTitle = isSGrade
+? "혁신제품 실증 S등급 · 우수조달물품 지정!"
+: "혁신제품 테스트베드 실증 적합 통과!";
+showMinigameResult(
+badgeTitle,
+`실증 점수 <strong>${score}점</strong> · 정중앙 BULLSEYE <strong>${bullseyes}회</strong> · 아군 오사 <strong>${friendlyHits}회</strong><br/>` +
+`${isSGrade ? "무결점 안전·정밀도 인증 완료 → " : "실전 배치 적합 판정 → "}포탑 화력 <strong>+${pwrGain}</strong> · 연사 <strong>-${rateGain}ms</strong> 추가 강화!`,
+"우수조달물품 배치 승인 →",
+onComplete
+);
+};
+const fireShot = (tx, ty) => {
+if (!active || ending || reloadLeftMs > 0) return;
+const aimY = Math.max(130, Math.min(485, ty));
+const aimX = Math.max(24, Math.min(CW - 24, tx));
+reticle.x = aimX; reticle.y = aimY; reticle.visible = true;
+reloadLeftMs = RELOAD_MS;
+recoil = 1;
+vib(12);
+AudioMgr.playSfx("sfx_beam");
+const muzzleY = TURRET_Y - 38;
+const dx = aimX - TURRET_X, dy = aimY - muzzleY;
+const dist = Math.max(1, Math.hypot(dx, dy));
+bolts.push({
+x: TURRET_X,
+y: muzzleY,
+tx: aimX,
+ty: aimY,
+vx: (dx / dist) * BOLT_SPEED,
+vy: (dy / dist) * BOLT_SPEED,
+remain: dist,
+});
+if (FXL) FXL.burst("magic", TURRET_X, muzzleY, 48, { dur: 8 });
+};
+const toCanvasPos = (ev) => {
+const r = canvas.getBoundingClientRect();
+const fit = Math.min(r.width / CW, r.height / CH);
+return {
+x: (ev.clientX - r.left - (r.width - CW * fit) / 2) / fit,
+y: (ev.clientY - r.top - (r.height - CH * fit) / 2) / fit,
+};
+};
+canvas.addEventListener("pointermove", (ev) => {
+const pt = toCanvasPos(ev);
+reticle.x = Math.max(24, Math.min(CW - 24, pt.x));
+reticle.y = Math.max(130, Math.min(485, pt.y));
+reticle.visible = true;
+});
+canvas.addEventListener("pointerdown", (ev) => {
+if (!active || ending) return;
+ev.preventDefault();
+const pt = toCanvasPos(ev);
+fireShot(pt.x, pt.y);
+});
+const onKey = (e) => {
+if (e.code === "Space" && active && !ending) {
+e.preventDefault();
+fireShot(reticle.x, reticle.y);
+}
+};
+window.addEventListener("keydown", onKey);
+const rrect = (x, y, w, h, r) => {
+ctx.beginPath();
+if (ctx.roundRect) ctx.roundRect(x, y, w, h, r); else ctx.rect(x, y, w, h);
+};
+let prevT = 0;
+const stepFrame = (tNow) => {
+if (!active) return;
+if (document.hidden) { prevT = 0; rafId = requestAnimationFrame(stepFrame); return; }
+const dtS = prevT ? Math.min(0.05, Math.max(0, (tNow - prevT) / 1000)) : (1 / 60);
+prevT = tNow;
+const fr = dtS * 60;
+if (!ending) {
+timeLeft = Math.max(0, timeLeft - dtS);
+reloadLeftMs = Math.max(0, reloadLeftMs - dtS * 1000);
+recoil = Math.max(0, recoil - 0.12 * fr);
+spawnAcc += dtS;
+if (spawnAcc >= 0.72) {
+spawnAcc = 0;
+spawnTarget(false);
+}
+updateHud();
+if (timeLeft <= 0) {
+ending = true;
+setTimeout(() => finish(false), 380);
+}
+}
+for (let i = targets.length - 1; i >= 0; i--) {
+const t = targets[i];
+t.x += t.vx * fr;
+if ((t.vx > 0 && t.x > CW + 55) || (t.vx < 0 && t.x < -55)) {
+targets.splice(i, 1);
+}
+}
+for (let i = bolts.length - 1; i >= 0; i--) {
+const b = bolts[i];
+const stepDist = BOLT_SPEED * fr;
+b.x += b.vx * fr;
+b.y += b.vy * fr;
+b.remain -= stepDist;
+let hitIdx = -1, bestD = 999;
+for (let k = 0; k < targets.length; k++) {
+const t = targets[k];
+const d = Math.hypot(b.x - t.x, b.y - t.y);
+if (d <= t.r + 11 && d < bestD) {
+bestD = d;
+hitIdx = k;
+}
+}
+if (hitIdx >= 0 || b.remain <= 0) {
+const ix = hitIdx >= 0 ? b.x : b.tx;
+const iy = hitIdx >= 0 ? b.y : b.ty;
+if (hitIdx >= 0) {
+const tgt = targets[hitIdx];
+targets.splice(hitIdx, 1);
+if (tgt.kind === "friendly") {
+friendlyHits++;
+combo = 0;
+score = Math.max(0, score - 2);
+vib([42, 24, 42]);
+AudioMgr.playSfx("sfx_error");
+triggerStageQuake();
+triggerFlash("crimson");
+if (FXL) FXL.burst("boom", tgt.x, tgt.y, 175, { dur: 18 });
+fxTexts.push({ x: tgt.x, y: tgt.y - 34, txt: "🚨 아군 수레 오사! -2점", col: "#fca5a5", life: 44 });
+updateHud();
+if (friendlyHits > MAX_FRIENDLY_HIT && !ending) {
+ending = true;
+setTimeout(() => finish(true), 460);
+}
+} else {
+const isBull = bestD <= tgt.r * 0.48;
+const basePt = tgt.kind === "siege" ? 2 : 1;
+const gain = basePt + (isBull ? 1 : 0);
+score += gain;
+combo++;
+bestCombo = Math.max(bestCombo, combo);
+if (isBull) bullseyes++;
+vib(isBull ? [16, 14, 24] : 14);
+AudioMgr.playSfx(isBull ? "sfx_chime" : "sfx_stamp");
+if (FXL) {
+FXL.burst(isBull ? "spark" : "magic", tgt.x, tgt.y, isBull ? 190 : 140, { dur: 18 })
+.ring(tgt.x, tgt.y, { r0: 10, r1: isBull ? 92 : 64, rgb: isBull ? "250,204,21" : "56,189,248", dur: 16, w: isBull ? 5 : 3.5 })
+.particles(tgt.x, tgt.y, { n: isBull ? 16 : 10, speed: 5.2, rgb: isBull ? "253,224,71" : "125,211,252" });
+}
+const lbl = isBull ? `🎯 BULLSEYE! +${gain}점` : `✓ 표적 명중! +${gain}점`;
+fxTexts.push({ x: tgt.x, y: tgt.y - 34, txt: lbl, col: isBull ? "#fde68a" : "#7dd3fc", life: 36 });
+updateHud();
+}
+} else {
+combo = 0;
+if (FXL) FXL.ring(ix, iy, { r0: 6, r1: 30, rgb: "148,163,184", dur: 10, w: 2 });
+fxTexts.push({ x: ix, y: iy - 18, txt: "빗나감", col: "#94a3b8", life: 22 });
+updateHud();
+}
+bolts.splice(i, 1);
+}
+}
+ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+ctx.clearRect(0, 0, CW, CH);
+if (bgIm.complete && bgIm.naturalWidth) ctx.drawImage(bgIm, 0, 0, CW, CH);
+const shade = ctx.createLinearGradient(0, 0, 0, CH);
+shade.addColorStop(0, "rgba(6, 12, 26, 0.78)");
+shade.addColorStop(0.5, "rgba(8, 18, 36, 0.56)");
+shade.addColorStop(1, "rgba(5, 10, 22, 0.86)");
+ctx.fillStyle = shade;
+ctx.fillRect(0, 0, CW, CH);
+const ratioT = Math.max(0, Math.min(1, timeLeft / TEST_TIME));
+ctx.save();
+ctx.fillStyle = "rgba(2,6,23,0.78)";
+rrect(18, 48, CW - 36, 7, 3.5); ctx.fill();
+ctx.fillStyle = timeLeft <= 6 ? "#f87171" : (score >= S_SCORE ? "#4ade80" : (score >= PASS_SCORE ? "#38bdf8" : "#f0c969"));
+if (ratioT > 0) { rrect(18, 48, (CW - 36) * ratioT, 7, 3.5); ctx.fill(); }
+ctx.fillStyle = "rgba(8,14,28,0.84)";
+ctx.strokeStyle = score >= PASS_SCORE ? "rgba(56,189,248,0.62)" : "rgba(240,201,105,0.45)";
+ctx.lineWidth = 1.2;
+rrect(14, 61, CW - 28, 46, 10); ctx.fill(); ctx.stroke();
+ctx.textAlign = "center";
+ctx.font = `900 12px ${FONT}`;
+ctx.fillStyle = "#fde68a";
+ctx.fillText("🎯 마물 표적 예측 저격 (+1~3점)  ·  🛡️ 초록 아군 수레 사격 금지!", CW / 2, 77);
+ctx.font = `800 11px ${FONT}`;
+ctx.fillStyle = score >= S_SCORE && friendlyHits === 0
+? "#86efac"
+: (score >= PASS_SCORE ? "#7dd3fc" : "#cbd5e1");
+ctx.fillText(
+score >= S_SCORE && friendlyHits === 0
+? "★ 우수조달물품 S등급 기준 달성! 끝까지 무오사 유지!"
+: (score >= PASS_SCORE ? `✓ 시범구매 통과 확정! (16점 무오사 시 S등급 · 현재 ${score}점)` : `실증 합격까지 ${PASS_SCORE - score}점 남음 · 화면을 눌러 단발 사격!`),
+CW / 2,
+96
+);
+ctx.restore();
+RAILS.forEach((rl) => {
+ctx.save();
+ctx.strokeStyle = "rgba(56, 189, 248, 0.24)";
+ctx.lineWidth = 2;
+ctx.setLineDash([8, 6]);
+ctx.beginPath(); ctx.moveTo(16, rl.y + 24); ctx.lineTo(CW - 16, rl.y + 24); ctx.stroke();
+ctx.setLineDash([]);
+ctx.fillStyle = "rgba(148, 163, 184, 0.55)";
+ctx.font = `700 10px ${FONT}`;
+ctx.textAlign = "left";
+ctx.fillText(rl.label, 18, rl.y + 37);
+ctx.restore();
+});
+targets.forEach((t) => {
+const bob = Math.sin(tNow / 180 + t.wob) * 2.5;
+ctx.save();
+ctx.translate(t.x, t.y + bob);
+ctx.strokeStyle = "rgba(148,163,184,0.5)";
+ctx.lineWidth = 3;
+ctx.beginPath(); ctx.moveTo(0, t.r * 0.6); ctx.lineTo(0, 24 - bob); ctx.stroke();
+if (t.kind === "friendly") {
+ctx.fillStyle = "rgba(16, 185, 129, 0.22)";
+ctx.strokeStyle = "#4ade80";
+ctx.lineWidth = 3;
+ctx.beginPath(); ctx.arc(0, 0, t.r + 3, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+if (cartIm.complete && cartIm.naturalWidth) {
+ctx.drawImage(cartIm, -t.r, -t.r, t.r * 2, t.r * 2);
+}
+ctx.fillStyle = "rgba(6, 78, 59, 0.92)";
+rrect(-34, -t.r - 20, 68, 17, 8.5); ctx.fill();
+ctx.fillStyle = "#86efac";
+ctx.font = `900 10.5px ${FONT}`;
+ctx.textAlign = "center"; ctx.textBaseline = "middle";
+ctx.fillText("🛡️ 아군 보호", 0, -t.r - 11.5);
+} else {
+ctx.fillStyle = t.kind === "siege" ? "rgba(124, 45, 18, 0.72)" : "rgba(30, 41, 59, 0.78)";
+ctx.strokeStyle = t.kind === "siege" ? "#fbbf24" : "#f87171";
+ctx.lineWidth = 3;
+ctx.beginPath(); ctx.arc(0, 0, t.r, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+ctx.strokeStyle = "rgba(250, 204, 21, 0.85)";
+ctx.lineWidth = 2;
+ctx.beginPath(); ctx.arc(0, 0, t.r * 0.46, 0, Math.PI * 2); ctx.stroke();
+const im = t.kind === "siege" ? siegeIm : scoutIm;
+const s = t.r * 1.75;
+if (im.complete && im.naturalWidth) ctx.drawImage(im, -s / 2, -s / 2, s, s);
+if (t.kind === "siege") {
+ctx.fillStyle = "rgba(120, 53, 15, 0.92)";
+rrect(-28, -t.r - 19, 56, 16, 8); ctx.fill();
+ctx.fillStyle = "#fde68a";
+ctx.font = `900 10px ${FONT}`;
+ctx.textAlign = "center"; ctx.textBaseline = "middle";
+ctx.fillText("★ 고득점", 0, -t.r - 11);
+}
+}
+ctx.restore();
+});
+bolts.forEach((b) => {
+ctx.save();
+ctx.strokeStyle = "#38bdf8";
+ctx.lineWidth = 5;
+ctx.lineCap = "round";
+ctx.beginPath();
+ctx.moveTo(b.x, b.y);
+ctx.lineTo(b.x - b.vx * 1.3, b.y - b.vy * 1.3);
+ctx.stroke();
+ctx.fillStyle = "#e0f2fe";
+ctx.beginPath(); ctx.arc(b.x, b.y, 4.5, 0, Math.PI * 2); ctx.fill();
+ctx.restore();
+});
+if (reticle.visible) {
+ctx.save();
+ctx.strokeStyle = reloadLeftMs > 0 ? "rgba(148,163,184,0.22)" : "rgba(56,189,248,0.32)";
+ctx.lineWidth = 1.5;
+ctx.setLineDash([5, 6]);
+ctx.beginPath(); ctx.moveTo(TURRET_X, TURRET_Y - 38); ctx.lineTo(reticle.x, reticle.y); ctx.stroke();
+ctx.setLineDash([]);
+ctx.translate(reticle.x, reticle.y);
+ctx.strokeStyle = reloadLeftMs > 0 ? "#94a3b8" : "#fde68a";
+ctx.lineWidth = 2;
+ctx.beginPath(); ctx.arc(0, 0, 18, 0, Math.PI * 2); ctx.stroke();
+ctx.beginPath();
+ctx.moveTo(-25, 0); ctx.lineTo(-10, 0); ctx.moveTo(10, 0); ctx.lineTo(25, 0);
+ctx.moveTo(0, -25); ctx.lineTo(0, -10); ctx.moveTo(0, 10); ctx.lineTo(0, 25);
+ctx.stroke();
+ctx.fillStyle = "#ef4444";
+ctx.beginPath(); ctx.arc(0, 0, 2.5, 0, Math.PI * 2); ctx.fill();
+ctx.restore();
+}
+ctx.save();
+ctx.fillStyle = "rgba(8, 14, 28, 0.85)";
+ctx.strokeStyle = "rgba(56, 189, 248, 0.45)";
+ctx.lineWidth = 2;
+ctx.beginPath(); ctx.ellipse(TURRET_X, TURRET_Y + 34, 72, 18, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+const aimAng = reticle.visible ? Math.max(-0.55, Math.min(0.55, Math.atan2(reticle.x - TURRET_X, (TURRET_Y - 38) - reticle.y) * 0.42)) : 0;
+ctx.translate(TURRET_X, TURRET_Y + recoil * 6);
+ctx.rotate(aimAng);
+if (turretIm.complete && turretIm.naturalWidth) {
+ctx.drawImage(turretIm, -56, -56, 112, 112);
+}
+ctx.restore();
+if (reloadLeftMs > 0) {
+const p = 1 - reloadLeftMs / RELOAD_MS;
+ctx.save();
+ctx.strokeStyle = "#38bdf8";
+ctx.lineWidth = 4;
+ctx.beginPath(); ctx.arc(TURRET_X, TURRET_Y, 54, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * p); ctx.stroke();
+ctx.restore();
+}
+ctx.save();
+ctx.fillStyle = "#bae6fd";
+ctx.font = `800 11.5px ${FONT}`;
+ctx.textAlign = "center";
+ctx.fillText("▲ 표적 앞쪽을 예측해 터치/클릭 단발 사격! ▲", CW / 2, 676);
+ctx.restore();
+if (FXL) FXL.draw(ctx);
+if (combo >= 2) {
+ctx.save();
+ctx.textAlign = "center";
+ctx.font = `900 22px ${FONT}`;
+ctx.lineWidth = 4.5;
+ctx.strokeStyle = "rgba(2,6,23,0.9)";
+ctx.fillStyle = "#fde68a";
+ctx.strokeText(`${combo} 연속 명중!`, CW / 2, 134);
+ctx.fillText(`${combo} 연속 명중!`, CW / 2, 134);
+ctx.restore();
+}
+for (let i = fxTexts.length - 1; i >= 0; i--) {
+const f = fxTexts[i]; f.y -= 1.15 * fr; f.life -= fr;
+ctx.save(); ctx.textAlign = "center"; ctx.lineJoin = "round";
+ctx.font = `900 15.5px ${FONT}`; ctx.lineWidth = 4; ctx.strokeStyle = "rgba(2,6,23,0.9)"; ctx.fillStyle = f.col;
+ctx.strokeText(f.txt, f.x, f.y); ctx.fillText(f.txt, f.x, f.y);
+ctx.restore();
+if (f.life <= 0) fxTexts.splice(i, 1);
+}
+rafId = requestAnimationFrame(stepFrame);
+};
+activeMinigameCleanup = () => { stopAll(); };
+updateHud();
+rafId = requestAnimationFrame(stepFrame);
 }
 );
 }
@@ -8118,7 +8414,7 @@ const jumps = [
 { label: "08. [추가 거점] 나라장터 게시판 담합 적발 이벤트", fn: () => { state.rank = "행정관"; state.hubStep = Math.max(state.hubStep, 1); runScene(findSceneIndex("board_event_1")); } },
 { label: "09. [거점 3] 오후 보급로 & 품질 검수 수레 호송", fn: () => { state.rank = "행정관"; state.hubStep = 1; runScene(findSceneIndex("convoy_intro_1")); } },
 { label: "10. [추가 거점] 전략 비축창고 격자 적재 이벤트", fn: () => { state.rank = "행정관"; state.hubStep = Math.max(state.hubStep, 1); runScene(findSceneIndex("warehouse_event_1")); } },
-{ label: "11. [거점 5] 저녁 마도공방 · 부품 선별 & 포탑 시범구매", fn: () => { state.rank = "행정관"; state.hubStep = 2; runScene(findSceneIndex("workshop_intro_1")); } },
+{ label: "11. [거점 5] 저녁 마도공방 · 포탑 조립 & 실증 사격 시험", fn: () => { state.rank = "행정관"; state.hubStep = 2; runScene(findSceneIndex("workshop_intro_1")); } },
 { label: "12. 초대 '냥-조달청장' 임명식 스토리 (07-A → 07-B)", fn: () => { state.rank = "냥-조달청장"; state.hubStep = 3; runScene(findSceneIndex("award_cut1_nar")); } },
 { label: "13. 최종 결전: 회귀의 마물 군주 방어전 스토리", fn: () => { state.rank = "냥-조달청장"; state.hubStep = 3; runScene(findSceneIndex("boss_intro_1")); } },
 { label: "14. 성문 광장 작별 인사 & 복구 파노라마 · 인형 세례", fn: () => { state.rank = "냥-조달청장"; state.hubStep = 3; runScene(findSceneIndex("ending_panorama_1")); } },
