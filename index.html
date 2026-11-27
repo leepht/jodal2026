@@ -2108,6 +2108,9 @@ return;
 }
 const pre = preloadImage(found);
 if (!(pre && pre.complete && pre.naturalWidth > 0)) {
+if (el.bgImg.dataset.resolvedSrc && el.bgImg.dataset.resolvedSrc !== found) {
+el.bgImg.classList.remove("loaded");
+}
 await decodeReady(pre, 350);
 if (seq !== bgReqSeq) return;
 }
@@ -4354,6 +4357,9 @@ text: previewText || (sc && sc.text) || "",
 }
 function runScene(idx, opts) {
 stopActiveMinigame();
+if (el.mgBanner) el.mgBanner.classList.remove("active");
+if (el.minigameLayer) el.minigameLayer.classList.remove("active");
+if (el.nameModal) el.nameModal.classList.remove("active");
 clearTimeout(state.autoTimer);
 activeReplyQueue = null;
 activeNarrationQueue = null;
@@ -4839,6 +4845,9 @@ runScene(findSceneIndex("chief_answer_name"));
 });
 async function openVillageHub(restored) {
 stopActiveMinigame();
+if (el.mgBanner) el.mgBanner.classList.remove("active");
+if (el.minigameLayer) el.minigameLayer.classList.remove("active");
+if (el.nameModal) el.nameModal.classList.remove("active");
 state.phase = "hub";
 state.hudMode = "isekai";
 state.hubRestored = !!restored;
@@ -5053,6 +5062,15 @@ state.phase = "minigame";
 state.hudMode = "combat";
 hideAllDialogOverlays();
 renderHud();
+(bgImgList || []).concat([
+"assets/minigame/obj_crate_plain.png",
+"assets/minigame/item_mana_crystal.png",
+"assets/minigame/obj_turret_blue.png",
+"assets/minigame/enemy_scout.png",
+"assets/minigame/enemy_siege.png",
+"assets/minigame/boss_rewind_lord.png",
+"assets/minigame/convoy_cart.png",
+]).forEach((u) => { if (u && KNOWN_ASSETS.has(stripQuery(u))) getSprite(u); });
 el.minigameLayer.classList.remove("mg-hud-overlay");
 el.minigameLayer.classList.add("active");
 el.mgHud.innerHTML = "";
@@ -5131,8 +5149,13 @@ openVillageHub(false);
 });
 }
 async function attachMinigameBg(imgCandidates) {
-const found = await resolveFirstExistingImage(imgCandidates);
+const found = resolveKnownImageSync(imgCandidates || []) || await resolveFirstExistingImage(imgCandidates || []);
 if (!found || !el.minigameLayer.classList.contains("active") || document.querySelector("#mg-content canvas")) return;
+const pre = preloadImage(found);
+if (!(pre && pre.complete && pre.naturalWidth > 0)) {
+await decodeReady(pre, 300);
+if (!el.minigameLayer.classList.contains("active") || document.querySelector("#mg-content canvas")) return;
+}
 const im = document.getElementById("mg-bg-img");
 if (im) { im.src = found; im.style.display = "block"; }
 }
@@ -9038,6 +9061,16 @@ AudioMgr.initLiveSync();
 if (loadSavedGame()) el.resumeBtn.classList.remove("hidden");
 renderHud();
 preloadUpcoming(-1);
+setTimeout(() => {
+const warmQueue = Array.from(KNOWN_ASSETS).filter((u) => /^assets\/(cg|bg)\/.*\.png$/i.test(u) && !/title_layer_/.test(u));
+let wi = 0;
+const warmNext = () => {
+if (wi >= warmQueue.length) return;
+preloadImage(warmQueue[wi++]);
+setTimeout(warmNext, 40);
+};
+warmNext();
+}, 650);
 })();</script>
 <script id="fit-appw">(function () {
 var canZoom = !window.CSS || !window.CSS.supports || window.CSS.supports("zoom", "2");
@@ -9334,7 +9367,7 @@ var css = [
 ".sdw-bubble.show{opacity:1;transform:translateX(-50%) scale(1);}",
 "#village-hub-layer #hub-grid{z-index:80!important;}",
 "#village-hub-layer #hub-unified-hud{z-index:85!important;}",
-"#sdw-portrait-card{position:absolute;left:10px;right:10px;bottom:calc(var(--sdw-hud-h, 88px) + 14px + env(safe-area-inset-bottom));z-index:92;display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;background:rgba(10,16,28,0.90);border:1px solid rgba(240,201,105,0.62);box-shadow:0 8px 24px rgba(0,0,0,0.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);opacity:0;transform:translate3d(0,10px,0) scale(0.97);pointer-events:none;transition:opacity .18s ease,transform .18s ease;will-change:transform,opacity;}",
+"#sdw-portrait-card{position:absolute;left:10px;right:10px;bottom:calc(var(--sdw-hud-h, 68px) + 12px + env(safe-area-inset-bottom));z-index:92;display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;background:rgba(10,16,28,0.90);border:1px solid rgba(240,201,105,0.62);box-shadow:0 8px 24px rgba(0,0,0,0.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);opacity:0;transform:translate3d(0,10px,0) scale(0.97);pointer-events:none;transition:opacity .18s ease,transform .18s ease;will-change:transform,opacity;}",
 "#sdw-portrait-card.show{opacity:1;transform:translate3d(0,0,0) scale(1);pointer-events:auto;cursor:pointer;}",
 "#sdw-portrait-card .sdw-pc-img{width:66px;height:80px;object-fit:cover;object-position:center 12%;border-radius:7px;flex-shrink:0;border:1px solid rgba(240,201,105,0.45);background:radial-gradient(circle at 50% 40%,rgba(240,201,105,0.16),rgba(15,23,42,0.8));}",
 "#sdw-portrait-card .sdw-pc-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;}",
@@ -9659,10 +9692,14 @@ var pName = def.name || meta.name || def.key;
 var pRole = def.role || meta.role || "개척촌 주민";
 if (portraitSrc) {
 var hud = document.getElementById("hub-unified-hud");
-if (hud) {
-var hudH = Math.max(60, Math.round(hud.offsetHeight || 88));
-hub.style.setProperty("--sdw-hud-h", hudH + "px");
+var dock = document.getElementById("hub-thumb-dock");
+var barH = 68;
+if (hud && hud.offsetHeight > 0 && hud.offsetTop > 160) {
+barH = Math.max(barH, Math.round((hub.clientHeight || 844) - hud.offsetTop));
+} else if (dock && dock.offsetHeight > 0) {
+barH = Math.max(barH, Math.round(dock.offsetHeight + 12));
 }
+hub.style.setProperty("--sdw-hud-h", barH + "px");
 var pImg = card.querySelector(".sdw-pc-img");
 pImg.style.display = "";
 pImg.onerror = function () { this.style.display = "none"; };
