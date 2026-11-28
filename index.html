@@ -1308,9 +1308,15 @@ this.ctx.resume().catch(() => {});
 }
 if (this.ctx && !this.sfxPrewarmed && (!window.location || window.location.protocol !== "file:")) {
 this.sfxPrewarmed = true;
-KNOWN_ASSETS.forEach((u) => {
-if (/^assets\/audio\/sfx_.*\.mp3$/i.test(u)) this.loadSfxBuffer(this.withCacheBust(u), u);
+const warm = new Set();
+KNOWN_ASSETS.forEach((u) => { if (/^assets\/audio\/sfx_.*\.mp3$/i.test(u)) warm.add(u); });
+Object.keys((this.map && this.map.sfx) || {}).forEach((k) => {
+this.getSfxChannels(k).forEach((ch) => {
+const clean = stripQuery(this.withCacheBust(ch.src));
+if (KNOWN_ASSETS.has(clean)) warm.add(clean);
 });
+});
+warm.forEach((u) => this.loadSfxBuffer(this.withCacheBust(u), u));
 }
 },
 withCacheBust(src) {
@@ -5426,7 +5432,7 @@ oc.drawImage(bgIm, 0, 0, CW, CH);
 bgCache = off;
 return bgCache;
 };
-const BAKE_S = 144;
+const BAKE_S = Math.min(512, Math.ceil(132 * 1.07 * DPR * 2)); // 맨 앞(132px)·집어 든(×1.07) 크기 × 화면 배율 × 2배로 구워 화면엔 축소만 → 흐림 방지 (원본 512px 상한)
 const ensureCrateSprite = (c) => {
 if (c._sprite) return c._sprite;
 if (!plainIm.complete || !plainIm.naturalWidth) return null;
@@ -6483,7 +6489,7 @@ const ensureDefectSprite = (defect) => {
 if (!defect) return null;
 if (defect._sprite) return defect._sprite;
 if (!plainIm.complete || !plainIm.naturalWidth) return null;
-const SZ = 84;
+const SZ = Math.min(512, Math.ceil(68 * DPR * 2)); // 벨트 위 실제 크기(68px) × 화면 배율 × 2배로 구워 화면엔 축소만 → 흐림 방지 (원본 512px 상한)
 const off = document.createElement("canvas");
 off.width = SZ; off.height = SZ;
 const oc = off.getContext("2d");
